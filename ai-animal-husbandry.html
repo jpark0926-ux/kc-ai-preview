@@ -1,0 +1,1051 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI / Animal Husbandry — 인공수정 & 축산 극저온 솔루션 | KC 극저온</title>
+  <meta name="description" content="IC Biomedical AI / Animal Husbandry. 정액 보관, 수송, 냉동을 위한 전문 극저온 장비. 소, 말, 돼지, 양 등 번식 프로그램에 최적화된 LN₂ 솔루션.">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: { extend: { colors: {
+        cryo: {950:'#060d1b',900:'#0a1628',800:'#0f2240',700:'#143060',600:'#1a4080',
+               500:'#10b981',400:'#34d399',300:'#6ee7b7',200:'#a7f3d0',100:'#d1fae5',50:'#ecfdf5'}
+      }}}
+    }
+  </script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+
+    /* ── 디자인 토큰 (Apple-inspired) ── */
+    :root {
+      --black:    #1d1d1f;
+      --g1:       #424245;
+      --g2:       #6e6e73;
+      --g3:       #86868b;
+      --g4:       #a1a1a6;
+      --gbg:      #f5f5f7;
+      --white:    #ffffff;
+      --blue:     #0369a1;
+      --blue-lt:  #0ea5e9;
+      --blue-50:  #f0f9ff;
+      --blue-100: #e0f2fe;
+      --cyan:     #0891b2;
+      --em:       #059669;
+      --em-50:    #ecfdf5;
+      --bd:       rgba(0,0,0,0.08);
+      --bd-s:     rgba(0,0,0,0.05);
+    }
+
+    *, *::before, *::after { box-sizing: border-box; }
+    * { -webkit-font-smoothing: antialiased; }
+    body {
+      background: var(--white);
+      color: var(--black);
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+    .scrollbar-hide::-webkit-scrollbar { display: none; }
+    .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
+
+    /* ── 타이포그래피 ── */
+    .display-xl {
+      font-size: clamp(2.6rem, 6.5vw, 5.2rem);
+      font-weight: 700;
+      letter-spacing: -0.03em;
+      line-height: 1.06;
+    }
+    .display-lg {
+      font-size: clamp(1.9rem, 4vw, 3.5rem);
+      font-weight: 700;
+      letter-spacing: -0.025em;
+      line-height: 1.1;
+    }
+    .eyebrow {
+      display: block;
+      font-size: 12px; font-weight: 600;
+      letter-spacing: 0.1em; text-transform: uppercase;
+      color: var(--cyan); margin-bottom: 0.6rem;
+    }
+
+    /* ── Nav ── */
+    #nav {
+      background: transparent;
+      border-bottom: 1px solid transparent;
+      transition: background 0.3s, border-color 0.3s;
+    }
+    #nav.scrolled {
+      background: rgba(255,255,255,0.9);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--bd);
+    }
+    #nav.on-dark .tab-inactive { color: rgba(255,255,255,0.6) !important; }
+
+    /* ── Hero (dark) ── */
+    .hero-dark {
+      background: var(--black);
+      position: relative;
+      overflow: hidden;
+    }
+    .hero-dark::before {
+      content: '';
+      position: absolute; inset: 0;
+      background:
+        radial-gradient(ellipse at 30% 65%, rgba(5,150,105,0.25) 0%, transparent 55%),
+        radial-gradient(ellipse at 75% 20%, rgba(8,145,178,0.18) 0%, transparent 50%);
+      pointer-events: none;
+    }
+
+    /* ── Stat strip ── */
+    .big-num {
+      font-family: 'Inter', ui-monospace, monospace;
+      font-variant-numeric: tabular-nums;
+      font-size: clamp(2.4rem, 5vw, 3.8rem);
+      font-weight: 800;
+      letter-spacing: -0.035em;
+      line-height: 1;
+      color: var(--black);
+    }
+    .big-num-unit { font-size: 1.1rem; font-weight: 500; color: var(--g3); margin-left: 2px; }
+    .big-num-label { font-size: 0.76rem; color: var(--g2); margin-top: 0.4rem; }
+
+    /* ── 섹션 ── */
+    .s-white { background: var(--white); }
+    .s-gray  { background: var(--gbg); }
+
+    /* ── Feature card ── */
+    .feat-card {
+      border-radius: 18px;
+      padding: 1.75rem;
+      transition: box-shadow 0.25s, transform 0.25s;
+    }
+    .feat-card:hover {
+      box-shadow: 0 14px 44px rgba(0,0,0,0.09);
+      transform: translateY(-3px);
+    }
+    .feat-icon {
+      width: 44px; height: 44px; border-radius: 12px;
+      background: var(--blue-50);
+      display: flex; align-items: center; justify-content: center;
+      margin-bottom: 1.25rem;
+    }
+    .feat-icon svg { width: 22px; height: 22px; color: var(--blue); }
+
+    /* ── Model card (category card) ── */
+    .model-card {
+      background: var(--white);
+      border-radius: 18px;
+      padding: 1.5rem;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.05);
+      transition: box-shadow 0.25s, transform 0.2s;
+      cursor: pointer;
+      text-decoration: none;
+      display: block;
+      color: inherit;
+    }
+    .model-card:hover {
+      box-shadow: 0 10px 36px rgba(0,0,0,0.10);
+      transform: translateY(-2px);
+    }
+
+    /* ── Spec table ── */
+    .spec-table { overflow-x: auto; }
+    .spec-table table { border-collapse: collapse; width: 100%; font-size: 0.82rem; }
+    .spec-table th {
+      background: var(--gbg); color: var(--g2);
+      padding: 0.7rem 1rem; text-align: left;
+      font-weight: 600; font-size: 10.5px; letter-spacing: 0.07em; text-transform: uppercase;
+      border-bottom: 1px solid var(--bd); white-space: nowrap;
+    }
+    .spec-table td {
+      padding: 0.7rem 1rem;
+      border-bottom: 1px solid var(--bd-s);
+      background: var(--white); color: var(--g1);
+      font-variant-numeric: tabular-nums;
+      white-space: nowrap;
+    }
+    .spec-table tr:hover td { background: var(--gbg); }
+    .spec-table .shi { color: var(--em); font-weight: 700; }
+    .spec-table .sdash { color: var(--g4); }
+
+    /* ── Contact form ── */
+    #ai-contact-form {
+      background: var(--white);
+      border-radius: 20px;
+      padding: 2rem;
+      box-shadow: 0 2px 24px rgba(0,0,0,0.06);
+    }
+    #ai-contact-form input,
+    #ai-contact-form textarea {
+      background: var(--gbg);
+      border: 1px solid transparent;
+      border-radius: 10px;
+      padding: 0.7rem 1rem;
+      font-size: 0.875rem;
+      color: var(--black);
+      width: 100%; outline: none;
+      transition: border-color 0.2s, background 0.2s;
+      font-family: inherit;
+    }
+    #ai-contact-form input:focus,
+    #ai-contact-form textarea:focus {
+      border-color: var(--blue-lt);
+      background: var(--white);
+      box-shadow: 0 0 0 3px rgba(14,165,233,0.1);
+    }
+
+    /* ── Product chip (contact form) ── */
+    .prod-chip {
+      display: inline-flex; align-items: center; gap: 4px;
+      padding: 5px 12px; border-radius: 20px;
+      font-size: 12px; font-weight: 500;
+      border: 1px solid var(--bd);
+      background: var(--white);
+      color: var(--g2);
+      cursor: pointer;
+      transition: all 0.2s;
+      user-select: none;
+    }
+    .prod-chip.active {
+      background: var(--em-50);
+      border-color: rgba(5,150,105,0.3);
+      color: #065f46;
+    }
+
+    /* ── FAQ accordion ── */
+    .faq-item { border-bottom: 1px solid var(--bd-s); }
+    .faq-q {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 1.25rem 0; cursor: pointer;
+      font-weight: 600; font-size: 0.95rem; color: var(--black);
+      transition: color 0.2s;
+    }
+    .faq-q:hover { color: var(--blue); }
+    .faq-q svg {
+      width: 20px; height: 20px; color: var(--g4);
+      transition: transform 0.3s;
+      flex-shrink: 0;
+    }
+    .faq-a {
+      max-height: 0; overflow: hidden;
+      transition: max-height 0.35s ease, padding 0.35s ease;
+      padding: 0 0;
+    }
+    .faq-item.open .faq-q svg { transform: rotate(45deg); }
+    .faq-item.open .faq-a {
+      max-height: 300px;
+      padding-bottom: 1.25rem;
+    }
+
+    /* ── Scroll reveal ── */
+    .reveal { opacity: 0; transform: translateY(20px); transition: opacity 0.65s ease, transform 0.65s ease; }
+    .reveal.visible { opacity: 1; transform: none; }
+
+    /* ── Footer (다크 유지) ── */
+    .kc-logo-footer { height: 80px; width: auto; }
+    .footer-v2 {
+      position: relative;
+      background: linear-gradient(180deg, #0d1f35 0%, #060d1b 100%);
+      border-top: 1px solid rgba(0,212,255,0.08);
+    }
+    .footer-v2::before {
+      content: ''; position: absolute; top: 0; left: 50%;
+      transform: translateX(-50%); width: 200px; height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(0,212,255,0.4), transparent);
+    }
+    .footer-glow-line { height:1px; background:linear-gradient(90deg,transparent,rgba(0,212,255,0.12),transparent); margin:32px 0; }
+    .footer-col-title { font-size:11px; font-weight:700; letter-spacing:3px; text-transform:uppercase; color:rgba(0,212,255,0.5); margin-bottom:16px; }
+    .footer-link { display:flex; align-items:center; gap:8px; color:rgba(148,163,184,0.8); font-size:13px; text-decoration:none; transition:all 0.25s; padding:4px 0; }
+    .footer-link:hover { color:#80f0ff; transform:translateX(3px); }
+    .footer-link svg { width:14px; height:14px; opacity:0.5; flex-shrink:0; }
+    .footer-link:hover svg { opacity:1; }
+    .footer-contact-item { display:flex; align-items:flex-start; gap:10px; color:rgba(148,163,184,0.7); font-size:13px; padding:6px 0; }
+    .footer-contact-item svg { width:16px; height:16px; color:rgba(0,212,255,0.4); flex-shrink:0; margin-top:1px; }
+    .footer-contact-item a { color:inherit; text-decoration:none; transition:color 0.25s; }
+    .footer-contact-item a:hover { color:#80f0ff; }
+    .footer-biz-bar { border-top:1px solid rgba(0,212,255,0.06); padding-top:24px; display:flex; flex-wrap:wrap; justify-content:space-between; align-items:center; gap:12px; }
+    .footer-biz-info { font-size:11px; color:rgba(100,116,139,0.7); line-height:1.8; }
+    .footer-biz-info span { white-space:nowrap; }
+    .footer-biz-info .sep { display:inline-block; width:1px; height:10px; background:rgba(100,116,139,0.3); margin:0 8px; vertical-align:middle; }
+    .footer-copyright { font-size:11px; color:rgba(100,116,139,0.5); }
+    .ee-hint { cursor:pointer; opacity:0.4; transition:opacity 0.3s; margin-left:8px; }
+    .ee-hint:hover { opacity:0.8; }
+  </style>
+</head>
+<body>
+
+<!-- ── Navigation ── -->
+<nav id="nav" class="fixed top-0 w-full z-50">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6">
+    <div class="flex items-center h-14 sm:h-16 gap-4">
+      <a href="index.html" class="flex-shrink-0">
+        <img src="Logo/logo-kc.png" alt="KC" class="h-7 sm:h-10 w-auto">
+      </a>
+      <div class="flex-1 overflow-x-auto scrollbar-hide">
+        <div class="flex gap-1 justify-center min-w-max">
+          <a href="ai-animal-husbandry.html" class="bg-emerald-500/15 text-emerald-700 border border-emerald-500/30 px-2.5 py-1 rounded-full text-[11px] font-medium transition whitespace-nowrap">AI Overview</a>
+          <a href="bio-icb-series.html"      class="tab-inactive text-slate-500 hover:text-slate-800 hover:bg-slate-100 px-2.5 py-1 rounded-full text-[11px] font-medium transition whitespace-nowrap">ICB (Small Freezers)</a>
+          <a href="bio-xt-series.html"       class="tab-inactive text-slate-500 hover:text-slate-800 hover:bg-slate-100 px-2.5 py-1 rounded-full text-[11px] font-medium transition whitespace-nowrap">XT (Small Freezers)</a>
+          <a href="bio-hc-series.html"       class="tab-inactive text-slate-500 hover:text-slate-800 hover:bg-slate-100 px-2.5 py-1 rounded-full text-[11px] font-medium transition whitespace-nowrap">HC (Small Freezers)</a>
+          <a href="bio-ld-series.html"       class="tab-inactive text-slate-500 hover:text-slate-800 hover:bg-slate-100 px-2.5 py-1 rounded-full text-[11px] font-medium transition whitespace-nowrap">LD (Dewars)</a>
+          <a href="bio-icb-dual-series.html" class="tab-inactive text-slate-500 hover:text-slate-800 hover:bg-slate-100 px-2.5 py-1 rounded-full text-[11px] font-medium transition whitespace-nowrap">ICB Dual (Vapor)</a>
+        </div>
+      </div>
+      <div class="flex items-center gap-2 flex-shrink-0">
+        <a href="biobanking.html" class="hidden sm:inline text-[11px] text-slate-500 hover:text-slate-800 transition">BIO</a>
+        <a href="index.html"      class="hidden sm:inline text-[11px] text-slate-500 hover:text-slate-800 transition" data-ko="홈" data-en="Home">홈</a>
+        <div id="lang-toggle" onclick="toggleLang()" style="display:inline-flex;align-items:center;background:rgba(0,0,0,0.06);border-radius:9999px;padding:2px;cursor:pointer;border:1px solid rgba(0,0,0,0.08);gap:1px;">
+          <span id="lang-ko" style="padding:2px 7px;font-size:9px;font-weight:700;border-radius:9999px;background:#0ea5e9;color:#ffffff;transition:all 0.3s;">KO</span>
+          <span id="lang-en" style="padding:2px 7px;font-size:9px;font-weight:700;border-radius:9999px;background:transparent;color:#94a3b8;transition:all 0.3s;">EN</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<!-- ── HERO (dark, Apple-style) ── -->
+<section class="hero-dark" style="min-height:100svh;display:flex;flex-direction:column;justify-content:flex-end;">
+  <div class="relative max-w-7xl mx-auto px-4 sm:px-6 pt-24 pb-0 w-full">
+    <div class="flex flex-col items-center text-center pb-12">
+
+      <!-- 에브로우 -->
+      <span class="inline-block text-xs font-semibold tracking-[0.12em] uppercase mb-6"
+            style="color:rgba(14,165,233,0.85);"
+            data-ko="IC Biomedical — AI / Animal Husbandry"
+            data-en="IC Biomedical — AI / Animal Husbandry">IC Biomedical — AI / Animal Husbandry</span>
+
+      <!-- 메인 헤드라인 -->
+      <h1 class="display-xl text-white mb-6 max-w-4xl"
+          data-ko="인공수정 &amp; 축산<br class='hidden sm:block'>초저온 보관 솔루션"
+          data-en="Artificial Insemination &amp;<br class='hidden sm:block'>Animal Husbandry Storage Solutions">
+        인공수정 &amp; 축산<br class="hidden sm:block">초저온 보관 솔루션
+      </h1>
+
+      <!-- 서브텍스트 -->
+      <p class="text-lg max-w-xl leading-relaxed mb-10"
+         style="color:rgba(255,255,255,0.5);"
+         data-ko="정액 보관 · 수송 · 냉동 | 소, 말, 돼지, 양 등<br>번식 프로그램을 위한 전문 극저온 장비"
+         data-en="Semen Storage · Transport · Freezing | Professional<br>cryogenic equipment for cattle, equine, swine &amp; small ruminant breeding programs">
+        정액 보관 · 수송 · 냉동 | 소, 말, 돼지, 양 등<br>
+        번식 프로그램을 위한 전문 극저온 장비
+      </p>
+
+      <!-- CTA -->
+      <div class="flex gap-3 flex-wrap justify-center mb-16">
+        <a href="#categories"
+           class="inline-flex items-center gap-2 px-6 py-3 rounded-full font-semibold text-sm transition hover:opacity-90"
+           style="background:#059669;color:#ffffff;"
+           data-ko="제품 카테고리" data-en="Product Categories">제품 카테고리</a>
+        <a href="#contact"
+           class="inline-flex items-center gap-2 px-6 py-3 rounded-full font-semibold text-sm border transition hover:border-white/50"
+           style="border-color:rgba(255,255,255,0.22);color:rgba(255,255,255,0.8);backdrop-filter:blur(8px);"
+           data-ko="제품 문의" data-en="Contact Us">제품 문의</a>
+      </div>
+
+      <!-- 제품 이미지 -->
+      <div class="flex justify-center w-full">
+        <img src="bio-images/icb-series-nobg.webp"
+             alt="AI / Animal Husbandry LN₂ 장비 라인업"
+             style="height:clamp(260px,42vw,440px);width:auto;object-fit:contain;
+                    filter:drop-shadow(0 20px 70px rgba(5,150,105,0.28));">
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── 핵심 수치 ── -->
+<section class="s-gray py-16" style="border-top:1px solid rgba(0,0,0,0.06);">
+  <div class="max-w-5xl mx-auto px-4 sm:px-6">
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
+      <div>
+        <p class="big-num">5</p>
+        <p class="big-num-label" data-ko="제품 카테고리" data-en="Product Categories">제품 카테고리</p>
+      </div>
+      <div>
+        <p class="big-num" style="color:var(--em);">-196<span class="big-num-unit">°C</span></p>
+        <p class="big-num-label" data-ko="보관 온도" data-en="Storage Temperature">보관 온도</p>
+      </div>
+      <div>
+        <p class="big-num">USA</p>
+        <p class="big-num-label" data-ko="제조" data-en="Made in">제조</p>
+      </div>
+      <div>
+        <p class="big-num">2<span class="big-num-unit" data-ko="yr" data-en="yr">yr</span></p>
+        <p class="big-num-label" data-ko="보증 기간" data-en="Warranty">보증 기간</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── 제품 카테고리 (4 카드) ── -->
+<section id="categories" class="s-white py-24">
+  <div class="max-w-6xl mx-auto px-4 sm:px-6">
+    <div class="text-center mb-16 reveal">
+      <span class="eyebrow" data-ko="제품 카테고리" data-en="Product Categories">제품 카테고리</span>
+      <h2 class="display-lg" style="color:var(--black);"
+          data-ko="용도에 맞는 장비 선택" data-en="Choose the Right Equipment">용도에 맞는 장비 선택</h2>
+      <p class="text-lg max-w-2xl mx-auto mt-5 leading-relaxed" style="color:var(--g2);"
+         data-ko="정액 보관용 소형 냉동고부터 대규모 번식 프로그램을 위한 벌크 저장 탱크까지, IC Biomedical의 AI/축산 전용 극저온 장비 라인업을 소개합니다."
+         data-en="From compact semen storage freezers to bulk tanks for large-scale breeding programs — explore IC Biomedical's complete AI/Animal Husbandry cryogenic equipment lineup.">
+        정액 보관용 소형 냉동고부터 대규모 번식 프로그램을 위한 벌크 저장 탱크까지, IC Biomedical의 AI/축산 전용 극저온 장비 라인업을 소개합니다.
+      </p>
+    </div>
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+
+      <!-- 1. Small Freezers -->
+      <a href="bio-icb-series.html" class="model-card reveal">
+        <div class="flex items-center justify-between mb-3">
+          <span class="inline-block text-[10px] font-bold tracking-wider uppercase px-2.5 py-1 rounded-full"
+                style="background:rgba(5,150,105,0.1);color:#065f46;border:1px solid rgba(5,150,105,0.25);"
+                data-ko="소형 냉동고" data-en="Small Freezers">소형 냉동고</span>
+        </div>
+        <div class="flex justify-center items-end my-4" style="height:10rem;">
+          <img src="bio-images/icb-series-nobg.webp" alt="Small Freezers"
+               class="h-36 w-auto object-contain mx-auto"
+               style="filter:drop-shadow(0 6px 24px rgba(5,150,105,0.16));"
+               onerror="this.style.display='none'">
+        </div>
+        <h3 class="text-xl font-bold mb-2" style="color:var(--black);"
+            data-ko="소형 냉동고 (Small Freezers)" data-en="Small Freezers">소형 냉동고 (Small Freezers)</h3>
+        <p class="text-sm mb-3" style="color:var(--g2);"
+           data-ko="ICB, XT, HC 시리즈 및 AI Shield. 범용 캐니스터 호환, 견고한 알루미늄 바디, 잠금형 리드. 목장과 클리닉에서의 일상 운용에 최적화."
+           data-en="ICB, XT, HC Series &amp; AI Shield. Universal canister compatibility, rugged aluminum body, lockable lid. Optimized for daily ranch and clinic operations.">
+          ICB, XT, HC 시리즈 및 AI Shield. 범용 캐니스터 호환, 견고한 알루미늄 바디, 잠금형 리드. 목장과 클리닉에서의 일상 운용에 최적화.
+        </p>
+        <span class="inline-flex items-center gap-1 text-xs font-semibold" style="color:var(--em);"
+              data-ko="자세히 보기 →" data-en="Learn more →">자세히 보기 →</span>
+      </a>
+
+      <!-- 2. Vapor Shippers -->
+      <a href="bio-icb-dual-series.html" class="model-card reveal">
+        <div class="flex items-center justify-between mb-3">
+          <span class="inline-block text-[10px] font-bold tracking-wider uppercase px-2.5 py-1 rounded-full"
+                style="background:rgba(14,165,233,0.08);color:#0369a1;border:1px solid rgba(14,165,233,0.2);"
+                data-ko="베이퍼 쉬퍼" data-en="Vapor Shippers">베이퍼 쉬퍼</span>
+        </div>
+        <div class="flex justify-center items-end my-4" style="height:10rem;">
+          <img src="bio-images/icb-dual-series-nobg.webp" alt="Vapor Shippers"
+               class="h-36 w-auto object-contain mx-auto"
+               style="filter:drop-shadow(0 6px 24px rgba(3,105,161,0.16));"
+               onerror="this.style.display='none'">
+        </div>
+        <h3 class="text-xl font-bold mb-2" style="color:var(--black);"
+            data-ko="베이퍼 쉬퍼 (Vapor Shippers)" data-en="Vapor Shippers">베이퍼 쉬퍼 (Vapor Shippers)</h3>
+        <p class="text-sm mb-3" style="color:var(--g2);"
+           data-ko="정밀한 극저온 조건을 유지하며 스트로를 안전하게 수송합니다. Store-Ship-Store 개념으로 보관과 수송을 하나의 용기에서 해결."
+           data-en="Transport straws safely under precise cryogenic conditions. The Store-Ship-Store concept enables storage and transport in a single vessel.">
+          정밀한 극저온 조건을 유지하며 스트로를 안전하게 수송합니다. Store-Ship-Store 개념으로 보관과 수송을 하나의 용기에서 해결.
+        </p>
+        <span class="inline-flex items-center gap-1 text-xs font-semibold" style="color:var(--blue);"
+              data-ko="자세히 보기 →" data-en="Learn more →">자세히 보기 →</span>
+      </a>
+
+      <!-- 3. Dewars -->
+      <a href="bio-ld-series.html" class="model-card reveal">
+        <div class="flex items-center justify-between mb-3">
+          <span class="inline-block text-[10px] font-bold tracking-wider uppercase px-2.5 py-1 rounded-full"
+                style="background:rgba(8,145,178,0.08);color:#155e75;border:1px solid rgba(8,145,178,0.2);"
+                data-ko="듀어" data-en="Dewars">듀어</span>
+        </div>
+        <div class="flex justify-center items-end my-4" style="height:10rem;">
+          <img src="bio-images/ld-series-nobg.webp" alt="Dewars"
+               class="h-36 w-auto object-contain mx-auto"
+               style="filter:drop-shadow(0 6px 24px rgba(8,145,178,0.16));"
+               onerror="this.style.display='none'">
+        </div>
+        <h3 class="text-xl font-bold mb-2" style="color:var(--black);"
+            data-ko="듀어 (Dewars)" data-en="Dewars">듀어 (Dewars)</h3>
+        <p class="text-sm mb-3" style="color:var(--g2);"
+           data-ko="목장과 클리닉을 위한 LN₂ 보관 듀어. 장기 보유 시간과 견고한 구조로 현장에서 안정적인 극저온 환경을 유지합니다."
+           data-en="LN₂ storage dewars for ranch and clinic use. Extended hold times and rugged construction maintain reliable cryogenic conditions in the field.">
+          목장과 클리닉을 위한 LN₂ 보관 듀어. 장기 보유 시간과 견고한 구조로 현장에서 안정적인 극저온 환경을 유지합니다.
+        </p>
+        <span class="inline-flex items-center gap-1 text-xs font-semibold" style="color:var(--cyan);"
+              data-ko="자세히 보기 →" data-en="Learn more →">자세히 보기 →</span>
+      </a>
+
+      <!-- 4. Bulk Freezers -->
+      <a href="bio-labs-series.html" class="model-card reveal">
+        <div class="flex items-center justify-between mb-3">
+          <span class="inline-block text-[10px] font-bold tracking-wider uppercase px-2.5 py-1 rounded-full"
+                style="background:rgba(124,58,237,0.08);color:#5b21b6;border:1px solid rgba(124,58,237,0.2);"
+                data-ko="대형 냉동고" data-en="Bulk Freezers">대형 냉동고</span>
+        </div>
+        <div class="flex justify-center items-end gap-3 my-4" style="height:10rem;">
+          <img src="bio-images/LABS-80K-AI_ICBiomedical_Web-500x520.png" alt="LABS 80K AI"
+               class="h-36 w-auto object-contain"
+               style="filter:drop-shadow(0 6px 24px rgba(124,58,237,0.12));"
+               onerror="this.style.display='none'">
+          <img src="bio-images/AI-91K-No-Controller-500x480.png" alt="AI 91K"
+               class="h-36 w-auto object-contain"
+               style="filter:drop-shadow(0 6px 24px rgba(124,58,237,0.12));"
+               onerror="this.style.display='none'">
+        </div>
+        <h3 class="text-xl font-bold mb-2" style="color:var(--black);"
+            data-ko="대형 냉동고 (Bulk Freezers)" data-en="Bulk Freezers">대형 냉동고 (Bulk Freezers)</h3>
+        <p class="text-sm mb-3" style="color:var(--g2);"
+           data-ko="대규모 정액 보관 운용을 위한 스테인리스 벌크 냉동고. 수만 개의 스트로를 체계적으로 보관하며 장기적으로 안정적인 LN₂ 환경을 제공합니다."
+           data-en="Stainless steel bulk freezers for large-scale semen storage operations. Systematically store tens of thousands of straws with long-term stable LN₂ conditions.">
+          대규모 정액 보관 운용을 위한 스테인리스 벌크 냉동고. 수만 개의 스트로를 체계적으로 보관하며 장기적으로 안정적인 LN₂ 환경을 제공합니다.
+        </p>
+        <span class="inline-flex items-center gap-1 text-xs font-semibold" style="color:#7c3aed;"
+              data-ko="자세히 보기 →" data-en="Learn more →">자세히 보기 →</span>
+      </a>
+
+      <!-- 5. AI Shield -->
+      <a href="#ai-shield" class="model-card reveal sm:col-span-2" style="border:2px solid rgba(234,179,8,0.2);background:linear-gradient(135deg,#fffbeb,#ffffff);">
+        <div class="flex items-center justify-between mb-3">
+          <span class="inline-block text-[10px] font-bold tracking-wider uppercase px-2.5 py-1 rounded-full"
+                style="background:rgba(234,179,8,0.1);color:#92400e;border:1px solid rgba(234,179,8,0.3);"
+                data-ko="AI Shield" data-en="AI Shield">AI Shield</span>
+          <span class="badge" style="background:rgba(234,179,8,0.12);color:#92400e;"
+                data-ko="온도 보호 기술" data-en="Thermal Protection">온도 보호 기술</span>
+        </div>
+        <div class="grid sm:grid-cols-2 gap-6 items-center">
+          <div>
+            <h3 class="text-xl font-bold mb-3" style="color:var(--black);"
+                data-ko="AI Shield 소형 냉동고" data-en="AI Shield Small Freezers">AI Shield 소형 냉동고</h3>
+            <p class="text-sm font-semibold mb-2" style="color:#92400e;"
+               data-ko="온도 변동으로부터 정액 시료를 보호하여 인공수정 실패율을 줄입니다."
+               data-en="Protect bull semen from adverse temperature fluctuations. Reduce artificial insemination failure.">
+              온도 변동으로부터 정액 시료를 보호하여 인공수정 실패율을 줄입니다.
+            </p>
+            <p class="text-sm mb-4" style="color:var(--g2);"
+               data-ko="AIS 1.5 및 AIS 3 모델은 혁신적인 AI Shield™ 캐니스터로 극저온 장기 보관 시 더 긴 보유 시간을 제공합니다. 가장 혹독한 환경에서도 시료를 안전하게 보호하도록 설계되었습니다."
+               data-en="The AIS 1.5 and AIS 3 models, with their innovative AI Shield™ canister, provide longer hold times for extended-term storage at cryogenic temperatures. Designed for durability and performance in the most challenging conditions.">
+              AIS 1.5 및 AIS 3 모델은 혁신적인 AI Shield™ 캐니스터로 극저온 장기 보관 시 더 긴 보유 시간을 제공합니다. 가장 혹독한 환경에서도 시료를 안전하게 보호하도록 설계되었습니다.
+            </p>
+            <div class="flex flex-wrap gap-2 mb-2">
+              <span class="text-xs px-2.5 py-1 rounded-full" style="background:rgba(5,150,105,0.08);color:#065f46;"
+                    data-ko="시료 생존율 향상" data-en="Improved Sample Viability">시료 생존율 향상</span>
+              <span class="text-xs px-2.5 py-1 rounded-full" style="background:rgba(5,150,105,0.08);color:#065f46;"
+                    data-ko="수태율 증가" data-en="Higher Conception Rates">수태율 증가</span>
+              <span class="text-xs px-2.5 py-1 rounded-full" style="background:rgba(5,150,105,0.08);color:#065f46;"
+                    data-ko="생산성 향상" data-en="Increased Productivity">생산성 향상</span>
+            </div>
+            <p class="text-xs mt-3" style="color:var(--g4);" data-ko="Made in USA" data-en="Made in USA">Made in USA</p>
+          </div>
+          <div class="flex justify-center">
+            <img src="bio-images/AIS_Group_Freezersr-600x400.png" alt="AI Shield AIS 1.5 / AIS 3 그룹샷"
+                 class="h-52 w-auto object-contain"
+                 style="filter:drop-shadow(0 8px 30px rgba(234,179,8,0.15));"
+                 onerror="this.style.display='none'">
+          </div>
+        </div>
+      </a>
+
+    </div>
+  </div>
+</section>
+
+<!-- ── 주요 기능 / 제품 라인업 ── -->
+<section class="s-gray py-24">
+  <div class="max-w-6xl mx-auto px-4 sm:px-6">
+    <div class="text-center mb-16 reveal">
+      <span class="eyebrow" data-ko="장비 &amp; 액세서리" data-en="Equipment &amp; Accessories">장비 &amp; 액세서리</span>
+      <h2 class="display-lg" style="color:var(--black);"
+          data-ko="AI 프로그램을 위한 완전한 솔루션" data-en="Complete Solutions for AI Programs">AI 프로그램을 위한 완전한 솔루션</h2>
+      <p class="mt-4" style="color:var(--g2);"
+         data-ko="보관 탱크부터 해동 장비, 안전 용품까지 — 번식 프로그램에 필요한 모든 것"
+         data-en="From storage tanks to thawing equipment and safety gear — everything your breeding program needs">
+        보관 탱크부터 해동 장비, 안전 용품까지 — 번식 프로그램에 필요한 모든 것
+      </p>
+    </div>
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+
+      <!-- 기능 1: Semen Tanks -->
+      <div class="feat-card s-white reveal">
+        <div class="feat-icon" style="background:var(--em-50);">
+          <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="color:var(--em);">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M20.25 7.5l-.625 10.632a2.25 2.25 0 01-2.247 2.118H6.622a2.25 2.25 0 01-2.247-2.118L3.75 7.5M10 11.25h4M3.375 7.5h17.25c.621 0 1.125-.504 1.125-1.125v-1.5c0-.621-.504-1.125-1.125-1.125H3.375c-.621 0-1.125.504-1.125 1.125v1.5c0 .621.504 1.125 1.125 1.125z"/>
+          </svg>
+        </div>
+        <h3 class="font-semibold mb-2" style="color:var(--black);" data-ko="정액 보관 탱크" data-en="Semen Storage Tanks">정액 보관 탱크</h3>
+        <p class="text-sm leading-relaxed" style="color:var(--g2);"
+           data-ko="장기 보유 시간과 견고한 구조를 갖춘 LN₂ 보관 듀어. 목장 환경에서도 안정적인 극저온 환경을 유지하며 다양한 용량 옵션을 제공합니다."
+           data-en="LN₂ storage dewars with extended hold times and rugged construction. Maintain stable cryogenic conditions even in ranch environments with multiple capacity options.">
+          장기 보유 시간과 견고한 구조를 갖춘 LN₂ 보관 듀어. 목장 환경에서도 안정적인 극저온 환경을 유지하며 다양한 용량 옵션을 제공합니다.
+        </p>
+      </div>
+
+      <!-- 기능 2: Transport & Vapor Shippers -->
+      <div class="feat-card s-white reveal">
+        <div class="feat-icon">
+          <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 18.75a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m3 0h6m-9 0H3.375a1.125 1.125 0 01-1.125-1.125V14.25m17.25 4.5a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m3 0H21a.75.75 0 00.75-.75V10.5a.75.75 0 00-.75-.75h-2.25l-2.25-3h-4.5m0 0V18M9.75 6.75h.008v.008H9.75V6.75z"/>
+          </svg>
+        </div>
+        <h3 class="font-semibold mb-2" style="color:var(--black);" data-ko="수송 &amp; 베이퍼 쉬퍼" data-en="Transport &amp; Vapor Shippers">수송 &amp; 베이퍼 쉬퍼</h3>
+        <p class="text-sm leading-relaxed" style="color:var(--g2);"
+           data-ko="수송 중에도 극저온 조건을 정밀하게 유지합니다. 흡착 매체 기반 드라이 쉬퍼로 누출 없이 안전하게 정액 스트로를 이동합니다."
+           data-en="Maintain precise cryogenic conditions during transport. Adsorbent-based dry shippers safely move semen straws without risk of liquid nitrogen spillage.">
+          수송 중에도 극저온 조건을 정밀하게 유지합니다. 흡착 매체 기반 드라이 쉬퍼로 누출 없이 안전하게 정액 스트로를 이동합니다.
+        </p>
+      </div>
+
+      <!-- 기능 3: Inventory Components -->
+      <div class="feat-card s-white reveal">
+        <div class="feat-icon">
+          <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6A2.25 2.25 0 016 3.75h2.25A2.25 2.25 0 0110.5 6v2.25a2.25 2.25 0 01-2.25 2.25H6a2.25 2.25 0 01-2.25-2.25V6zM3.75 15.75A2.25 2.25 0 016 13.5h2.25a2.25 2.25 0 012.25 2.25V18a2.25 2.25 0 01-2.25 2.25H6A2.25 2.25 0 013.75 18v-2.25zM13.5 6a2.25 2.25 0 012.25-2.25H18A2.25 2.25 0 0120.25 6v2.25A2.25 2.25 0 0118 10.5h-2.25a2.25 2.25 0 01-2.25-2.25V6zM13.5 15.75a2.25 2.25 0 012.25-2.25H18a2.25 2.25 0 012.25 2.25V18A2.25 2.25 0 0118 20.25h-2.25A2.25 2.25 0 0113.5 18v-2.25z"/>
+          </svg>
+        </div>
+        <h3 class="font-semibold mb-2" style="color:var(--black);" data-ko="재고 관리 부품" data-en="Inventory Components">재고 관리 부품</h3>
+        <p class="text-sm leading-relaxed" style="color:var(--g2);"
+           data-ko="캐니스터, 케인, 랙, 고블릿 등 체계적인 정액 재고 관리를 위한 호환 부품. 표준 및 대형 규격으로 다양한 탱크에 호환됩니다."
+           data-en="Canisters, canes, racks, and goblets for systematic semen inventory management. Compatible across tanks in standard and oversized formats.">
+          캐니스터, 케인, 랙, 고블릿 등 체계적인 정액 재고 관리를 위한 호환 부품. 표준 및 대형 규격으로 다양한 탱크에 호환됩니다.
+        </p>
+      </div>
+
+      <!-- 기능 4: Temperature Control -->
+      <div class="feat-card s-white reveal">
+        <div class="feat-icon">
+          <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 3v2.25m6.364.386l-1.591 1.591M21 12h-2.25m-.386 6.364l-1.591-1.591M12 18.75V21m-4.773-4.227l-1.591 1.591M5.25 12H3m4.227-4.773L5.636 5.636M15.75 12a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0z"/>
+          </svg>
+        </div>
+        <h3 class="font-semibold mb-2" style="color:var(--black);" data-ko="온도 제어 장비" data-en="Temperature Control Equipment">온도 제어 장비</h3>
+        <p class="text-sm leading-relaxed" style="color:var(--g2);"
+           data-ko="해동 수조(Thaw Bath), 타이머, 포셉 등 정밀한 온도 관리를 위한 장비. 정액 해동 시 정확한 온도와 시간을 제어하여 생존율을 극대화합니다."
+           data-en="Thaw baths, timers, and forceps for precise temperature management. Control exact temperature and timing during semen thawing to maximize viability.">
+          해동 수조(Thaw Bath), 타이머, 포셉 등 정밀한 온도 관리를 위한 장비. 정액 해동 시 정확한 온도와 시간을 제어하여 생존율을 극대화합니다.
+        </p>
+      </div>
+
+      <!-- 기능 5: PPE -->
+      <div class="feat-card s-white reveal">
+        <div class="feat-icon">
+          <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z"/>
+          </svg>
+        </div>
+        <h3 class="font-semibold mb-2" style="color:var(--black);" data-ko="개인 보호 장비 (PPE)" data-en="Personal Protective Equipment (PPE)">개인 보호 장비 (PPE)</h3>
+        <p class="text-sm leading-relaxed" style="color:var(--g2);"
+           data-ko="극저온 장갑, 앞치마, 안전 장비 등. LN₂를 취급하는 현장에서 작업자의 안전을 보장하는 필수 보호 장비를 제공합니다."
+           data-en="Cryogenic gloves, aprons, and safety equipment. Essential protective gear ensuring operator safety when handling LN₂ in the field.">
+          극저온 장갑, 앞치마, 안전 장비 등. LN₂를 취급하는 현장에서 작업자의 안전을 보장하는 필수 보호 장비를 제공합니다.
+        </p>
+      </div>
+
+      <!-- 기능 6: Cryo-Sentry Alarm -->
+      <div class="feat-card s-white reveal">
+        <div class="feat-icon" style="background:rgba(239,68,68,0.06);">
+          <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="color:#dc2626;">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M14.857 17.082a23.848 23.848 0 005.454-1.31A8.967 8.967 0 0118 9.75v-.7V9A6 6 0 006 9v.75a8.967 8.967 0 01-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 01-5.714 0m5.714 0a3 3 0 11-5.714 0"/>
+          </svg>
+        </div>
+        <h3 class="font-semibold mb-2" style="color:var(--black);" data-ko="Cryo-Sentry 알람" data-en="Cryo-Sentry Alarm">Cryo-Sentry 알람</h3>
+        <p class="text-sm leading-relaxed" style="color:var(--g2);"
+           data-ko="LN₂ 수위가 낮아지면 시각 및 청각 경보를 발생시키는 Cryo-Sentry 알람 시스템. 귀중한 유전 자원이 온도 이탈로 손상되는 것을 방지합니다."
+           data-en="Visual and audible low-level LN₂ alarm system. Cryo-Sentry prevents precious genetic material from being compromised by temperature excursions.">
+          LN₂ 수위가 낮아지면 시각 및 청각 경보를 발생시키는 Cryo-Sentry 알람 시스템. 귀중한 유전 자원이 온도 이탈로 손상되는 것을 방지합니다.
+        </p>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ── 탱크 선택 가이드 ── -->
+<section class="s-white py-24">
+  <div class="max-w-4xl mx-auto px-4 sm:px-6">
+    <div class="text-center mb-14 reveal">
+      <span class="eyebrow" data-ko="선택 가이드" data-en="Selection Guide">선택 가이드</span>
+      <h2 class="display-lg" style="color:var(--black);"
+          data-ko="정액 탱크 선택 기준" data-en="Choosing the Right Semen Tank">정액 탱크 선택 기준</h2>
+      <p class="mt-4" style="color:var(--g2);"
+         data-ko="다음 항목을 기준으로 최적의 탱크를 선택하십시오."
+         data-en="Consider the following criteria to select the optimal tank for your operation.">
+        다음 항목을 기준으로 최적의 탱크를 선택하십시오.
+      </p>
+    </div>
+
+    <div class="space-y-4 reveal">
+      <!-- 기준 1 -->
+      <div class="flex gap-4 items-start p-5 rounded-2xl" style="background:var(--gbg);">
+        <div class="flex-shrink-0 w-9 h-9 rounded-xl flex items-center justify-center text-sm font-bold" style="background:var(--em-50);color:var(--em);">1</div>
+        <div>
+          <h4 class="font-semibold text-sm mb-1" style="color:var(--black);" data-ko="현재 및 예상 스트로 수량" data-en="Current &amp; Projected Straw Capacity">현재 및 예상 스트로 수량</h4>
+          <p class="text-sm" style="color:var(--g2);" data-ko="현재 보관 중인 스트로 수량과 향후 확장 계획을 기준으로 필요 용량을 산정합니다. 여유 공간을 확보하여 운용 유연성을 높이십시오." data-en="Calculate required capacity based on current straw count and future expansion plans. Maintain reserve space for operational flexibility.">현재 보관 중인 스트로 수량과 향후 확장 계획을 기준으로 필요 용량을 산정합니다. 여유 공간을 확보하여 운용 유연성을 높이십시오.</p>
+        </div>
+      </div>
+      <!-- 기준 2 -->
+      <div class="flex gap-4 items-start p-5 rounded-2xl" style="background:var(--gbg);">
+        <div class="flex-shrink-0 w-9 h-9 rounded-xl flex items-center justify-center text-sm font-bold" style="background:var(--blue-50);color:var(--blue);">2</div>
+        <div>
+          <h4 class="font-semibold text-sm mb-1" style="color:var(--black);" data-ko="보유 시간 및 충전 주기" data-en="Hold Time &amp; Refill Schedule">보유 시간 및 충전 주기</h4>
+          <p class="text-sm" style="color:var(--g2);" data-ko="LN₂ 공급이 원활한 지역이라면 보유 시간이 짧은 대용량 모델도 적합합니다. 원격지라면 장기 보유 모델을 우선 고려하십시오." data-en="If LN₂ supply is readily available, larger models with shorter hold times work well. For remote locations, prioritize long-hold models.">LN₂ 공급이 원활한 지역이라면 보유 시간이 짧은 대용량 모델도 적합합니다. 원격지라면 장기 보유 모델을 우선 고려하십시오.</p>
+        </div>
+      </div>
+      <!-- 기준 3 -->
+      <div class="flex gap-4 items-start p-5 rounded-2xl" style="background:var(--gbg);">
+        <div class="flex-shrink-0 w-9 h-9 rounded-xl flex items-center justify-center text-sm font-bold" style="background:rgba(8,145,178,0.08);color:var(--cyan);">3</div>
+        <div>
+          <h4 class="font-semibold text-sm mb-1" style="color:var(--black);" data-ko="이동성 vs 고정 운용" data-en="Portability vs Stationary Use">이동성 vs 고정 운용</h4>
+          <p class="text-sm" style="color:var(--g2);" data-ko="현장 이동이 잦다면 경량·컴팩트 모델을, 고정 보관이 주 목적이라면 대용량 벌크 모델을 선택하십시오." data-en="Choose lightweight, compact models for frequent field use. For stationary storage, opt for large-capacity bulk models.">현장 이동이 잦다면 경량·컴팩트 모델을, 고정 보관이 주 목적이라면 대용량 벌크 모델을 선택하십시오.</p>
+        </div>
+      </div>
+      <!-- 기준 4 -->
+      <div class="flex gap-4 items-start p-5 rounded-2xl" style="background:var(--gbg);">
+        <div class="flex-shrink-0 w-9 h-9 rounded-xl flex items-center justify-center text-sm font-bold" style="background:rgba(217,119,6,0.08);color:#d97706;">4</div>
+        <div>
+          <h4 class="font-semibold text-sm mb-1" style="color:var(--black);" data-ko="접근 속도 및 LN₂ 보존" data-en="Access Speed &amp; LN₂ Conservation">접근 속도 및 LN₂ 보존</h4>
+          <p class="text-sm" style="color:var(--g2);" data-ko="넓은 넥 직경은 빠른 접근이 가능하지만 증발률이 높습니다. 좁은 넥 직경은 LN₂를 절약하지만 접근 시간이 길어집니다. 운용 패턴에 맞게 선택하십시오." data-en="Wider necks enable faster access but higher evaporation. Narrower necks conserve LN₂ but take longer to access. Choose based on your operational patterns.">넓은 넥 직경은 빠른 접근이 가능하지만 증발률이 높습니다. 좁은 넥 직경은 LN₂를 절약하지만 접근 시간이 길어집니다. 운용 패턴에 맞게 선택하십시오.</p>
+        </div>
+      </div>
+      <!-- 기준 5 -->
+      <div class="flex gap-4 items-start p-5 rounded-2xl" style="background:var(--gbg);">
+        <div class="flex-shrink-0 w-9 h-9 rounded-xl flex items-center justify-center text-sm font-bold" style="background:rgba(124,58,237,0.08);color:#7c3aed;">5</div>
+        <div>
+          <h4 class="font-semibold text-sm mb-1" style="color:var(--black);" data-ko="액세서리 호환성" data-en="Accessory Compatibility">액세서리 호환성</h4>
+          <p class="text-sm" style="color:var(--g2);" data-ko="기존에 사용 중인 캐니스터, 케인, 고블릿과의 호환성을 확인하십시오. IC Biomedical 제품은 업계 표준 규격과 호환됩니다." data-en="Verify compatibility with your existing canisters, canes, and goblets. IC Biomedical products are compatible with industry-standard formats.">기존에 사용 중인 캐니스터, 케인, 고블릿과의 호환성을 확인하십시오. IC Biomedical 제품은 업계 표준 규격과 호환됩니다.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── FAQ ── -->
+<section class="s-gray py-24">
+  <div class="max-w-3xl mx-auto px-4 sm:px-6">
+    <div class="text-center mb-14 reveal">
+      <span class="eyebrow" data-ko="자주 묻는 질문" data-en="Frequently Asked Questions">자주 묻는 질문</span>
+      <h2 class="display-lg" style="color:var(--black);" data-ko="FAQ" data-en="FAQ">FAQ</h2>
+    </div>
+
+    <div class="reveal">
+      <!-- Q1 -->
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFaq(this)">
+          <span data-ko="정액은 LN₂에서 얼마나 오래 보관할 수 있습니까?" data-en="How long can semen remain viable in LN₂?">정액은 LN₂에서 얼마나 오래 보관할 수 있습니까?</span>
+          <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15"/></svg>
+        </div>
+        <div class="faq-a">
+          <p class="text-sm leading-relaxed" style="color:var(--g2);"
+             data-ko="LN₂ 수위가 적절하게 유지되는 한, 정액은 사실상 무기한으로 생존력을 유지합니다. -196°C에서는 모든 생물학적 활동이 정지되므로, 20년 이상 보관된 정액에서도 정상적인 수태율이 보고되고 있습니다. 핵심은 탱크의 LN₂ 수위를 정기적으로 점검하고 보충하는 것입니다."
+             data-en="As long as proper LN₂ levels are maintained, semen remains viable indefinitely. At -196°C, all biological activity ceases — normal conception rates have been reported from semen stored for over 20 years. The key is regularly checking and replenishing LN₂ levels in your tank.">
+            LN₂ 수위가 적절하게 유지되는 한, 정액은 사실상 무기한으로 생존력을 유지합니다. -196°C에서는 모든 생물학적 활동이 정지되므로, 20년 이상 보관된 정액에서도 정상적인 수태율이 보고되고 있습니다. 핵심은 탱크의 LN₂ 수위를 정기적으로 점검하고 보충하는 것입니다.
+          </p>
+        </div>
+      </div>
+
+      <!-- Q2 -->
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFaq(this)">
+          <span data-ko="내 축군 규모에 맞는 최적의 탱크 크기는?" data-en="What's the best tank size for my herd?">내 축군 규모에 맞는 최적의 탱크 크기는?</span>
+          <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15"/></svg>
+        </div>
+        <div class="faq-a">
+          <p class="text-sm leading-relaxed" style="color:var(--g2);"
+             data-ko="현재 보관 중인 스트로 수량의 1.5~2배 용량을 권장합니다. 소규모 목장(50두 미만)은 ICB 20~24 시리즈, 중규모(50~200두)는 ICB 34~35 시리즈, 대규모 번식 센터는 LABS 벌크 냉동고가 적합합니다. 향후 확장 계획도 반드시 고려하십시오."
+             data-en="We recommend 1.5-2x your current straw count. Small ranches (under 50 head): ICB 20-24, medium operations (50-200 head): ICB 34-35, large breeding centers: LABS bulk freezers. Always factor in future expansion plans.">
+            현재 보관 중인 스트로 수량의 1.5~2배 용량을 권장합니다. 소규모 목장(50두 미만)은 ICB 20~24 시리즈, 중규모(50~200두)는 ICB 34~35 시리즈, 대규모 번식 센터는 LABS 벌크 냉동고가 적합합니다. 향후 확장 계획도 반드시 고려하십시오.
+          </p>
+        </div>
+      </div>
+
+      <!-- Q3 -->
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFaq(this)">
+          <span data-ko="수송 전용 컨테이너가 별도로 필요합니까?" data-en="Do I need a separate transport container?">수송 전용 컨테이너가 별도로 필요합니까?</span>
+          <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15"/></svg>
+        </div>
+        <div class="faq-a">
+          <p class="text-sm leading-relaxed" style="color:var(--g2);"
+             data-ko="장거리 운송이나 항공 수송 시에는 전용 베이퍼 쉬퍼(드라이 쉬퍼)를 사용하는 것이 안전합니다. ICB Dual 시리즈는 보관과 수송을 하나의 용기에서 해결하는 Store-Ship-Store 개념으로, 별도의 수송 용기 없이도 안전한 이동이 가능합니다. 단거리 이동이라면 일반 소형 냉동고로도 충분합니다."
+             data-en="For long-distance or air transport, dedicated vapor shippers (dry shippers) are recommended. The ICB Dual series uses a Store-Ship-Store concept, handling both storage and transport in one vessel. For short trips, a standard small freezer is sufficient.">
+            장거리 운송이나 항공 수송 시에는 전용 베이퍼 쉬퍼(드라이 쉬퍼)를 사용하는 것이 안전합니다. ICB Dual 시리즈는 보관과 수송을 하나의 용기에서 해결하는 Store-Ship-Store 개념으로, 별도의 수송 용기 없이도 안전한 이동이 가능합니다. 단거리 이동이라면 일반 소형 냉동고로도 충분합니다.
+          </p>
+        </div>
+      </div>
+
+      <!-- Q4 -->
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFaq(this)">
+          <span data-ko="LN₂ 수위는 얼마나 자주 확인해야 합니까?" data-en="How often should I check LN₂ levels?">LN₂ 수위는 얼마나 자주 확인해야 합니까?</span>
+          <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15"/></svg>
+        </div>
+        <div class="faq-a">
+          <p class="text-sm leading-relaxed" style="color:var(--g2);"
+             data-ko="최소 2주에 1회, 여름철에는 주 1회 점검을 권장합니다. 측정 스틱을 10초간 탱크에 담근 후 꺼내어 결빙 높이로 수위를 확인합니다. 스트로가 항상 LN₂에 완전히 잠겨 있어야 합니다. Cryo-Sentry 알람을 설치하면 수위 저하 시 자동 경보를 받을 수 있습니다."
+             data-en="Check at least every 2 weeks; weekly in summer. Dip a measuring stick for 10 seconds and check frost height. Straws must remain fully submerged in LN₂ at all times. Installing a Cryo-Sentry alarm provides automatic low-level alerts.">
+            최소 2주에 1회, 여름철에는 주 1회 점검을 권장합니다. 측정 스틱을 10초간 탱크에 담근 후 꺼내어 결빙 높이로 수위를 확인합니다. 스트로가 항상 LN₂에 완전히 잠겨 있어야 합니다. Cryo-Sentry 알람을 설치하면 수위 저하 시 자동 경보를 받을 수 있습니다.
+          </p>
+        </div>
+      </div>
+
+      <!-- Q5 -->
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFaq(this)">
+          <span data-ko="인공수정 작업에 필수적인 액세서리는?" data-en="What are the essential accessories for AI handling?">인공수정 작업에 필수적인 액세서리는?</span>
+          <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15"/></svg>
+        </div>
+        <div class="faq-a">
+          <p class="text-sm leading-relaxed" style="color:var(--g2);"
+             data-ko="기본 필수 장비: (1) 해동 수조 — 37°C 정밀 온도 유지, (2) 해동 타이머, (3) 스트로 집게(포셉), (4) 극저온 장갑, (5) LN₂ 수위 측정 스틱, (6) Cryo-Sentry 알람. 추가로 스트로 커터, 시스(Sheath), AI 건(Gun)이 현장 작업에 필요합니다."
+             data-en="Essential gear: (1) Thaw bath at 37°C, (2) Thaw timer, (3) Straw forceps, (4) Cryogenic gloves, (5) LN₂ measuring stick, (6) Cryo-Sentry alarm. Additionally, straw cutters, sheaths, and AI guns are needed for fieldwork.">
+            기본 필수 장비: (1) 해동 수조 — 37°C 정밀 온도 유지, (2) 해동 타이머, (3) 스트로 집게(포셉), (4) 극저온 장갑, (5) LN₂ 수위 측정 스틱, (6) Cryo-Sentry 알람. 추가로 스트로 커터, 시스(Sheath), AI 건(Gun)이 현장 작업에 필요합니다.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── 문의 ── -->
+<section id="contact" class="s-white py-24">
+  <div class="max-w-5xl mx-auto px-4 sm:px-6">
+    <div class="text-center mb-12 reveal">
+      <span class="eyebrow" data-ko="제품 문의" data-en="Product Inquiry">제품 문의</span>
+      <h2 class="display-lg" style="color:var(--black);"
+          data-ko="AI / 축산 장비 상담" data-en="AI / Animal Husbandry Consultation">AI / 축산 장비 상담</h2>
+      <p class="mt-4" style="color:var(--g2);"
+         data-ko="필요 제품, 수량, 납기 일정을 알려주시면 빠르게 견적을 드립니다."
+         data-en="Share your product requirements, quantity, and delivery schedule for a prompt quotation.">
+        필요 제품, 수량, 납기 일정을 알려주시면 빠르게 견적을 드립니다.
+      </p>
+    </div>
+    <div class="grid lg:grid-cols-5 gap-8 reveal">
+      <div class="lg:col-span-3">
+        <form id="ai-contact-form" onsubmit="submitAI(event)">
+          <!-- 제품 칩 -->
+          <div class="mb-5">
+            <label class="block text-xs mb-2" style="color:var(--g2);" data-ko="관심 제품 (복수 선택 가능)" data-en="Products of Interest (multiple)">관심 제품 (복수 선택 가능)</label>
+            <div class="flex flex-wrap gap-2" id="prod-chips">
+              <span class="prod-chip" data-val="Small Freezers" onclick="toggleChip(this)" data-ko="소형 냉동고" data-en="Small Freezers">소형 냉동고</span>
+              <span class="prod-chip" data-val="Vapor Shippers" onclick="toggleChip(this)" data-ko="베이퍼 쉬퍼" data-en="Vapor Shippers">베이퍼 쉬퍼</span>
+              <span class="prod-chip" data-val="Dewars" onclick="toggleChip(this)" data-ko="듀어" data-en="Dewars">듀어</span>
+              <span class="prod-chip" data-val="Bulk Freezers" onclick="toggleChip(this)" data-ko="대형 냉동고" data-en="Bulk Freezers">대형 냉동고</span>
+              <span class="prod-chip" data-val="AI Shield" onclick="toggleChip(this)" data-ko="AI Shield" data-en="AI Shield">AI Shield</span>
+              <span class="prod-chip" data-val="Accessories" onclick="toggleChip(this)" data-ko="액세서리" data-en="Accessories">액세서리</span>
+            </div>
+            <input type="hidden" name="products" id="prod-hidden">
+          </div>
+          <div class="grid sm:grid-cols-2 gap-4 mb-4">
+            <div>
+              <label class="block text-xs mb-1.5" style="color:var(--g2);" data-ko="이름" data-en="Name">이름</label>
+              <input type="text" name="name" required placeholder="홍길동" data-ko="홍길동" data-en="John Doe">
+            </div>
+            <div>
+              <label class="block text-xs mb-1.5" style="color:var(--g2);" data-ko="회사 / 목장명" data-en="Company / Ranch">회사 / 목장명</label>
+              <input type="text" name="company" placeholder="(주)회사명" data-ko="(주)회사명" data-en="Company Inc.">
+            </div>
+          </div>
+          <div class="grid sm:grid-cols-2 gap-4 mb-4">
+            <div>
+              <label class="block text-xs mb-1.5" style="color:var(--g2);" data-ko="연락처" data-en="Phone">연락처</label>
+              <input type="tel" name="phone" placeholder="010-0000-0000">
+            </div>
+            <div>
+              <label class="block text-xs mb-1.5" style="color:var(--g2);" data-ko="이메일" data-en="Email">이메일</label>
+              <input type="email" name="email" required placeholder="email@company.com">
+            </div>
+          </div>
+          <div class="mb-5">
+            <label class="block text-xs mb-1.5" style="color:var(--g2);" data-ko="문의 내용" data-en="Message">문의 내용</label>
+            <textarea name="message" rows="3" style="resize:none;"
+              placeholder="필요 제품, 축종(소/말/돼지/양), 수량, 납기 등을 입력해주세요."
+              data-ko="필요 제품, 축종(소/말/돼지/양), 수량, 납기 등을 입력해주세요."
+              data-en="Required products, species (cattle/equine/swine/sheep), quantity, delivery schedule, etc."></textarea>
+          </div>
+          <button type="submit" id="ai-submit"
+            class="w-full py-3.5 rounded-full font-semibold text-sm transition hover:opacity-90"
+            style="background:#059669;color:#ffffff;"
+            data-ko="문의 보내기" data-en="Send Inquiry">문의 보내기</button>
+          <p id="ai-success" class="hidden text-center text-emerald-600 text-sm font-semibold pt-3" data-ko="문의가 접수되었습니다. 빠른 시일 내에 연락드리겠습니다!" data-en="Received. We'll get back to you shortly!">문의가 접수되었습니다. 빠른 시일 내에 연락드리겠습니다!</p>
+          <p id="ai-error" class="hidden text-center text-red-600 text-sm font-semibold pt-3" data-ko="전송 실패. info@koreacryo.com으로 직접 연락해주세요." data-en="Failed. Please email info@koreacryo.com directly.">전송 실패. info@koreacryo.com으로 직접 연락해주세요.</p>
+        </form>
+      </div>
+      <div class="lg:col-span-2 space-y-4">
+        <a href="tel:031-737-8171" class="flex flex-col items-center gap-2 p-5 rounded-2xl transition hover:shadow-md" style="background:var(--gbg);">
+          <svg class="w-5 h-5" style="color:var(--blue);" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6A19.79 19.79 0 012.12 4.18 2 2 0 014.11 2h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg>
+          <span class="text-xs" style="color:var(--g3);" data-ko="전화 바로걸기" data-en="Call Now">전화 바로걸기</span>
+          <span class="text-sm font-semibold" style="color:var(--black);">031-737-8171</span>
+        </a>
+        <a href="mailto:info@koreacryo.com" class="flex flex-col items-center gap-2 p-5 rounded-2xl transition hover:shadow-md" style="background:var(--gbg);">
+          <svg class="w-5 h-5" style="color:var(--blue);" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 01-2.06 0L2 7"/></svg>
+          <span class="text-xs" style="color:var(--g3);" data-ko="이메일" data-en="Email">이메일</span>
+          <span class="text-sm font-semibold" style="color:var(--black);">info@koreacryo.com</span>
+        </a>
+        <div class="p-5 rounded-2xl" style="background:var(--gbg);">
+          <p class="text-xs mb-1" style="color:var(--g3);" data-ko="주소" data-en="Address">주소</p>
+          <p class="text-sm" style="color:var(--g1);" data-ko="경기도 성남시 중원구<br>둔촌대로 560 벽산테크노피아 201호" data-en="201, Byeoksan Technopia<br>560 Dunchon-daero, Seongnam">경기도 성남시 중원구<br>둔촌대로 560 벽산테크노피아 201호</p>
+          <p class="text-xs mt-2" style="color:var(--g3);" data-ko="영업시간 월~금 09:00 – 18:00" data-en="Mon–Fri 09:00 – 18:00">영업시간 월~금 09:00 – 18:00</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── Footer (다크 유지) ── -->
+<footer class="footer-v2 py-16">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10 lg:gap-8">
+      <div class="sm:col-span-2 lg:col-span-1">
+        <img src="Logo/logo-kc.png" alt="KC" class="kc-logo-footer mb-4" style="filter:brightness(1.1);">
+        <p class="text-sm leading-relaxed" style="color:rgba(148,163,184,0.7);" data-ko="극저온 장비에서 가스 엔지니어링까지,<br>신뢰할 수 있는 파트너" data-en="Your trusted partner,<br>from cryogenic equipment to gas engineering">극저온 장비에서 가스 엔지니어링까지,<br>신뢰할 수 있는 파트너</p>
+        <div style="margin-top:16px;display:flex;gap:10px;">
+          <a href="tel:031-737-8171" style="display:inline-flex;align-items:center;justify-content:center;width:36px;height:36px;border-radius:10px;border:1px solid rgba(0,212,255,0.12);background:rgba(0,212,255,0.04);transition:all 0.25s;" onmouseover="this.style.borderColor='rgba(0,212,255,0.3)';this.style.background='rgba(0,212,255,0.08)'" onmouseout="this.style.borderColor='rgba(0,212,255,0.12)';this.style.background='rgba(0,212,255,0.04)'">
+            <svg width="16" height="16" fill="none" stroke="rgba(0,212,255,0.5)" stroke-width="1.5" viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6A19.79 19.79 0 0 1 2.12 4.18 2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+          </a>
+          <a href="mailto:info@koreacryo.com" style="display:inline-flex;align-items:center;justify-content:center;width:36px;height:36px;border-radius:10px;border:1px solid rgba(0,212,255,0.12);background:rgba(0,212,255,0.04);transition:all 0.25s;" onmouseover="this.style.borderColor='rgba(0,212,255,0.3)';this.style.background='rgba(0,212,255,0.08)'" onmouseout="this.style.borderColor='rgba(0,212,255,0.12)';this.style.background='rgba(0,212,255,0.04)'">
+            <svg width="16" height="16" fill="none" stroke="rgba(0,212,255,0.5)" stroke-width="1.5" viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
+          </a>
+        </div>
+      </div>
+      <div class="sm:col-span-2 lg:col-span-1">
+        <div class="footer-col-title" data-ko="AI / 축산 제품" data-en="AI / Animal Husbandry">AI / 축산 제품</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:3px 16px;">
+          <a href="bio-icb-series.html"      class="footer-link"><svg fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="m9 18 6-6-6-6"/></svg><span>ICB Series</span></a>
+          <a href="bio-xt-series.html"       class="footer-link"><svg fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="m9 18 6-6-6-6"/></svg><span>XT Series</span></a>
+          <a href="bio-hc-series.html"       class="footer-link"><svg fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="m9 18 6-6-6-6"/></svg><span>HC Series</span></a>
+          <a href="bio-ld-series.html"       class="footer-link"><svg fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="m9 18 6-6-6-6"/></svg><span>LD Dewars</span></a>
+          <a href="bio-icb-dual-series.html" class="footer-link"><svg fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="m9 18 6-6-6-6"/></svg><span>ICB Dual</span></a>
+          <a href="bio-labs-series.html"     class="footer-link"><svg fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="m9 18 6-6-6-6"/></svg><span>LABS Bulk</span></a>
+        </div>
+      </div>
+      <div>
+        <div class="footer-col-title" data-ko="회사" data-en="Company">회사</div>
+        <div style="display:flex;flex-direction:column;gap:4px;">
+          <a href="index-v3.html" class="footer-link"><svg fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="m9 18 6-6-6-6"/></svg><span data-ko="홈" data-en="Home">홈</span></a>
+          <a href="about.html"    class="footer-link"><svg fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="m9 18 6-6-6-6"/></svg><span data-ko="회사소개" data-en="About Us">회사소개</span></a>
+          <a href="biobanking.html" class="footer-link"><svg fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="m9 18 6-6-6-6"/></svg><span data-ko="바이오뱅킹" data-en="Biobanking">바이오뱅킹</span></a>
+          <a href="index-v3.html#contact" class="footer-link"><svg fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="m9 18 6-6-6-6"/></svg><span data-ko="문의하기" data-en="Contact">문의하기</span></a>
+        </div>
+      </div>
+      <div>
+        <div class="footer-col-title" data-ko="연락처" data-en="Contact">연락처</div>
+        <div style="display:flex;flex-direction:column;gap:6px;">
+          <div class="footer-contact-item"><svg fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6A19.79 19.79 0 0 1 2.12 4.18 2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg><div><a href="tel:031-737-8171">031-737-8171~4</a></div></div>
+          <div class="footer-contact-item"><svg fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg><div><a href="mailto:info@koreacryo.com">info@koreacryo.com</a></div></div>
+          <div class="footer-contact-item"><svg fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0z"/><circle cx="12" cy="10" r="3"/></svg><div data-ko="경기도 성남시 중원구<br>둔촌대로 560 벽산테크노피아 201호" data-en="201, Byeoksan Technopia<br>560 Dunchon-daero, Seongnam">경기도 성남시 중원구<br>둔촌대로 560 벽산테크노피아 201호</div></div>
+        </div>
+      </div>
+    </div>
+    <div class="footer-glow-line"></div>
+    <div class="footer-biz-bar">
+      <div class="footer-biz-info">
+        <span data-ko="한국초저온용기(주)" data-en="Korea Cryogenics Co., Ltd.">한국초저온용기(주)</span>
+        <span class="sep"></span>
+        <span data-ko="대표이사: 이희란" data-en="CEO: Hee-ran Lee">대표이사: 이희란</span>
+        <span class="sep"></span>
+        <span data-ko="사업자등록번호: 214-81-19072" data-en="Biz Reg No: 214-81-19072">사업자등록번호: 214-81-19072</span>
+      </div>
+      <div class="footer-copyright">
+        &copy; <span id="footer-year">2026</span> Korea Cryogenics. All rights reserved.
+        <span class="ee-hint" onclick="if(typeof launchEasterEgg==='function')launchEasterEgg()">Est. by HJP</span>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+<script>try { emailjs.init('sQsYCTrE1oUQdNLYN'); } catch(e) { console.warn('EmailJS init failed:', e); }</script>
+<script>
+/* ── 언어 전환 ── */
+var currentLang = 'ko';
+function toggleLang() {
+  currentLang = currentLang === 'ko' ? 'en' : 'ko';
+  document.querySelectorAll('[data-ko]').forEach(function(el) {
+    var val = el.getAttribute(currentLang === 'ko' ? 'data-ko' : 'data-en');
+    if (val) {
+      if (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA') el.placeholder = val;
+      else el.textContent = val;
+    }
+  });
+  /* restore HTML for elements that need it */
+  document.querySelectorAll('[data-ko]').forEach(function(el) {
+    var val = el.getAttribute(currentLang === 'ko' ? 'data-ko' : 'data-en');
+    if (val && (val.indexOf('<br') !== -1 || val.indexOf('&') !== -1)) {
+      if (el.tagName !== 'INPUT' && el.tagName !== 'TEXTAREA') {
+        el.innerHTML = val;
+      }
+    }
+  });
+  var ko = document.getElementById('lang-ko'), en = document.getElementById('lang-en');
+  if (currentLang === 'ko') {
+    ko.style.background='#0ea5e9'; ko.style.color='#ffffff';
+    en.style.background='transparent'; en.style.color='#94a3b8';
+  } else {
+    en.style.background='#0ea5e9'; en.style.color='#ffffff';
+    ko.style.background='transparent'; ko.style.color='#94a3b8';
+  }
+}
+
+/* ── Nav 스크롤 ── */
+(function() {
+  var nav = document.getElementById('nav');
+  if (!nav) return;
+  var heroH = document.querySelector('.hero-dark')?.offsetHeight || 600;
+  window.addEventListener('scroll', function() {
+    if (window.scrollY > heroH - 80) {
+      nav.classList.add('scrolled');
+      nav.classList.remove('on-dark');
+    } else {
+      nav.classList.remove('scrolled');
+      nav.classList.add('on-dark');
+    }
+  }, {passive: true});
+  nav.classList.add('on-dark');
+})();
+
+/* ── Scroll reveal ── */
+(function() {
+  var obs = new IntersectionObserver(function(entries) {
+    entries.forEach(function(e) {
+      if (e.isIntersecting) { e.target.classList.add('visible'); obs.unobserve(e.target); }
+    });
+  }, {threshold: 0.12});
+  document.querySelectorAll('.reveal').forEach(function(el) { obs.observe(el); });
+})();
+
+/* ── FAQ accordion ── */
+function toggleFaq(el) {
+  var item = el.parentElement;
+  var wasOpen = item.classList.contains('open');
+  document.querySelectorAll('.faq-item.open').forEach(function(i) { i.classList.remove('open'); });
+  if (!wasOpen) item.classList.add('open');
+}
+
+/* ── Product chip toggle ── */
+function toggleChip(el) {
+  el.classList.toggle('active');
+  var sel = [];
+  document.querySelectorAll('.prod-chip.active').forEach(function(c) { sel.push(c.dataset.val); });
+  document.getElementById('prod-hidden').value = sel.join(', ');
+}
+
+/* ── EmailJS 문의 전송 ── */
+function submitAI(event) {
+  event.preventDefault();
+  var btn = document.getElementById('ai-submit');
+  var succ = document.getElementById('ai-success');
+  var err  = document.getElementById('ai-error');
+  btn.disabled = true;
+  btn.textContent = currentLang === 'ko' ? '전송 중…' : 'Sending…';
+  var form = document.getElementById('ai-contact-form');
+  emailjs.sendForm('service_v89smv9', 'template_xweueym', form)
+    .then(function() {
+      succ.classList.remove('hidden');
+      err.classList.add('hidden');
+      form.reset();
+      document.querySelectorAll('.prod-chip').forEach(function(c) { c.classList.remove('active'); });
+      btn.textContent = currentLang === 'ko' ? '전송 완료' : 'Sent!';
+    }, function() {
+      err.classList.remove('hidden');
+      succ.classList.add('hidden');
+      btn.disabled = false;
+      btn.textContent = currentLang === 'ko' ? '문의 보내기' : 'Send Inquiry';
+    });
+}
+
+/* ── 연도 자동 업데이트 ── */
+document.getElementById('footer-year').textContent = new Date().getFullYear();
+</script>
+</body>
+</html>
