@@ -144,6 +144,12 @@ body.dark-mode .l1-node:hover{border-color:rgba(255,255,255,0.2);background:rgba
 }
 .l1-node.active ~ .l1-label{color:var(--text);font-weight:600;}
 body.dark-mode .l1-node.active ~ .l1-label{color:#fff;}
+.l1-hint{
+  margin-left:10px;font-size:10px;color:var(--text-dim);opacity:0.6;
+  white-space:nowrap;max-width:180px;overflow:hidden;text-overflow:ellipsis;
+  transition:opacity 0.3s;
+}
+.l1-node.active ~ .l1-hint{opacity:0.9;}
 
 /* -- Hover tooltip -- */
 .l2-pill{position:relative;}
@@ -483,10 +489,10 @@ var productData = {
 };
 
 var branchNames = {
-  biobanking:{ ko:'바이오뱅킹', en:'Biobanking' },
-  animal:{ ko:'인공수정/축산', en:'AI & Animal' },
-  cryo:{ ko:'극저온 장비', en:'Cryo Equipment' },
-  engineering:{ ko:'엔지니어링', en:'Engineering' }
+  biobanking:{ ko:'바이오뱅킹', en:'Biobanking', hintKo:'줄기세포, 혈액, 정액, 백신 등 바이오 시료 보관', hintEn:'Stem cells, blood, semen, vaccine storage' },
+  animal:{ ko:'인공수정/축산', en:'AI & Animal', hintKo:'소, 말, 돼지, 양 번식 프로그램 장비', hintEn:'Cattle, equine, swine breeding equipment' },
+  cryo:{ ko:'극저온 장비', en:'Cryo Equipment', hintKo:'LN₂, 헬륨, 특수가스 저장·공급', hintEn:'LN₂, helium, specialty gas storage & supply' },
+  engineering:{ ko:'엔지니어링', en:'Engineering', hintKo:'가스 배관 설계, 진공 배관, 유량계', hintEn:'Gas piping, vacuum piping, flow meters' }
 };
 
 var subNames = {
@@ -638,6 +644,12 @@ function buildTree(){
       rootNode.id = 'root-node';
       rootNode.innerHTML = '<img src="Logo/logo-kc.png" alt="KC">';
       rootCol.appendChild(rootNode);
+      var guideText = document.createElement('div');
+      guideText.style.cssText = 'font-size:10px;color:var(--text-dim);opacity:0.7;text-align:center;margin-top:6px;white-space:nowrap;';
+      guideText.setAttribute('data-ko','분야를 선택하세요 →');
+      guideText.setAttribute('data-en','Select a category →');
+      guideText.textContent = lang==='ko'?'분야를 선택하세요 →':'Select a category →';
+      rootCol.appendChild(guideText);
     }
     var vline = document.createElement('div');
     vline.className = 'root-vline';
@@ -672,8 +684,15 @@ function buildTree(){
     l1label.setAttribute('data-en',name.en);
     l1label.textContent = name[lang];
 
+    var l1hint = document.createElement('span');
+    l1hint.className = 'l1-hint';
+    l1hint.setAttribute('data-ko',name.hintKo||'');
+    l1hint.setAttribute('data-en',name.hintEn||'');
+    l1hint.textContent = (lang==='ko'?name.hintKo:name.hintEn)||'';
+
     l1col.appendChild(l1node);
     l1col.appendChild(l1label);
+    l1col.appendChild(l1hint);
     branch.appendChild(l1col);
 
     // H-line L1 -> L2
