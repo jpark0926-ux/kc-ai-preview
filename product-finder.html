@@ -1,0 +1,976 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>제품 찾기 | Product Finder — Korea Cryo</title>
+<link rel="icon" href="Logo/logo-kc.png">
+<link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #060d1b;
+  --bg-light: #0c1a2e;
+  --cyan: #06b6d4;
+  --cyan-glow: rgba(6,182,212,0.4);
+  --emerald: #10b981;
+  --emerald-glow: rgba(16,185,129,0.4);
+  --amber: #f59e0b;
+  --amber-glow: rgba(245,158,11,0.4);
+  --orange: #f97316;
+  --orange-glow: rgba(249,115,22,0.4);
+  --text: #e2e8f0;
+  --text-dim: #94a3b8;
+  --border: rgba(255,255,255,0.08);
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+body {
+  font-family:'Inter','Noto Sans KR',sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* ── NAV ── */
+.topnav {
+  position: fixed; top:0; left:0; right:0; z-index:100;
+  background: rgba(6,13,27,0.92);
+  backdrop-filter: blur(16px);
+  border-bottom: 1px solid var(--border);
+  display:flex; align-items:center; justify-content:space-between;
+  padding: 0 1.5rem; height: 56px;
+}
+.topnav-left { display:flex; align-items:center; gap:12px; }
+.topnav-left img { height:28px; }
+.topnav-left span { font-weight:600; font-size:15px; color:var(--text-dim); }
+.topnav-right { display:flex; align-items:center; gap:16px; }
+.topnav-right a { color:var(--text-dim); text-decoration:none; font-size:13px; transition:color .2s; }
+.topnav-right a:hover { color:#fff; }
+.lang-toggle {
+  background: rgba(255,255,255,0.06); border:1px solid var(--border);
+  border-radius:6px; padding:4px 10px; color:var(--text); cursor:pointer;
+  font-size:12px; font-weight:500; transition:all .2s;
+}
+.lang-toggle:hover { background:rgba(255,255,255,0.12); }
+
+/* ── BREADCRUMB ── */
+.breadcrumb-bar {
+  position:fixed; top:56px; left:0; right:0; z-index:99;
+  background:rgba(6,13,27,0.85); backdrop-filter:blur(8px);
+  padding:8px 1.5rem; font-size:12px; color:var(--text-dim);
+  border-bottom:1px solid var(--border);
+  display:flex; align-items:center; gap:6px;
+  min-height:32px;
+}
+.breadcrumb-bar .sep { opacity:.4; }
+.breadcrumb-bar .crumb { cursor:pointer; transition:color .2s; }
+.breadcrumb-bar .crumb:hover { color:var(--cyan); }
+.breadcrumb-bar .crumb.active { color:var(--text); font-weight:500; }
+
+/* ── MAIN CANVAS ── */
+.canvas {
+  padding-top: 110px;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+}
+.bg-gradient {
+  position:fixed; top:0; left:0; right:0; bottom:0; pointer-events:none; z-index:0;
+  background: radial-gradient(ellipse 60% 50% at 50% 40%, rgba(6,182,212,0.04) 0%, transparent 70%),
+              radial-gradient(ellipse 40% 40% at 50% 50%, rgba(16,185,129,0.03) 0%, transparent 60%);
+}
+
+/* ── PARTICLES ── */
+.particles {
+  position:fixed; top:0; left:0; right:0; bottom:0; pointer-events:none; z-index:1; overflow:hidden;
+}
+.particle {
+  position:absolute; width:2px; height:2px; background:rgba(6,182,212,0.3); border-radius:50%;
+  animation: particleFloat linear infinite;
+}
+@keyframes particleFloat {
+  0% { transform: translateY(100vh) scale(0); opacity:0; }
+  10% { opacity:1; }
+  90% { opacity:1; }
+  100% { transform: translateY(-10vh) scale(1); opacity:0; }
+}
+
+/* ── SVG LAYER ── */
+.svg-layer {
+  position:absolute; top:0; left:0; width:100%; height:100%; pointer-events:none; z-index:2;
+}
+
+/* ── CENTER NODE ── */
+.center-node {
+  position:relative; z-index:10; cursor:pointer;
+  display:flex; flex-direction:column; align-items:center; gap:12px;
+  margin-top: 40px; margin-bottom: 20px;
+}
+.center-circle {
+  width:96px; height:96px; border-radius:50%;
+  background: radial-gradient(circle, rgba(6,182,212,0.15), transparent 70%);
+  border: 2px solid rgba(6,182,212,0.4);
+  display:flex; align-items:center; justify-content:center;
+  animation: centerPulse 3s ease-in-out infinite;
+  transition: all .3s;
+}
+.center-circle:hover {
+  border-color: var(--cyan);
+  box-shadow: 0 0 30px var(--cyan-glow), 0 0 60px rgba(6,182,212,0.15);
+}
+.center-circle img { width:52px; height:52px; object-fit:contain; }
+@keyframes centerPulse {
+  0%,100% { box-shadow: 0 0 20px rgba(6,182,212,0.15), 0 0 40px rgba(6,182,212,0.05); }
+  50% { box-shadow: 0 0 30px rgba(6,182,212,0.25), 0 0 60px rgba(6,182,212,0.1); }
+}
+.center-label {
+  font-size:14px; color:var(--text-dim); text-align:center; font-weight:300;
+  letter-spacing:0.02em;
+}
+
+/* ── LEVEL 1 NODES ── */
+.level1-container {
+  display:flex; flex-wrap:wrap; justify-content:center; gap:28px;
+  position:relative; z-index:10; margin-top:20px; padding:0 20px;
+  max-width:800px;
+}
+.l1-node {
+  display:flex; flex-direction:column; align-items:center; gap:8px;
+  cursor:pointer; transition:transform .3s;
+  opacity:0; transform:translateY(20px);
+}
+.l1-node.visible { opacity:1; transform:translateY(0); transition: opacity .4s, transform .4s; }
+.l1-node:hover { transform:translateY(-4px) scale(1.05); }
+.l1-node.active { transform:scale(1.08); }
+.l1-circle {
+  width:72px; height:72px; border-radius:50%;
+  display:flex; align-items:center; justify-content:center;
+  font-size:28px; border:2px solid; transition:all .3s;
+  position:relative;
+}
+.l1-circle::after {
+  content:''; position:absolute; inset:-4px; border-radius:50%;
+  border:1px solid transparent; transition:border-color .3s;
+}
+.l1-node:hover .l1-circle::after,
+.l1-node.active .l1-circle::after { border-color: inherit; opacity:.4; }
+.l1-label { font-size:12px; font-weight:500; text-align:center; line-height:1.4; max-width:100px; }
+.l1-sublabel { font-size:10px; color:var(--text-dim); text-align:center; }
+
+/* branch colors */
+.branch-emerald .l1-circle { border-color:var(--emerald); background:rgba(16,185,129,0.08); color:var(--emerald); }
+.branch-emerald .l1-node:hover .l1-circle,
+.branch-emerald .l1-node.active .l1-circle { box-shadow:0 0 24px var(--emerald-glow); }
+.branch-amber .l1-circle { border-color:var(--amber); background:rgba(245,158,11,0.08); color:var(--amber); }
+.branch-amber .l1-node:hover .l1-circle,
+.branch-amber .l1-node.active .l1-circle { box-shadow:0 0 24px var(--amber-glow); }
+.branch-cyan .l1-circle { border-color:var(--cyan); background:rgba(6,182,212,0.08); color:var(--cyan); }
+.branch-cyan .l1-node:hover .l1-circle,
+.branch-cyan .l1-node.active .l1-circle { box-shadow:0 0 24px var(--cyan-glow); }
+.branch-orange .l1-circle { border-color:var(--orange); background:rgba(249,115,22,0.08); color:var(--orange); }
+.branch-orange .l1-node:hover .l1-circle,
+.branch-orange .l1-node.active .l1-circle { box-shadow:0 0 24px var(--orange-glow); }
+
+/* active glow */
+.l1-node.active .l1-circle { box-shadow:0 0 24px currentColor !important; }
+
+/* ── LEVEL 2 SECTION ── */
+.level2-section {
+  width:100%; max-width:900px; margin-top:0; padding:0 20px;
+  position:relative; z-index:10;
+  overflow:hidden; max-height:0; opacity:0;
+  transition: max-height .5s cubic-bezier(.4,0,.2,1), opacity .4s ease, margin .3s;
+}
+.level2-section.open {
+  max-height: 2000px; opacity:1; margin-top:32px;
+}
+.l2-header {
+  display:flex; align-items:center; gap:10px; margin-bottom:20px;
+  padding-bottom:12px; border-bottom:1px solid var(--border);
+}
+.l2-header-icon { font-size:20px; }
+.l2-header-title { font-size:16px; font-weight:600; }
+.l2-grid {
+  display:grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap:12px;
+}
+.l2-node {
+  background: rgba(255,255,255,0.03); border:1px solid var(--border);
+  border-radius:12px; padding:16px; cursor:pointer;
+  transition:all .3s; position:relative; overflow:hidden;
+  opacity:0; transform:translateY(12px);
+}
+.l2-node.visible { opacity:1; transform:translateY(0); transition: opacity .35s, transform .35s; }
+.l2-node:hover {
+  background:rgba(255,255,255,0.06);
+  transform:translateY(-2px);
+}
+.l2-node.active {
+  border-color: currentColor;
+  background:rgba(255,255,255,0.05);
+}
+.l2-node::before {
+  content:''; position:absolute; top:0; left:0; right:0; height:2px;
+  background:currentColor; opacity:0; transition:opacity .3s;
+}
+.l2-node:hover::before, .l2-node.active::before { opacity:.6; }
+.l2-node-title { font-size:14px; font-weight:500; margin-bottom:4px; }
+.l2-node-sub { font-size:11px; color:var(--text-dim); }
+
+/* ── LEVEL 3 PRODUCTS ── */
+.level3-section {
+  width:100%; max-width:900px; margin-top:0; padding:0 20px;
+  position:relative; z-index:10;
+  overflow:hidden; max-height:0; opacity:0;
+  transition: max-height .5s cubic-bezier(.4,0,.2,1), opacity .4s ease;
+}
+.level3-section.open { max-height:2000px; opacity:1; margin-top:16px; }
+.l3-grid {
+  display:grid; grid-template-columns:repeat(auto-fill, minmax(240px, 1fr));
+  gap:12px; padding-top:8px;
+}
+.l3-card {
+  background:linear-gradient(135deg, rgba(255,255,255,0.04), rgba(255,255,255,0.01));
+  border:1px solid var(--border); border-radius:12px;
+  padding:16px 18px; cursor:pointer; text-decoration:none; color:inherit;
+  display:block; transition:all .3s;
+  opacity:0; transform:translateY(10px) scale(0.97);
+}
+.l3-card.visible { opacity:1; transform:translateY(0) scale(1); transition: opacity .35s, transform .35s; }
+.l3-card:hover {
+  background:linear-gradient(135deg, rgba(255,255,255,0.07), rgba(255,255,255,0.03));
+  transform:translateY(-3px) scale(1.01);
+  border-color: rgba(255,255,255,0.15);
+}
+.l3-card-name { font-size:14px; font-weight:600; margin-bottom:4px; }
+.l3-card-spec { font-size:11px; color:var(--text-dim); margin-bottom:10px; line-height:1.5; }
+.l3-card-link {
+  font-size:11px; font-weight:500; display:inline-flex; align-items:center; gap:4px;
+  transition:gap .2s;
+}
+.l3-card:hover .l3-card-link { gap:8px; }
+
+/* ── SVG CONNECTIONS ── */
+.conn-line {
+  fill:none; stroke-width:1.5; stroke-linecap:round;
+  filter: url(#lineGlow);
+}
+
+/* ── RESET BUTTON ── */
+.reset-btn {
+  position:fixed; bottom:24px; right:24px; z-index:100;
+  background:rgba(6,182,212,0.12); border:1px solid rgba(6,182,212,0.3);
+  border-radius:10px; padding:10px 18px; color:var(--cyan);
+  cursor:pointer; font-size:13px; font-weight:500;
+  display:flex; align-items:center; gap:6px;
+  transition:all .3s; backdrop-filter:blur(8px);
+  opacity:0; pointer-events:none; transform:translateY(10px);
+}
+.reset-btn.show { opacity:1; pointer-events:auto; transform:translateY(0); transition: opacity .4s, transform .4s; }
+.reset-btn:hover {
+  background:rgba(6,182,212,0.2); border-color:var(--cyan);
+  box-shadow:0 0 20px rgba(6,182,212,0.2);
+}
+
+/* ── COUNTER ── */
+.product-counter {
+  position:fixed; bottom:24px; left:24px; z-index:100;
+  font-size:11px; color:var(--text-dim);
+  background:rgba(6,13,27,0.8); backdrop-filter:blur(8px);
+  padding:8px 14px; border-radius:8px; border:1px solid var(--border);
+}
+.product-counter strong { color:var(--text); font-weight:600; }
+
+/* ── GLOW COLOR UTILITIES ── */
+.glow-emerald { color:var(--emerald); }
+.glow-amber { color:var(--amber); }
+.glow-cyan { color:var(--cyan); }
+.glow-orange { color:var(--orange); }
+
+/* ── MOBILE ── */
+@media (max-width:640px) {
+  .topnav { padding:0 1rem; }
+  .level1-container { gap:16px; }
+  .l1-circle { width:60px; height:60px; font-size:24px; }
+  .l2-grid { grid-template-columns:1fr; }
+  .l3-grid { grid-template-columns:1fr; }
+  .center-circle { width:80px; height:80px; }
+  .center-circle img { width:44px; height:44px; }
+  .reset-btn { bottom:16px; right:16px; padding:8px 14px; font-size:12px; }
+  .product-counter { bottom:16px; left:16px; font-size:10px; }
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="topnav">
+  <div class="topnav-left">
+    <a href="index.html"><img src="Logo/logo-kc.png" alt="KC"></a>
+    <span data-ko="제품 찾기" data-en="Product Finder">제품 찾기</span>
+  </div>
+  <div class="topnav-right">
+    <a href="index.html" data-ko="홈" data-en="Home">홈</a>
+    <button class="lang-toggle" id="langToggle" onclick="toggleLang()">EN</button>
+  </div>
+</nav>
+
+<!-- BREADCRUMB -->
+<div class="breadcrumb-bar" id="breadcrumb"></div>
+
+<!-- BACKGROUND -->
+<div class="bg-gradient"></div>
+<div class="particles" id="particles"></div>
+
+<!-- SVG CONNECTIONS -->
+<svg class="svg-layer" id="svgLayer" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <filter id="lineGlow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="2" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+  </defs>
+</svg>
+
+<!-- MAIN CANVAS -->
+<main class="canvas" id="canvas">
+
+  <!-- CENTER NODE -->
+  <div class="center-node" id="centerNode">
+    <div class="center-circle" onclick="showLevel1()">
+      <img src="Logo/logo-kc.png" alt="Korea Cryo">
+    </div>
+    <div class="center-label" data-ko="무엇을 찾으시나요?" data-en="What are you looking for?">무엇을 찾으시나요?</div>
+  </div>
+
+  <!-- LEVEL 1 -->
+  <div class="level1-container" id="level1">
+    <div class="l1-node branch-emerald" data-branch="biobanking" onclick="selectL1(this,'biobanking')">
+      <div class="l1-circle">&#x1F9EC;</div>
+      <div class="l1-label" data-ko="바이오뱅킹" data-en="Biobanking">바이오뱅킹</div>
+      <div class="l1-sublabel" data-ko="연구 · 보관 · 운송" data-en="Research · Storage · Transport">연구 · 보관 · 운송</div>
+    </div>
+    <div class="l1-node branch-amber" data-branch="animal" onclick="selectL1(this,'animal')">
+      <div class="l1-circle">&#x1F404;</div>
+      <div class="l1-label" data-ko="인공수정/축산" data-en="AI &amp; Animal Husbandry">인공수정/축산</div>
+      <div class="l1-sublabel" data-ko="정액보관 · 번식" data-en="Semen Storage · Breeding">정액보관 · 번식</div>
+    </div>
+    <div class="l1-node branch-cyan" data-branch="cryo" onclick="selectL1(this,'cryo')">
+      <div class="l1-circle">&#x26A1;</div>
+      <div class="l1-label" data-ko="극저온 장비" data-en="Cryogenic Equipment">극저온 장비</div>
+      <div class="l1-sublabel" data-ko="탱크 · 가스 · 헬륨" data-en="Tanks · Gas · Helium">탱크 · 가스 · 헬륨</div>
+    </div>
+    <div class="l1-node branch-orange" data-branch="engineering" onclick="selectL1(this,'engineering')">
+      <div class="l1-circle">&#x1F527;</div>
+      <div class="l1-label" data-ko="엔지니어링" data-en="Engineering">엔지니어링</div>
+      <div class="l1-sublabel" data-ko="배관 · 설계 · 시공" data-en="Piping · Design · Construction">배관 · 설계 · 시공</div>
+    </div>
+  </div>
+
+  <!-- LEVEL 2: Biobanking -->
+  <div class="level2-section" id="l2-biobanking">
+    <div class="l2-header">
+      <span class="l2-header-icon">&#x1F9EC;</span>
+      <span class="l2-header-title glow-emerald" data-ko="바이오뱅킹 — 용도를 선택하세요" data-en="Biobanking — Select your application">바이오뱅킹 — 용도를 선택하세요</span>
+    </div>
+    <div class="l2-grid">
+      <div class="l2-node glow-emerald" data-sub="bio-lab" onclick="selectL2(this,'bio-lab','biobanking')">
+        <div class="l2-node-title" data-ko="연구소 / 실험실" data-en="Research Lab">연구소 / 실험실</div>
+        <div class="l2-node-sub" data-ko="소규모~중규모 시료 보관" data-en="Small-to-mid scale sample storage">소규모~중규모 시료 보관</div>
+      </div>
+      <div class="l2-node glow-emerald" data-sub="bio-bank" onclick="selectL2(this,'bio-bank','biobanking')">
+        <div class="l2-node-title" data-ko="바이오뱅크 / 병원" data-en="Biobank / Hospital">바이오뱅크 / 병원</div>
+        <div class="l2-node-sub" data-ko="대용량 장기 보관" data-en="Large-scale long-term storage">대용량 장기 보관</div>
+      </div>
+      <div class="l2-node glow-emerald" data-sub="bio-pharma" onclick="selectL2(this,'bio-pharma','biobanking')">
+        <div class="l2-node-title" data-ko="제약 / GMP" data-en="Pharma / GMP">제약 / GMP</div>
+        <div class="l2-node-sub" data-ko="GMP 규정 준수 보관" data-en="GMP-compliant storage">GMP 규정 준수 보관</div>
+      </div>
+      <div class="l2-node glow-emerald" data-sub="bio-transport" onclick="selectL2(this,'bio-transport','biobanking')">
+        <div class="l2-node-title" data-ko="시료 운송" data-en="Sample Transport">시료 운송</div>
+        <div class="l2-node-sub" data-ko="Vapor Shipper 운송 용기" data-en="Vapor Shipper transport vessels">Vapor Shipper 운송 용기</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- LEVEL 2: Animal -->
+  <div class="level2-section" id="l2-animal">
+    <div class="l2-header">
+      <span class="l2-header-icon">&#x1F404;</span>
+      <span class="l2-header-title glow-amber" data-ko="인공수정/축산 — 규모를 선택하세요" data-en="AI &amp; Animal — Select your scale">인공수정/축산 — 규모를 선택하세요</span>
+    </div>
+    <div class="l2-grid">
+      <div class="l2-node glow-amber" data-sub="ai-small" onclick="selectL2(this,'ai-small','animal')">
+        <div class="l2-node-title" data-ko="소규모 목장" data-en="Small Ranch">소규모 목장</div>
+        <div class="l2-node-sub" data-ko="100두 미만" data-en="Under 100 heads">100두 미만</div>
+      </div>
+      <div class="l2-node glow-amber" data-sub="ai-mid" onclick="selectL2(this,'ai-mid','animal')">
+        <div class="l2-node-title" data-ko="중/대규모 번식장" data-en="Mid/Large Breeding Farm">중/대규모 번식장</div>
+        <div class="l2-node-sub" data-ko="100두~1,000두" data-en="100-1,000 heads">100두~1,000두</div>
+      </div>
+      <div class="l2-node glow-amber" data-sub="ai-large" onclick="selectL2(this,'ai-large','animal')">
+        <div class="l2-node-title" data-ko="대규모 정액은행" data-en="Large Semen Bank">대규모 정액은행</div>
+        <div class="l2-node-sub" data-ko="1,000두 이상 / 정액 유통" data-en="1,000+ heads / semen distribution">1,000두 이상 / 정액 유통</div>
+      </div>
+      <div class="l2-node glow-amber" data-sub="ai-transport" onclick="selectL2(this,'ai-transport','animal')">
+        <div class="l2-node-title" data-ko="정액 운송" data-en="Semen Transport">정액 운송</div>
+        <div class="l2-node-sub" data-ko="Vapor Shipper / Dry Shipper" data-en="Vapor Shipper / Dry Shipper">Vapor Shipper / Dry Shipper</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- LEVEL 2: Cryo -->
+  <div class="level2-section" id="l2-cryo">
+    <div class="l2-header">
+      <span class="l2-header-icon">&#x26A1;</span>
+      <span class="l2-header-title glow-cyan" data-ko="극저온 장비 — 분야를 선택하세요" data-en="Cryogenic Equipment — Select category">극저온 장비 — 분야를 선택하세요</span>
+    </div>
+    <div class="l2-grid">
+      <div class="l2-node glow-cyan" data-sub="cryo-tank" onclick="selectL2(this,'cryo-tank','cryo')">
+        <div class="l2-node-title" data-ko="액화가스 저장탱크" data-en="Liquefied Gas Tanks">액화가스 저장탱크</div>
+        <div class="l2-node-sub" data-ko="LN2, LOX, LAr, CO2" data-en="LN2, LOX, LAr, CO2">LN2, LOX, LAr, CO2</div>
+      </div>
+      <div class="l2-node glow-cyan" data-sub="cryo-helium" onclick="selectL2(this,'cryo-helium','cryo')">
+        <div class="l2-node-title" data-ko="액체헬륨" data-en="Liquid Helium">액체헬륨</div>
+        <div class="l2-node-sub" data-ko="MRI, NMR, 연구용" data-en="MRI, NMR, Research">MRI, NMR, 연구용</div>
+      </div>
+      <div class="l2-node glow-cyan" data-sub="cryo-specialty" onclick="selectL2(this,'cryo-specialty','cryo')">
+        <div class="l2-node-title" data-ko="초고순도 가스 실린더" data-en="Ultra-High Purity Gas Cylinders">초고순도 가스 실린더</div>
+        <div class="l2-node-sub" data-ko="반도체, 디스플레이" data-en="Semiconductor, Display">반도체, 디스플레이</div>
+      </div>
+      <div class="l2-node glow-cyan" data-sub="cryo-medical" onclick="selectL2(this,'cryo-medical','cryo')">
+        <div class="l2-node-title" data-ko="의료용 가스" data-en="Medical Gas">의료용 가스</div>
+        <div class="l2-node-sub" data-ko="병원, 의료기관" data-en="Hospitals, Medical Facilities">병원, 의료기관</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- LEVEL 2: Engineering -->
+  <div class="level2-section" id="l2-engineering">
+    <div class="l2-header">
+      <span class="l2-header-icon">&#x1F527;</span>
+      <span class="l2-header-title glow-orange" data-ko="엔지니어링 — 서비스를 선택하세요" data-en="Engineering — Select service">엔지니어링 — 서비스를 선택하세요</span>
+    </div>
+    <div class="l2-grid">
+      <div class="l2-node glow-orange" data-sub="eng-gas" onclick="selectL2(this,'eng-gas','engineering')">
+        <div class="l2-node-title" data-ko="가스 배관 설계" data-en="Gas Piping Design">가스 배관 설계</div>
+        <div class="l2-node-sub" data-ko="가스 공급 시스템" data-en="Gas supply systems">가스 공급 시스템</div>
+      </div>
+      <div class="l2-node glow-orange" data-sub="eng-vacuum" onclick="selectL2(this,'eng-vacuum','engineering')">
+        <div class="l2-node-title" data-ko="진공 배관" data-en="Vacuum Piping">진공 배관</div>
+        <div class="l2-node-sub" data-ko="진공 시스템 설치" data-en="Vacuum system installation">진공 시스템 설치</div>
+      </div>
+      <div class="l2-node glow-orange" data-sub="eng-flow" onclick="selectL2(this,'eng-flow','engineering')">
+        <div class="l2-node-title" data-ko="유량계" data-en="Flow Meters">유량계</div>
+        <div class="l2-node-sub" data-ko="가스 유량 측정" data-en="Gas flow measurement">가스 유량 측정</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- LEVEL 3 CONTAINERS -->
+  <div class="level3-section" id="l3-bio-lab"></div>
+  <div class="level3-section" id="l3-bio-bank"></div>
+  <div class="level3-section" id="l3-bio-pharma"></div>
+  <div class="level3-section" id="l3-bio-transport"></div>
+  <div class="level3-section" id="l3-ai-small"></div>
+  <div class="level3-section" id="l3-ai-mid"></div>
+  <div class="level3-section" id="l3-ai-large"></div>
+  <div class="level3-section" id="l3-ai-transport"></div>
+  <div class="level3-section" id="l3-cryo-tank"></div>
+  <div class="level3-section" id="l3-cryo-helium"></div>
+  <div class="level3-section" id="l3-cryo-specialty"></div>
+  <div class="level3-section" id="l3-cryo-medical"></div>
+  <div class="level3-section" id="l3-eng-gas"></div>
+  <div class="level3-section" id="l3-eng-vacuum"></div>
+  <div class="level3-section" id="l3-eng-flow"></div>
+
+  <div style="height:120px;"></div>
+</main>
+
+<!-- RESET BUTTON -->
+<button class="reset-btn" id="resetBtn" onclick="resetAll()">
+  <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M3 12a9 9 0 1 1 3.3-6.9"/><path d="M3 3v5h5"/></svg>
+  <span data-ko="처음으로" data-en="Start Over">처음으로</span>
+</button>
+
+<!-- COUNTER -->
+<div class="product-counter" id="productCounter">
+  <span data-ko="전체 제품" data-en="Total Products">전체 제품</span>: <strong id="counterNum">0</strong>
+</div>
+
+<script>
+(function() {
+  'use strict';
+
+  // ═══════════════════════════════════════════════════
+  // PRODUCT DATA
+  // ═══════════════════════════════════════════════════
+  var productData = {
+    'bio-lab': [
+      { ko:'LD Series', en:'LD Series', specKo:'소형 실험실용, 10~50L', specEn:'Small lab use, 10-50L', url:'bio-ld-series.html', color:'emerald' },
+      { ko:'XT Series', en:'XT Series', specKo:'고효율 정사각형 랙 시스템', specEn:'High-efficiency square rack system', url:'bio-xt-series.html', color:'emerald' },
+      { ko:'HC Series', en:'HC Series', specKo:'고용량 시료 보관', specEn:'High-capacity sample storage', url:'bio-hc-series.html', color:'emerald' },
+      { ko:'ICB Series', en:'ICB Series', specKo:'소형 운반/보관 겸용', specEn:'Compact transport & storage', url:'bio-icb-series.html', color:'emerald' }
+    ],
+    'bio-bank': [
+      { ko:'LS Series', en:'LS Series', specKo:'대용량 스테인리스 보관', specEn:'Large-capacity stainless storage', url:'bio-ls-series.html', color:'emerald' },
+      { ko:'LABS Series', en:'LABS Series', specKo:'자동화 바이오뱅크 시스템', specEn:'Automated biobank system', url:'bio-labs-series.html', color:'emerald' }
+    ],
+    'bio-pharma': [
+      { ko:'Revolution Series', en:'Revolution Series', specKo:'GMP 준수, 자동 충전, 모니터링', specEn:'GMP compliant, auto-fill, monitoring', url:'bio-revolution-series.html', color:'emerald' }
+    ],
+    'bio-transport': [
+      { ko:'ICB Dual (Vapor Shippers)', en:'ICB Dual (Vapor Shippers)', specKo:'기내 반입 가능, 10일+ 보관', specEn:'Airline-approved, 10+ day hold time', url:'bio-icb-dual-series.html', color:'emerald' }
+    ],
+    'ai-small': [
+      { ko:'AI Shield (AIS 1.5)', en:'AI Shield (AIS 1.5)', specKo:'1.5L, 휴대용 축산 용기', specEn:'1.5L, portable livestock vessel', url:'bio-ai.html', color:'amber' },
+      { ko:'AI Shield (AIS 3)', en:'AI Shield (AIS 3)', specKo:'3L, 확장 보관 용량', specEn:'3L, extended storage capacity', url:'bio-ai.html', color:'amber' },
+      { ko:'ICB 20 / ICB 24', en:'ICB 20 / ICB 24', specKo:'20~24L, 소목장 표준', specEn:'20-24L, small ranch standard', url:'bio-ai.html', color:'amber' }
+    ],
+    'ai-mid': [
+      { ko:'ICB 34 / ICB 35', en:'ICB 34 / ICB 35', specKo:'34~35L, 중규모 번식장', specEn:'34-35L, mid-scale breeding', url:'bio-ai.html', color:'amber' },
+      { ko:'XT 21-AI', en:'XT 21-AI', specKo:'고효율 정사각 AI 전용', specEn:'High-efficiency square AI dedicated', url:'bio-ai.html', color:'amber' }
+    ],
+    'ai-large': [
+      { ko:'LABS 80K AI', en:'LABS 80K AI', specKo:'80,000 스트로 보관', specEn:'80,000 straw capacity', url:'bio-ai.html', color:'amber' },
+      { ko:'AI 91K', en:'AI 91K', specKo:'91,000 스트로, 최대 용량', specEn:'91,000 straws, max capacity', url:'bio-ai.html', color:'amber' }
+    ],
+    'ai-transport': [
+      { ko:'ICB Dual', en:'ICB Dual', specKo:'정액 운송용 Vapor Shipper', specEn:'Semen transport Vapor Shipper', url:'bio-icb-dual-series.html', color:'amber' }
+    ],
+    'cryo-tank': [
+      { ko:'액화가스 저장탱크', en:'Liquefied Gas Storage Tank', specKo:'LN2, LOX, LAr, CO2 벌크 저장', specEn:'LN2, LOX, LAr, CO2 bulk storage', url:'cryo-equipment.html', color:'cyan' }
+    ],
+    'cryo-helium': [
+      { ko:'액체헬륨 공급', en:'Liquid Helium Supply', specKo:'MRI, NMR, 초전도 연구', specEn:'MRI, NMR, superconductor research', url:'liquid-helium.html', color:'cyan' }
+    ],
+    'cryo-specialty': [
+      { ko:'초고순도 가스 실린더', en:'Ultra-High Purity Gas Cylinders', specKo:'반도체/디스플레이 공정 가스', specEn:'Semiconductor/display process gas', url:'specialty-gas.html', color:'cyan' }
+    ],
+    'cryo-medical': [
+      { ko:'의료용 가스', en:'Medical Gas', specKo:'산소, 질소, 의료 혼합가스', specEn:'Oxygen, nitrogen, medical gas mix', url:'healthcare.html', color:'cyan' }
+    ],
+    'eng-gas': [
+      { ko:'가스 배관 설계/시공', en:'Gas Piping Design & Construction', specKo:'고압/저압 가스 공급 라인', specEn:'High/low pressure gas supply lines', url:'gas-engineering.html', color:'orange' }
+    ],
+    'eng-vacuum': [
+      { ko:'진공 배관 시스템', en:'Vacuum Piping System', specKo:'고진공, 초고진공 라인', specEn:'High vacuum, ultra-high vacuum lines', url:'vacuum-piping.html', color:'orange' }
+    ],
+    'eng-flow': [
+      { ko:'가스 유량계', en:'Gas Flow Meters', specKo:'정밀 유량 측정 솔루션', specEn:'Precision flow measurement solutions', url:'gas-engineering.html#flow-meters', color:'orange' }
+    ]
+  };
+
+  var branchNames = {
+    biobanking: { ko:'바이오뱅킹', en:'Biobanking' },
+    animal: { ko:'인공수정/축산', en:'AI & Animal Husbandry' },
+    cryo: { ko:'극저온 장비', en:'Cryogenic Equipment' },
+    engineering: { ko:'엔지니어링', en:'Engineering' }
+  };
+
+  var subNames = {
+    'bio-lab':{ ko:'연구소/실험실', en:'Research Lab' },
+    'bio-bank':{ ko:'바이오뱅크/병원', en:'Biobank/Hospital' },
+    'bio-pharma':{ ko:'제약/GMP', en:'Pharma/GMP' },
+    'bio-transport':{ ko:'시료 운송', en:'Sample Transport' },
+    'ai-small':{ ko:'소규모 목장', en:'Small Ranch' },
+    'ai-mid':{ ko:'중/대규모 번식장', en:'Mid/Large Farm' },
+    'ai-large':{ ko:'대규모 정액은행', en:'Large Semen Bank' },
+    'ai-transport':{ ko:'정액 운송', en:'Semen Transport' },
+    'cryo-tank':{ ko:'액화가스 저장탱크', en:'Gas Storage Tank' },
+    'cryo-helium':{ ko:'액체헬륨', en:'Liquid Helium' },
+    'cryo-specialty':{ ko:'초고순도 가스', en:'Ultra-High Purity Gas' },
+    'cryo-medical':{ ko:'의료용 가스', en:'Medical Gas' },
+    'eng-gas':{ ko:'가스 배관 설계', en:'Gas Piping Design' },
+    'eng-vacuum':{ ko:'진공 배관', en:'Vacuum Piping' },
+    'eng-flow':{ ko:'유량계', en:'Flow Meters' }
+  };
+
+  // ═══════════════════════════════════════════════════
+  // STATE
+  // ═══════════════════════════════════════════════════
+  var currentLang = 'ko';
+  var activeL1 = null;
+  var activeL2 = null;
+  var l1Shown = false;
+  var resizeTimer = null;
+
+  // ═══════════════════════════════════════════════════
+  // HELPER: safe text escaping
+  // ═══════════════════════════════════════════════════
+  function escapeText(str) {
+    var div = document.createElement('div');
+    div.appendChild(document.createTextNode(str));
+    return div.textContent;
+  }
+
+  // ═══════════════════════════════════════════════════
+  // PARTICLES
+  // ═══════════════════════════════════════════════════
+  function createParticles() {
+    var container = document.getElementById('particles');
+    for (var i = 0; i < 30; i++) {
+      var p = document.createElement('div');
+      p.className = 'particle';
+      p.style.left = Math.random() * 100 + '%';
+      p.style.animationDuration = (8 + Math.random() * 12) + 's';
+      p.style.animationDelay = Math.random() * 10 + 's';
+      var size = (1 + Math.random() * 2) + 'px';
+      p.style.width = size;
+      p.style.height = size;
+      p.style.opacity = String(0.1 + Math.random() * 0.3);
+      container.appendChild(p);
+    }
+  }
+
+  // ═══════════════════════════════════════════════════
+  // LANGUAGE
+  // ═══════════════════════════════════════════════════
+  window.toggleLang = function() {
+    currentLang = currentLang === 'ko' ? 'en' : 'ko';
+    document.getElementById('langToggle').textContent = currentLang === 'ko' ? 'EN' : 'KO';
+    var els = document.querySelectorAll('[data-ko]');
+    for (var i = 0; i < els.length; i++) {
+      els[i].textContent = els[i].getAttribute('data-' + currentLang);
+    }
+    if (activeL2) {
+      renderProducts(activeL2);
+    }
+    updateBreadcrumb();
+    updateCounter();
+  };
+
+  // ═══════════════════════════════════════════════════
+  // SHOW LEVEL 1
+  // ═══════════════════════════════════════════════════
+  window.showLevel1 = function() {
+    if (l1Shown) return;
+    l1Shown = true;
+    var nodes = document.querySelectorAll('.l1-node');
+    for (var i = 0; i < nodes.length; i++) {
+      (function(node, delay) {
+        setTimeout(function() { node.classList.add('visible'); }, delay);
+      })(nodes[i], i * 100);
+    }
+    document.getElementById('resetBtn').classList.add('show');
+    updateCounter();
+    setTimeout(drawConnections, 500);
+  };
+
+  // ═══════════════════════════════════════════════════
+  // SELECT LEVEL 1
+  // ═══════════════════════════════════════════════════
+  window.selectL1 = function(el, branch) {
+    if (!l1Shown) window.showLevel1();
+
+    var allL1 = document.querySelectorAll('.l1-node');
+    for (var i = 0; i < allL1.length; i++) { allL1[i].classList.remove('active'); }
+    el.classList.add('active');
+
+    // close all l2 and l3
+    var allL2 = document.querySelectorAll('.level2-section');
+    for (var i = 0; i < allL2.length; i++) { allL2[i].classList.remove('open'); }
+    var allL3 = document.querySelectorAll('.level3-section');
+    for (var i = 0; i < allL3.length; i++) {
+      allL3[i].classList.remove('open');
+      while (allL3[i].firstChild) { allL3[i].removeChild(allL3[i].firstChild); }
+    }
+    activeL2 = null;
+
+    var l2 = document.getElementById('l2-' + branch);
+    if (l2) {
+      l2.classList.add('open');
+      var l2nodes = l2.querySelectorAll('.l2-node');
+      for (var j = 0; j < l2nodes.length; j++) {
+        l2nodes[j].classList.remove('visible');
+        l2nodes[j].classList.remove('active');
+      }
+      for (var j = 0; j < l2nodes.length; j++) {
+        (function(node, delay) {
+          setTimeout(function() { node.classList.add('visible'); }, delay);
+        })(l2nodes[j], j * 80);
+      }
+      setTimeout(function() { l2.scrollIntoView({ behavior:'smooth', block:'nearest' }); }, 100);
+    }
+
+    activeL1 = branch;
+    updateBreadcrumb();
+    setTimeout(drawConnections, 300);
+  };
+
+  // ═══════════════════════════════════════════════════
+  // SELECT LEVEL 2
+  // ═══════════════════════════════════════════════════
+  window.selectL2 = function(el, sub, branch) {
+    var parent = el.closest('.level2-section');
+    var siblings = parent.querySelectorAll('.l2-node');
+    for (var i = 0; i < siblings.length; i++) { siblings[i].classList.remove('active'); }
+    el.classList.add('active');
+
+    var allL3 = document.querySelectorAll('.level3-section');
+    for (var i = 0; i < allL3.length; i++) { allL3[i].classList.remove('open'); }
+
+    activeL2 = sub;
+    renderProducts(sub);
+
+    var l3 = document.getElementById('l3-' + sub);
+    if (l3) {
+      l3.classList.add('open');
+      setTimeout(function() { l3.scrollIntoView({ behavior:'smooth', block:'nearest' }); }, 100);
+    }
+
+    updateBreadcrumb();
+  };
+
+  // ═══════════════════════════════════════════════════
+  // RENDER PRODUCTS (Level 3) — DOM-based, no innerHTML
+  // ═══════════════════════════════════════════════════
+  function renderProducts(sub) {
+    var container = document.getElementById('l3-' + sub);
+    if (!container) return;
+    var products = productData[sub];
+    if (!products) return;
+
+    // clear existing children safely
+    while (container.firstChild) { container.removeChild(container.firstChild); }
+
+    var colorMap = { emerald:'var(--emerald)', amber:'var(--amber)', cyan:'var(--cyan)', orange:'var(--orange)' };
+    var linkLabel = currentLang === 'ko' ? '바로가기' : 'View Product';
+
+    var grid = document.createElement('div');
+    grid.className = 'l3-grid';
+
+    for (var i = 0; i < products.length; i++) {
+      var p = products[i];
+      var name = currentLang === 'ko' ? p.ko : p.en;
+      var spec = currentLang === 'ko' ? p.specKo : p.specEn;
+      var c = colorMap[p.color] || 'var(--cyan)';
+
+      var card = document.createElement('a');
+      card.className = 'l3-card';
+      card.href = p.url;
+      card.setAttribute('data-index', String(i));
+
+      var nameDiv = document.createElement('div');
+      nameDiv.className = 'l3-card-name';
+      nameDiv.style.color = c;
+      nameDiv.textContent = name;
+
+      var specDiv = document.createElement('div');
+      specDiv.className = 'l3-card-spec';
+      specDiv.textContent = spec;
+
+      var linkDiv = document.createElement('div');
+      linkDiv.className = 'l3-card-link';
+      linkDiv.style.color = c;
+      linkDiv.textContent = linkLabel + ' ';
+      var arrow = document.createElement('span');
+      arrow.textContent = '\u2192';
+      linkDiv.appendChild(arrow);
+
+      card.appendChild(nameDiv);
+      card.appendChild(specDiv);
+      card.appendChild(linkDiv);
+      grid.appendChild(card);
+    }
+
+    container.appendChild(grid);
+
+    // stagger animation
+    var cards = container.querySelectorAll('.l3-card');
+    for (var j = 0; j < cards.length; j++) {
+      (function(card, delay) {
+        setTimeout(function() { card.classList.add('visible'); }, delay);
+      })(cards[j], j * 80);
+    }
+
+    updateCounter();
+  }
+
+  // ═══════════════════════════════════════════════════
+  // BREADCRUMB — DOM-based, no innerHTML
+  // ═══════════════════════════════════════════════════
+  function updateBreadcrumb() {
+    var bar = document.getElementById('breadcrumb');
+    while (bar.firstChild) { bar.removeChild(bar.firstChild); }
+
+    // KC root crumb
+    var root = document.createElement('span');
+    root.className = 'crumb' + (!activeL1 ? ' active' : '');
+    root.textContent = 'KC';
+    root.setAttribute('data-ko', 'KC');
+    root.setAttribute('data-en', 'KC');
+    root.onclick = function() { window.resetAll(); };
+    bar.appendChild(root);
+
+    if (activeL1) {
+      var sep1 = document.createElement('span');
+      sep1.className = 'sep';
+      sep1.textContent = '/';
+      bar.appendChild(sep1);
+
+      var b = branchNames[activeL1];
+      var l1Crumb = document.createElement('span');
+      l1Crumb.className = 'crumb' + (!activeL2 ? ' active' : '');
+      l1Crumb.textContent = b[currentLang];
+      l1Crumb.setAttribute('data-ko', b.ko);
+      l1Crumb.setAttribute('data-en', b.en);
+      (function(branch) {
+        l1Crumb.onclick = function() { window.goToL1(branch); };
+      })(activeL1);
+      bar.appendChild(l1Crumb);
+    }
+
+    if (activeL2) {
+      var sep2 = document.createElement('span');
+      sep2.className = 'sep';
+      sep2.textContent = '/';
+      bar.appendChild(sep2);
+
+      var s = subNames[activeL2];
+      var l2Crumb = document.createElement('span');
+      l2Crumb.className = 'crumb active';
+      l2Crumb.textContent = s[currentLang];
+      l2Crumb.setAttribute('data-ko', s.ko);
+      l2Crumb.setAttribute('data-en', s.en);
+      bar.appendChild(l2Crumb);
+    }
+  }
+
+  window.goToL1 = function(branch) {
+    var node = document.querySelector('.l1-node[data-branch="' + branch + '"]');
+    if (node) window.selectL1(node, branch);
+  };
+
+  // ═══════════════════════════════════════════════════
+  // COUNTER
+  // ═══════════════════════════════════════════════════
+  function updateCounter() {
+    var total = 0;
+    var keys = Object.keys(productData);
+    for (var i = 0; i < keys.length; i++) {
+      total += productData[keys[i]].length;
+    }
+    document.getElementById('counterNum').textContent = String(total);
+  }
+
+  // ═══════════════════════════════════════════════════
+  // RESET
+  // ═══════════════════════════════════════════════════
+  window.resetAll = function() {
+    activeL1 = null;
+    activeL2 = null;
+
+    var allL1 = document.querySelectorAll('.l1-node');
+    for (var i = 0; i < allL1.length; i++) { allL1[i].classList.remove('active'); }
+    var allL2s = document.querySelectorAll('.level2-section');
+    for (var i = 0; i < allL2s.length; i++) { allL2s[i].classList.remove('open'); }
+    var allL3s = document.querySelectorAll('.level3-section');
+    for (var i = 0; i < allL3s.length; i++) {
+      allL3s[i].classList.remove('open');
+      while (allL3s[i].firstChild) { allL3s[i].removeChild(allL3s[i].firstChild); }
+    }
+    var allL2nodes = document.querySelectorAll('.l2-node');
+    for (var i = 0; i < allL2nodes.length; i++) {
+      allL2nodes[i].classList.remove('active');
+      allL2nodes[i].classList.remove('visible');
+    }
+
+    updateBreadcrumb();
+    clearSVGLines();
+    window.scrollTo({ top:0, behavior:'smooth' });
+  };
+
+  // ═══════════════════════════════════════════════════
+  // SVG CONNECTIONS
+  // ═══════════════════════════════════════════════════
+  function clearSVGLines() {
+    var svg = document.getElementById('svgLayer');
+    var lines = svg.querySelectorAll('.conn-line');
+    for (var i = 0; i < lines.length; i++) { svg.removeChild(lines[i]); }
+  }
+
+  function drawConnections() {
+    var svg = document.getElementById('svgLayer');
+    clearSVGLines();
+
+    var center = document.getElementById('centerNode');
+    var centerRect = center.getBoundingClientRect();
+    var cx = centerRect.left + centerRect.width / 2;
+    var cy = centerRect.top + centerRect.height * 0.7;
+    var svgRect = svg.getBoundingClientRect();
+
+    var colorMap = {
+      'branch-emerald': 'var(--emerald)',
+      'branch-amber': 'var(--amber)',
+      'branch-cyan': 'var(--cyan)',
+      'branch-orange': 'var(--orange)'
+    };
+
+    var visibleNodes = document.querySelectorAll('.l1-node.visible');
+    for (var i = 0; i < visibleNodes.length; i++) {
+      (function(node, idx) {
+        var rect = node.getBoundingClientRect();
+        var nx = rect.left + rect.width / 2 - svgRect.left;
+        var ny = rect.top + 8 - svgRect.top;
+        var sx = cx - svgRect.left;
+        var sy = cy - svgRect.top;
+        var midY = (sy + ny) / 2;
+
+        var d = 'M' + sx + ',' + sy + ' C' + sx + ',' + midY + ' ' + nx + ',' + midY + ' ' + nx + ',' + ny;
+
+        var path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+        path.setAttribute('d', d);
+        path.setAttribute('class', 'conn-line');
+
+        var stroke = 'rgba(255,255,255,0.15)';
+        var classes = node.className;
+        var keys = Object.keys(colorMap);
+        for (var j = 0; j < keys.length; j++) {
+          if (classes.indexOf(keys[j]) !== -1) { stroke = colorMap[keys[j]]; break; }
+        }
+        path.style.stroke = stroke;
+        path.style.opacity = '0.35';
+        path.style.fill = 'none';
+        path.style.strokeWidth = '1.5';
+        path.style.strokeLinecap = 'round';
+
+        svg.appendChild(path);
+
+        var len = path.getTotalLength();
+        path.style.strokeDasharray = String(len);
+        path.style.strokeDashoffset = String(len);
+        path.style.transition = 'stroke-dashoffset 0.8s ease';
+
+        setTimeout(function() {
+          path.style.strokeDashoffset = '0';
+        }, 50 + idx * 120);
+      })(visibleNodes[i], i);
+    }
+  }
+
+  // Redraw on resize
+  window.addEventListener('resize', function() {
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(function() {
+      if (l1Shown) drawConnections();
+    }, 150);
+  });
+
+  // ═══════════════════════════════════════════════════
+  // INIT
+  // ═══════════════════════════════════════════════════
+  document.addEventListener('DOMContentLoaded', function() {
+    createParticles();
+    updateCounter();
+    updateBreadcrumb();
+    setTimeout(function() { window.showLevel1(); }, 400);
+  });
+
+})();
+</script>
+</body>
+</html>
