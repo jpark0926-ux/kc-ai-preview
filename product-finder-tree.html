@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>제품 찾기 | Skill Tree — Korea Cryo</title>
+<title>제품 찾기 | Korea Cryo</title>
 <link rel="icon" href="Logo/logo-kc.png">
 <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
@@ -16,35 +16,29 @@
 *{margin:0;padding:0;box-sizing:border-box;}
 html,body{
   font-family:'Inter','Noto Sans KR',sans-serif;
-  background:var(--bg); color:var(--text);
-  height:100%; overflow:hidden;
+  background:var(--bg);color:var(--text);
+  height:100%;overflow:hidden;
 }
-
-/* hex grid bg */
 body::before{
-  content:''; position:fixed; inset:0; z-index:0; pointer-events:none;
-  background-image:
-    radial-gradient(ellipse 50% 40% at 50% 40%, rgba(6,182,212,0.06) 0%, transparent 100%),
-    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='56' height='100'%3E%3Cpath d='M28 66L0 50V16L28 0l28 16v34L28 66zm0 34L0 84V50l28-16 28 16v34L28 100z' fill='none' stroke='rgba(255,255,255,0.03)' stroke-width='0.5'/%3E%3C/svg%3E");
-  background-size: cover, 56px 100px;
+  content:'';position:fixed;inset:0;z-index:0;pointer-events:none;
+  background:radial-gradient(ellipse 60% 80% at 80px 50%,rgba(6,182,212,0.05) 0%,transparent 70%);
 }
 
-/* topbar */
+/* ── Topbar ── */
 .topbar{
-  position:fixed;top:0;left:0;right:0;z-index:200;height:52px;
+  position:fixed;top:0;left:0;right:0;z-index:200;height:48px;
   display:flex;align-items:center;justify-content:space-between;
   padding:0 20px;
-  background:rgba(6,13,27,0.88);backdrop-filter:blur(20px);
+  background:rgba(6,13,27,0.92);backdrop-filter:blur(24px);
   border-bottom:1px solid var(--border);
 }
 .topbar-left{display:flex;align-items:center;gap:12px;}
 .topbar-left img{height:20px;}
-.topbar-left .divider{width:1px;height:18px;background:var(--border);}
+.topbar-left .divider{width:1px;height:16px;background:var(--border);}
 .topbar-title{font-size:13px;font-weight:500;color:var(--text-dim);}
-.breadcrumb{display:flex;align-items:center;gap:5px;font-size:12px;color:var(--text-dim);margin-left:8px;}
-.breadcrumb .sep{opacity:.3;font-size:10px;}
-.breadcrumb .crumb{cursor:pointer;transition:color .2s;}
-.breadcrumb .crumb:hover{color:#fff;}
+.breadcrumb{display:flex;align-items:center;gap:4px;font-size:11px;color:var(--text-dim);margin-left:8px;}
+.breadcrumb .sep{opacity:.3;font-size:9px;}
+.breadcrumb .crumb{transition:color .2s;}
 .breadcrumb .crumb.active{color:#fff;font-weight:500;}
 .topbar-right{display:flex;align-items:center;gap:12px;}
 .topbar-right a{color:var(--text-dim);text-decoration:none;font-size:12px;transition:color .2s;}
@@ -56,181 +50,221 @@ body::before{
 }
 .lang-btn:hover{background:rgba(255,255,255,0.12);}
 
-/* tree container */
+/* ── Tree viewport ── */
 .tree-viewport{
-  position:fixed;inset:0;top:52px;
+  position:fixed;inset:0;top:48px;
   overflow:auto;z-index:1;
-  display:flex;justify-content:center;
-  padding:30px 16px 60px;
+  padding:40px 40px 60px 40px;
 }
-.tree-wrap{
+.tree-container{
   position:relative;
+  display:flex;
+  flex-direction:column;
+  gap:0;
+  min-width:900px;
+  width:max-content;
+}
+
+/* ── Branch row ── */
+.branch{
+  display:flex;
+  align-items:flex-start;
+  position:relative;
+  padding:16px 0;
+  transition:opacity 0.4s;
+}
+.branch.dimmed{opacity:0.15;filter:grayscale(0.7);}
+.branch.dimmed .l1-node,.branch.dimmed .l2-pill,.branch.dimmed .l3-card{pointer-events:none;}
+
+/* ── Root column ── */
+.root-col{
+  position:sticky;left:0;z-index:20;
   display:flex;flex-direction:column;align-items:center;
-  min-width:320px;max-width:1100px;width:100%;
+  width:80px;min-width:80px;
+  padding-top:0;
+  align-self:stretch;
 }
-
-/* node base */
-.tree-node{
-  position:relative;display:flex;flex-direction:column;align-items:center;
-  cursor:pointer;transition:all .4s cubic-bezier(.16,1,.3,1);
-  z-index:10;
-}
-.tree-node.locked{opacity:.18;filter:grayscale(1);pointer-events:none;}
-.tree-node.unlocked{opacity:.55;filter:none;pointer-events:auto;}
-.tree-node.unlocked:hover{opacity:.8;transform:scale(1.08);}
-.tree-node.active{opacity:1;filter:none;pointer-events:auto;}
-.tree-node.completed{opacity:1;filter:none;}
-
-/* node shapes */
-.node-ring{
-  position:absolute;inset:-6px;border-radius:50%;
-  border:2px solid transparent;
-  transition:all .4s;
-}
-.tree-node.active .node-ring{
-  border-color:var(--node-color);
-  box-shadow:0 0 20px rgba(var(--node-rgb),.35), 0 0 40px rgba(var(--node-rgb),.15);
-  animation:ring-pulse 2s ease-in-out infinite;
-}
-@keyframes ring-pulse{
-  0%,100%{box-shadow:0 0 20px rgba(var(--node-rgb),.35),0 0 40px rgba(var(--node-rgb),.15);}
-  50%{box-shadow:0 0 28px rgba(var(--node-rgb),.5),0 0 56px rgba(var(--node-rgb),.25);}
-}
-
-.node-inner{
-  width:var(--node-size,60px);height:var(--node-size,60px);
-  border-radius:50%;
-  background:rgba(6,13,27,.9);
-  border:2px solid rgba(255,255,255,.1);
+.root-node{
+  width:56px;height:56px;border-radius:50%;
+  border:2px solid var(--cyan);
+  background:radial-gradient(circle,rgba(6,182,212,0.1),rgba(6,13,27,0.95));
   display:flex;align-items:center;justify-content:center;
-  transition:all .4s;position:relative;overflow:hidden;
+  box-shadow:0 0 24px rgba(6,182,212,0.25),0 0 48px rgba(6,182,212,0.08);
+  animation:root-glow 3s ease-in-out infinite;
+  flex-shrink:0;position:relative;z-index:10;
 }
-.tree-node.active .node-inner{
-  border-color:var(--node-color);
-  background:radial-gradient(circle at center, rgba(var(--node-rgb),.15), rgba(6,13,27,.95));
+.root-node img{width:32px;height:32px;object-fit:contain;}
+@keyframes root-glow{
+  0%,100%{box-shadow:0 0 24px rgba(6,182,212,0.25),0 0 48px rgba(6,182,212,0.08);}
+  50%{box-shadow:0 0 32px rgba(6,182,212,0.4),0 0 64px rgba(6,182,212,0.15);}
 }
-.tree-node.unlocked .node-inner{border-color:rgba(var(--node-rgb),.3);}
+.root-vline{
+  width:2px;flex:1;
+  background:linear-gradient(to bottom,rgba(6,182,212,0.3),rgba(255,255,255,0.04));
+  margin-top:-1px;
+}
 
-.node-inner svg{width:50%;height:50%;transition:all .3s;}
-.tree-node.active .node-inner svg{filter:drop-shadow(0 0 6px var(--node-color));}
+/* ── L1 node ── */
+.l1-col{
+  display:flex;align-items:center;
+  width:140px;min-width:140px;
+  padding-left:0;
+}
+.l1-hline{
+  width:24px;height:2px;flex-shrink:0;
+  background:rgba(255,255,255,0.06);
+  transition:all 0.5s;
+}
+.l1-hline.active{box-shadow:0 0 8px var(--glow-color);}
+.l1-node{
+  width:48px;height:48px;border-radius:50%;flex-shrink:0;
+  border:2px solid rgba(255,255,255,0.08);
+  background:rgba(255,255,255,0.03);
+  display:flex;align-items:center;justify-content:center;
+  cursor:pointer;transition:all 0.4s;position:relative;
+}
+.l1-node:hover{border-color:rgba(255,255,255,0.2);background:rgba(255,255,255,0.06);}
+.l1-node.active{
+  border-color:var(--cat-color);
+  box-shadow:0 0 20px var(--cat-glow);
+  background:radial-gradient(circle,var(--cat-bg),rgba(6,13,27,0.95));
+}
+.l1-node svg{transition:all 0.3s;}
+.l1-node.active svg{filter:drop-shadow(0 0 6px var(--cat-color));}
+.l1-label{
+  margin-left:10px;font-size:12px;font-weight:500;
+  color:var(--text-dim);white-space:nowrap;transition:color 0.3s;
+}
+.l1-node.active ~ .l1-label{color:#fff;font-weight:600;}
 
-.node-label{
-  margin-top:8px;font-size:12px;font-weight:500;
-  color:var(--text-dim);transition:color .3s;text-align:center;
-  white-space:nowrap;
+/* ── L2 column ── */
+.l2-col{
+  display:flex;flex-direction:column;gap:6px;
+  padding-left:0;min-width:150px;
+  position:relative;
 }
-.tree-node.active .node-label{color:#fff;font-weight:600;}
-.tree-node.unlocked .node-label{color:rgba(255,255,255,.5);}
+.l2-hline{
+  width:28px;height:2px;flex-shrink:0;
+  background:rgba(255,255,255,0.06);
+  transition:all 0.5s;
+  align-self:center;
+  margin-top:14px;
+}
+.l2-hline.active{box-shadow:0 0 6px var(--glow-color);}
+.l2-pill{
+  padding:6px 16px;border-radius:20px;
+  background:rgba(255,255,255,0.03);
+  border:1px solid rgba(255,255,255,0.06);
+  font-size:11px;font-weight:400;color:var(--text-dim);
+  cursor:pointer;transition:all 0.35s;white-space:nowrap;
+  opacity:0;transform:translateX(-8px);
+  display:flex;align-items:center;gap:6px;
+}
+.l2-pill.visible{opacity:1;transform:translateX(0);}
+.l2-pill.dimmed-pill{opacity:0.2 !important;filter:grayscale(0.6);}
+.l2-pill:hover{border-color:rgba(255,255,255,0.18);color:#fff;background:rgba(255,255,255,0.06);}
+.l2-pill.active{
+  border-color:var(--cat-color);color:#fff;font-weight:500;
+  background:rgba(255,255,255,0.06);
+  box-shadow:0 0 12px var(--cat-glow);
+}
+.l2-desc{font-size:9px;color:var(--text-dim);opacity:0.6;}
 
-/* root node */
-.root-node .node-inner{
-  --node-size:80px;width:80px;height:80px;
-  border-color:var(--cyan);
-  background:radial-gradient(circle at center, rgba(6,182,212,.12), rgba(6,13,27,.95));
+/* ── Bio tabs ── */
+.bio-tabs{
+  display:flex;gap:4px;margin-bottom:6px;
 }
-.root-node .node-ring{
-  border-color:var(--cyan);
-  box-shadow:0 0 30px rgba(6,182,212,.3),0 0 60px rgba(6,182,212,.1);
-  animation:ring-pulse-root 3s ease-in-out infinite;
+.bio-tab{
+  padding:3px 10px;border-radius:12px;font-size:10px;font-weight:500;
+  background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.06);
+  color:var(--text-dim);cursor:pointer;transition:all 0.25s;
 }
-@keyframes ring-pulse-root{
-  0%,100%{box-shadow:0 0 30px rgba(6,182,212,.3),0 0 60px rgba(6,182,212,.1);}
-  50%{box-shadow:0 0 40px rgba(6,182,212,.5),0 0 80px rgba(6,182,212,.2);}
-}
-.root-node .node-inner img{width:44px;height:44px;object-fit:contain;}
+.bio-tab:hover{border-color:rgba(255,255,255,0.2);color:#fff;}
+.bio-tab.active{background:rgba(16,185,129,0.12);border-color:rgba(16,185,129,0.35);color:#6ee7b7;}
 
-/* level rows */
-.level-row{
-  display:flex;justify-content:center;gap:48px;
-  position:relative;width:100%;flex-wrap:wrap;
+/* ── L3 column ── */
+.l3-col{
+  display:flex;flex-direction:column;gap:6px;
+  padding-left:0;min-width:220px;
 }
-.level-row.l2-row{gap:28px;}
+.l3-hline{
+  width:24px;height:2px;flex-shrink:0;
+  background:rgba(255,255,255,0.06);
+  transition:all 0.5s;
+  align-self:center;
+  margin-top:10px;
+}
+.l3-hline.active{box-shadow:0 0 6px var(--glow-color);}
+.l3-card{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:8px 14px;border-radius:10px;
+  background:rgba(255,255,255,0.03);
+  border:1px solid rgba(255,255,255,0.06);
+  text-decoration:none;color:inherit;
+  transition:all 0.35s;
+  opacity:0;transform:translateX(-10px);
+  cursor:pointer;min-width:200px;
+}
+.l3-card.visible{opacity:1;transform:translateX(0);}
+.l3-card:hover{
+  background:rgba(255,255,255,0.07);
+  border-color:rgba(255,255,255,0.18);
+  transform:translateX(2px);
+}
+.l3-card:hover .l3-arrow{transform:translateX(3px);}
+.l3-name{font-size:12px;font-weight:600;margin-bottom:1px;}
+.l3-spec{font-size:10px;color:var(--text-dim);line-height:1.3;}
+.l3-arrow{
+  font-size:14px;color:var(--text-dim);transition:all 0.3s;
+  flex-shrink:0;margin-left:10px;
+}
 
-/* energy dot */
+/* ── Connection lines (SVG overlay) ── */
+.tree-svg{
+  position:absolute;top:0;left:0;width:100%;height:100%;
+  pointer-events:none;z-index:0;overflow:visible;
+}
+
+/* ── Energy dot ── */
 .energy-dot{
-  position:absolute;width:6px;height:6px;border-radius:50%;
+  position:absolute;width:5px;height:5px;border-radius:50%;
   background:var(--dot-color);
-  box-shadow:0 0 12px var(--dot-color),0 0 24px var(--dot-color);
+  box-shadow:0 0 10px var(--dot-color),0 0 20px var(--dot-color);
   z-index:50;pointer-events:none;opacity:0;
 }
 
-/* activation pop */
-@keyframes node-pop{
-  0%{transform:scale(.8);opacity:.5;}
-  60%{transform:scale(1.12);}
-  100%{transform:scale(1);opacity:1;}
-}
-.tree-node.pop{animation:node-pop .4s cubic-bezier(.16,1,.3,1) forwards;}
-
-/* bio tabs */
-.bio-tabs{
-  display:flex;gap:6px;margin-bottom:6px;flex-wrap:wrap;justify-content:center;
-}
-.bio-tab{
-  padding:5px 14px;border-radius:20px;font-size:11px;font-weight:500;
-  background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);
-  color:var(--text-dim);cursor:pointer;transition:all .25s;
-}
-.bio-tab:hover{border-color:rgba(255,255,255,.2);color:#fff;}
-.bio-tab.active{background:rgba(16,185,129,.15);border-color:rgba(16,185,129,.4);color:#6ee7b7;}
-
-/* product cards (L3) */
-.l3-container{
-  display:flex;flex-wrap:wrap;gap:12px;justify-content:center;
-  width:100%;max-width:900px;margin-top:10px;
-}
-.prod-card{
-  background:linear-gradient(145deg, rgba(255,255,255,.05), rgba(255,255,255,.02));
-  border:1px solid rgba(255,255,255,.08);
-  border-radius:12px;padding:16px 18px;text-decoration:none;color:inherit;
-  display:block;transition:all .35s cubic-bezier(.16,1,.3,1);
-  width:220px;opacity:0;transform:translateY(12px);
-}
-.prod-card.visible{opacity:1;transform:translateY(0);}
-.prod-card:hover{
-  background:linear-gradient(145deg, rgba(255,255,255,.08), rgba(255,255,255,.04));
-  border-color:rgba(255,255,255,.18);transform:translateY(-3px);
-}
-.prod-name{font-size:13px;font-weight:600;margin-bottom:4px;}
-.prod-spec{font-size:11px;color:var(--text-dim);margin-bottom:10px;line-height:1.5;}
-.prod-link{font-size:11px;font-weight:500;display:inline-flex;align-items:center;gap:4px;transition:gap .2s;}
-.prod-card:hover .prod-link{gap:8px;}
-
-/* spacing between levels */
-.level-gap{height:50px;position:relative;width:100%;flex-shrink:0;}
-.level-gap-sm{height:36px;position:relative;width:100%;flex-shrink:0;}
-
-/* sub-label */
-.sub-desc{font-size:10px;color:var(--text-dim);text-align:center;max-width:100px;line-height:1.3;margin-top:2px;}
-
-/* reset pill */
+/* ── Reset pill ── */
 .reset-pill{
   position:fixed;bottom:20px;left:50%;transform:translateX(-50%);z-index:200;
-  background:rgba(6,13,27,.8);border:1px solid rgba(255,255,255,.1);
-  border-radius:24px;padding:8px 20px;backdrop-filter:blur(16px);
-  cursor:pointer;font-size:12px;color:var(--text-dim);font-weight:500;
+  background:rgba(6,13,27,0.85);border:1px solid rgba(255,255,255,0.1);
+  border-radius:24px;padding:6px 18px;backdrop-filter:blur(16px);
+  cursor:pointer;font-size:11px;color:var(--text-dim);font-weight:500;
   transition:all .3s;display:none;align-items:center;gap:6px;
 }
 .reset-pill.show{display:flex;}
-.reset-pill:hover{background:rgba(255,255,255,.08);border-color:rgba(255,255,255,.2);color:#fff;}
+.reset-pill:hover{background:rgba(255,255,255,0.08);border-color:rgba(255,255,255,0.2);color:#fff;}
 
-/* mobile */
-@media(max-width:640px){
-  .topbar{padding:0 12px;}
-  .level-row{gap:20px;}
-  .level-row.l2-row{gap:14px;}
-  .tree-node .node-inner{width:48px!important;height:48px!important;}
-  .root-node .node-inner{width:64px!important;height:64px!important;}
-  .node-label{font-size:10px;}
-  .prod-card{width:100%;max-width:280px;}
-  .level-gap{height:36px;}
-  .level-gap-sm{height:24px;}
-  .tree-viewport{padding:20px 10px 70px;}
-  .breadcrumb{display:none;}
+/* ── Active path line animation ── */
+@keyframes line-draw{
+  from{stroke-dashoffset:200;}
+  to{stroke-dashoffset:0;}
 }
-@media(min-width:641px) and (max-width:900px){
-  .level-row{gap:32px;}
-  .prod-card{width:200px;}
+
+/* ── Mobile ── */
+@media(max-width:768px){
+  .tree-viewport{padding:20px 16px 70px;}
+  .tree-container{min-width:700px;}
+  .root-node{width:44px;height:44px;}
+  .root-node img{width:24px;height:24px;}
+  .root-col{width:60px;min-width:60px;}
+  .l1-node{width:40px;height:40px;}
+  .l1-col{width:120px;min-width:120px;}
+  .l1-label{font-size:10px;}
+  .l2-pill{font-size:10px;padding:5px 12px;}
+  .l3-card{padding:6px 10px;min-width:170px;}
+  .l3-name{font-size:11px;}
+  .l3-spec{font-size:9px;}
+  .breadcrumb{display:none;}
 }
 </style>
 </head>
@@ -252,11 +286,10 @@ body::before{
 
 <!-- TREE -->
 <div class="tree-viewport" id="treeViewport">
-  <div class="tree-wrap" id="treeWrap">
-  </div>
+  <div class="tree-container" id="treeContainer"></div>
 </div>
 
-<!-- RESET PILL -->
+<!-- RESET -->
 <button class="reset-pill" id="resetPill" onclick="resetTree()">
   <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 12a9 9 0 1 1 3.3-6.9"/><path stroke-linecap="round" stroke-linejoin="round" d="M3 3v5h5"/></svg>
   <span data-ko="처음으로" data-en="Start Over">처음으로</span>
@@ -267,7 +300,7 @@ body::before{
 'use strict';
 
 /* ================================================================
-   DATA — identical to product-finder.html
+   DATA
    ================================================================ */
 var productData = {
   'bio-lab': [
@@ -427,40 +460,15 @@ var categorySubcats = {
   }
 };
 
-/* ================================================================
-   CATEGORY CONFIG — colors, rgb, SVG icon paths
-   ================================================================ */
 var catConfig = {
-  biobanking:{color:'#10b981',rgb:'16,185,129',
+  biobanking:{color:'#10b981',rgb:'16,185,129',glow:'rgba(16,185,129,0.3)',bg:'rgba(16,185,129,0.1)',
     icon:'<path stroke-linecap="round" stroke-linejoin="round" d="M9.75 3.104v5.714a2.25 2.25 0 01-.659 1.591L5 14.5M9.75 3.104c-.251.023-.501.05-.75.082m.75-.082a24.301 24.301 0 014.5 0m0 0v5.714c0 .597.237 1.17.659 1.591L19.8 15.3M14.25 3.104c.251.023.501.05.75.082M19.8 15.3l-1.57.393A9.065 9.065 0 0112 15a9.065 9.065 0 00-6.23.693L5 14.5m14.8.8l1.402 1.402c1.232 1.232.65 3.318-1.067 3.611A48.309 48.309 0 0112 21c-2.773 0-5.491-.235-8.135-.687-1.718-.293-2.3-2.379-1.067-3.61L5 14.5"/>'},
-  animal:{color:'#f59e0b',rgb:'245,158,11',
+  animal:{color:'#f59e0b',rgb:'245,158,11',glow:'rgba(245,158,11,0.3)',bg:'rgba(245,158,11,0.1)',
     icon:'<path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m0-10.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.75c0 5.592 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.57-.598-3.75h-.152c-3.196 0-6.1-1.249-8.25-3.286zM12 15.75h.007v.008H12v-.008z"/>'},
-  cryo:{color:'#06b6d4',rgb:'6,182,212',
+  cryo:{color:'#06b6d4',rgb:'6,182,212',glow:'rgba(6,182,212,0.3)',bg:'rgba(6,182,212,0.1)',
     icon:'<path stroke-linecap="round" stroke-linejoin="round" d="M20.25 6.375c0 2.278-3.694 4.125-8.25 4.125S3.75 8.653 3.75 6.375m16.5 0c0-2.278-3.694-4.125-8.25-4.125S3.75 4.097 3.75 6.375m16.5 0v11.25c0 2.278-3.694 4.125-8.25 4.125s-8.25-1.847-8.25-4.125V6.375m16.5 0v3.75m-16.5-3.75v3.75m16.5 0v3.75C20.25 16.153 16.556 18 12 18s-8.25-1.847-8.25-4.125v-3.75m16.5 0c0 2.278-3.694 4.125-8.25 4.125s-8.25-1.847-8.25-4.125"/>'},
-  engineering:{color:'#f97316',rgb:'249,115,22',
+  engineering:{color:'#f97316',rgb:'249,115,22',glow:'rgba(249,115,22,0.3)',bg:'rgba(249,115,22,0.1)',
     icon:'<path stroke-linecap="round" stroke-linejoin="round" d="M11.42 15.17l-5.1-5.1a2.25 2.25 0 010-3.18l.96-.96a2.25 2.25 0 013.18 0l.36.36.36-.36a2.25 2.25 0 013.18 0l.96.96a2.25 2.25 0 010 3.18l-5.1 5.1a.75.75 0 01-1.06 0zM21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>'}
-};
-
-/* Subcategory icons */
-var subIcons = {
-  'bio-cell':'<circle cx="12" cy="12" r="3"/><path d="M12 2v4m0 12v4M2 12h4m12 0h4m-2.93-7.07l-2.83 2.83m-8.48 8.48l-2.83 2.83m14.14 0l-2.83-2.83M6.34 6.34L3.51 3.51"/>',
-  'bio-semen':'<path d="M12 2a10 10 0 100 20 10 10 0 000-20zm0 14a4 4 0 110-8 4 4 0 010 8z"/>',
-  'bio-vaccine':'<path d="M7 2l-4 4 1.5 1.5L6 6l5 5-1.5 1.5 1 1L12 12l5 5-1.5 1.5 1 1 1.5-1.5L20 16l1.5 1.5L22 18l-4 4"/>',
-  'bio-pharma':'<path d="M9 3v2H4v2h1v11a2 2 0 002 2h10a2 2 0 002-2V7h1V5h-5V3H9zm0 7h2v7H9v-7zm4 0h2v7h-2v-7z"/>',
-  'bio-transport':'<path d="M20 8h-3V4H3v13h2m12 0h4v-5l-3-4zM7 18a2 2 0 100-4 2 2 0 000 4zm10 0a2 2 0 100-4 2 2 0 000 4z"/>',
-  'bio-lab':'<path d="M9 3v6l-4 8a2 2 0 001.7 3h10.6a2 2 0 001.7-3l-4-8V3M9 3h6"/>',
-  'bio-bank':'<path d="M3 21h18M3 10h18M5 6l7-3 7 3M4 10v11m16-11v11M8 14v4m4-4v4m4-4v4"/>',
-  'ai-small':'<path d="M12 5a3 3 0 100 6 3 3 0 000-6zM5 19c0-3.9 3.1-7 7-7s7 3.1 7 7"/>',
-  'ai-mid':'<path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2m22-2v-2a3 3 0 00-2.1-2.9M13 3.1A3 3 0 0116 6a3 3 0 01-3 2.9M9 7a3 3 0 110-6 3 3 0 010 6z"/>',
-  'ai-large':'<path d="M20 7H4a2 2 0 00-2 2v10a2 2 0 002 2h16a2 2 0 002-2V9a2 2 0 00-2-2zM6 3h12l2 4H4l2-4z"/>',
-  'ai-transport':'<path d="M13 16V6a1 1 0 00-1-1H4a1 1 0 00-1 1v10m10 0H3m10 0l3 3m0-6l3 3M6 19a2 2 0 100-4 2 2 0 000 4z"/>',
-  'cryo-tank':'<path d="M12 2v20M8 6a4 4 0 018 0v12a4 4 0 01-8 0V6z"/>',
-  'cryo-helium':'<path d="M12 3v18m-6-6l6 6 6-6M6 9l6-6 6 6"/>',
-  'cryo-specialty':'<path d="M4 4h16v16H4zM9 9h6v6H9z"/>',
-  'cryo-medical':'<path d="M12 4v16m-8-8h16"/>',
-  'eng-gas':'<path d="M4 6h16M4 12h16M4 18h16"/>',
-  'eng-vacuum':'<path d="M12 2a10 10 0 100 20 10 10 0 000-20zm0 4a6 6 0 110 12 6 6 0 010-12z"/>',
-  'eng-flow':'<path d="M3 12h4l3-9 4 18 3-9h4"/>'
 };
 
 /* ================================================================
@@ -470,515 +478,655 @@ var lang = 'ko';
 var activeCat = null;
 var activeSub = null;
 var bioTab = 'use';
-var svgNS = 'http://www.w3.org/2000/svg';
-var svgLayer = null;
+var catOrder = ['biobanking','animal','cryo','engineering'];
+var svgEl = null;
 
 /* ================================================================
-   SVG CONNECTOR LAYER
-   ================================================================ */
-function createSvgLayer(){
-  if(svgLayer) svgLayer.remove();
-  svgLayer = document.createElementNS(svgNS,'svg');
-  svgLayer.style.cssText = 'position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:1;overflow:visible;';
-  document.getElementById('treeWrap').prepend(svgLayer);
-}
-
-function ensureDefs(){
-  var d = svgLayer.querySelector('defs');
-  if(!d){ d = document.createElementNS(svgNS,'defs'); svgLayer.appendChild(d); }
-  return d;
-}
-
-function addGlowFilter(id, rgb){
-  var defs = ensureDefs();
-  if(defs.querySelector('#glow-'+id)) return;
-  var f = document.createElementNS(svgNS,'filter');
-  f.setAttribute('id','glow-'+id);
-  f.setAttribute('x','-50%');f.setAttribute('y','-50%');
-  f.setAttribute('width','200%');f.setAttribute('height','200%');
-  var gb = document.createElementNS(svgNS,'feGaussianBlur');
-  gb.setAttribute('stdDeviation','4');gb.setAttribute('result','blur');
-  f.appendChild(gb);
-  var mg = document.createElementNS(svgNS,'feMerge');
-  var m1 = document.createElementNS(svgNS,'feMergeNode'); m1.setAttribute('in','blur');
-  var m2 = document.createElementNS(svgNS,'feMergeNode'); m2.setAttribute('in','SourceGraphic');
-  mg.appendChild(m1); mg.appendChild(m2);
-  f.appendChild(mg);
-  defs.appendChild(f);
-}
-
-function drawLine(x1,y1,x2,y2,color,rgb,lit,id){
-  var line = document.createElementNS(svgNS,'line');
-  line.setAttribute('x1',x1); line.setAttribute('y1',y1);
-  line.setAttribute('x2',x2); line.setAttribute('y2',y2);
-  if(lit){
-    line.setAttribute('stroke',color);
-    line.setAttribute('stroke-width','2');
-    addGlowFilter(id,rgb);
-    line.setAttribute('filter','url(#glow-'+id+')');
-  } else {
-    line.setAttribute('stroke','rgba(255,255,255,0.05)');
-    line.setAttribute('stroke-width','1');
-    line.setAttribute('stroke-dasharray','4 4');
-  }
-  svgLayer.appendChild(line);
-  return line;
-}
-
-/* ================================================================
-   ENERGY DOT ANIMATION
-   ================================================================ */
-function fireEnergy(x1,y1,x2,y2,color,duration,cb){
-  var dot = document.createElement('div');
-  dot.className = 'energy-dot';
-  dot.style.setProperty('--dot-color',color);
-  dot.style.left = x1+'px'; dot.style.top = y1+'px';
-  document.getElementById('treeWrap').appendChild(dot);
-  var start = null, dur = duration||400;
-  function step(ts){
-    if(!start) start = ts;
-    var p = Math.min((ts-start)/dur,1);
-    var ease = p<0.5 ? 2*p*p : -1+(4-2*p)*p;
-    dot.style.left = (x1+(x2-x1)*ease)+'px';
-    dot.style.top  = (y1+(y2-y1)*ease)+'px';
-    dot.style.opacity = p<0.1 ? p/0.1 : (p>0.85 ? (1-p)/0.15 : 1);
-    if(p<1) requestAnimationFrame(step);
-    else { dot.remove(); if(cb) cb(); }
-  }
-  requestAnimationFrame(step);
-}
-
-/* ================================================================
-   HELPERS — center of element relative to treeWrap
-   ================================================================ */
-function nodeCenter(el){
-  var wrap = document.getElementById('treeWrap');
-  var wr = wrap.getBoundingClientRect();
-  var r = el.getBoundingClientRect();
-  return { x: r.left+r.width/2 - wr.left, y: r.top+r.height/2 - wr.top };
-}
-
-/* ================================================================
-   DRAW ALL CONNECTIONS
-   ================================================================ */
-function drawConnections(){
-  if(!svgLayer) return;
-  while(svgLayer.lastChild) svgLayer.removeChild(svgLayer.lastChild);
-
-  var rootEl = document.getElementById('node-root');
-  if(!rootEl) return;
-  var rc = nodeCenter(rootEl);
-  var cats = ['biobanking','animal','cryo','engineering'];
-
-  cats.forEach(function(catId){
-    var el = document.getElementById('node-'+catId);
-    if(!el) return;
-    var cc = nodeCenter(el);
-    var cfg = catConfig[catId];
-    var lit = activeCat === catId;
-    drawLine(rc.x, rc.y+40, cc.x, cc.y-30, cfg.color, cfg.rgb, lit, catId);
-  });
-
-  if(activeCat){
-    var catEl = document.getElementById('node-'+activeCat);
-    if(!catEl) return;
-    var catC = nodeCenter(catEl);
-    var cfg = catConfig[activeCat];
-
-    var l2nodes = document.querySelectorAll('#l2-container .tree-node');
-    l2nodes.forEach(function(n){
-      var nc = nodeCenter(n);
-      var subId = n.getAttribute('data-sub');
-      var lit2 = n.classList.contains('active') || n.classList.contains('unlocked');
-      drawLine(catC.x, catC.y+30, nc.x, nc.y-24, cfg.color, cfg.rgb, lit2, 'l2-'+subId);
-    });
-
-    if(activeSub){
-      var subEl = document.querySelector('#l2-container .tree-node[data-sub="'+activeSub+'"]');
-      if(subEl){
-        var sc = nodeCenter(subEl);
-        var cards = document.querySelectorAll('#l3-container .prod-card');
-        cards.forEach(function(card,i){
-          var cardC = nodeCenter(card);
-          drawLine(sc.x, sc.y+24, cardC.x, cardC.y-20, cfg.color, cfg.rgb, true, 'l3-'+i);
-        });
-      }
-    }
-  }
-}
-
-/* ================================================================
-   BUILD THE TREE SKELETON
+   BUILD TREE
    ================================================================ */
 function buildTree(){
-  var wrap = document.getElementById('treeWrap');
-  wrap.textContent = '';
-  createSvgLayer();
+  var ct = document.getElementById('treeContainer');
+  ct.innerHTML = '';
 
-  /* Root node */
-  var rootDiv = document.createElement('div');
-  rootDiv.style.cssText = 'display:flex;flex-direction:column;align-items:center;width:100%;';
-  var rootNode = document.createElement('div');
-  rootNode.className = 'tree-node root-node active';
-  rootNode.id = 'node-root';
-  rootNode.style.cssText = '--node-color:#06b6d4;--node-rgb:6,182,212;';
-  rootNode.setAttribute('data-level','0');
+  // SVG layer for connection lines
+  svgEl = document.createElementNS('http://www.w3.org/2000/svg','svg');
+  svgEl.setAttribute('class','tree-svg');
+  svgEl.style.cssText = 'position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:0;overflow:visible;';
+  ct.appendChild(svgEl);
 
-  var rRing = document.createElement('div'); rRing.className = 'node-ring';
-  var rInner = document.createElement('div'); rInner.className = 'node-inner';
-  var rImg = document.createElement('img'); rImg.src = 'Logo/logo-kc.png'; rImg.alt = 'KC';
-  rInner.appendChild(rImg);
-  var rLabel = document.createElement('div'); rLabel.className = 'node-label';
-  rLabel.setAttribute('data-ko','Korea Cryo'); rLabel.setAttribute('data-en','Korea Cryo');
-  rLabel.textContent = 'Korea Cryo';
-  rootNode.appendChild(rRing); rootNode.appendChild(rInner); rootNode.appendChild(rLabel);
-  rootDiv.appendChild(rootNode);
-  wrap.appendChild(rootDiv);
-
-  /* Gap root -> L1 */
-  var gap1 = document.createElement('div'); gap1.className = 'level-gap'; gap1.id = 'gap-root-l1';
-  wrap.appendChild(gap1);
-
-  /* L1 row */
-  var l1Row = document.createElement('div'); l1Row.className = 'level-row'; l1Row.id = 'l1-row';
-  var cats = ['biobanking','animal','cryo','engineering'];
-  cats.forEach(function(catId){
+  // Build each branch row
+  catOrder.forEach(function(catId, ci){
     var cfg = catConfig[catId];
     var name = branchNames[catId];
-    var node = document.createElement('div');
-    node.className = 'tree-node unlocked';
-    node.id = 'node-'+catId;
-    node.setAttribute('data-level','1');
-    node.setAttribute('data-cat',catId);
-    node.style.cssText = '--node-color:'+cfg.color+';--node-rgb:'+cfg.rgb+';--node-size:60px;';
-    node.onclick = function(){ selectCategory(catId); };
+    var data = categorySubcats[catId];
+    var items = data.tabs ? data.panels[bioTab] : data.items;
 
-    var ring = document.createElement('div'); ring.className = 'node-ring';
-    var inner = document.createElement('div'); inner.className = 'node-inner';
-    inner.insertAdjacentHTML('beforeend','<svg width="28" height="28" fill="none" stroke="'+cfg.color+'" stroke-width="1.5" viewBox="0 0 24 24">'+cfg.icon+'</svg>');
-    var label = document.createElement('div'); label.className = 'node-label';
-    label.setAttribute('data-ko',name.ko); label.setAttribute('data-en',name.en);
-    label.textContent = name[lang];
-    node.appendChild(ring); node.appendChild(inner); node.appendChild(label);
-    l1Row.appendChild(node);
+    var branch = document.createElement('div');
+    branch.className = 'branch';
+    branch.id = 'branch-'+catId;
+    branch.setAttribute('data-cat',catId);
+
+    // === Root column (only first branch has the node, others have vline) ===
+    var rootCol = document.createElement('div');
+    rootCol.className = 'root-col';
+    if(ci === 0){
+      var rootNode = document.createElement('div');
+      rootNode.className = 'root-node';
+      rootNode.id = 'root-node';
+      rootNode.innerHTML = '<img src="Logo/logo-kc.png" alt="KC">';
+      rootCol.appendChild(rootNode);
+    }
+    // vertical connector
+    var vline = document.createElement('div');
+    vline.className = 'root-vline';
+    vline.id = 'vline-'+catId;
+    if(ci === catOrder.length - 1) vline.style.flex = '0';
+    rootCol.appendChild(vline);
+    branch.appendChild(rootCol);
+
+    // === Horizontal line: root -> L1 ===
+    var hl1 = document.createElement('div');
+    hl1.className = 'l1-hline';
+    hl1.id = 'hline-root-'+catId;
+    hl1.style.alignSelf = 'flex-start';
+    hl1.style.marginTop = ci === 0 ? '23px' : '14px';
+    branch.appendChild(hl1);
+
+    // === L1 column ===
+    var l1col = document.createElement('div');
+    l1col.className = 'l1-col';
+    l1col.style.marginTop = ci === 0 ? '0' : '-9px';
+
+    var l1node = document.createElement('div');
+    l1node.className = 'l1-node';
+    l1node.id = 'l1-'+catId;
+    l1node.style.cssText = '--cat-color:'+cfg.color+';--cat-glow:'+cfg.glow+';--cat-bg:'+cfg.bg+';';
+    l1node.innerHTML = '<svg width="22" height="22" fill="none" stroke="'+cfg.color+'" stroke-width="1.5" viewBox="0 0 24 24">'+cfg.icon+'</svg>';
+    l1node.onclick = function(){ selectCategory(catId); };
+
+    var l1label = document.createElement('span');
+    l1label.className = 'l1-label';
+    l1label.setAttribute('data-ko',name.ko);
+    l1label.setAttribute('data-en',name.en);
+    l1label.textContent = name[lang];
+
+    l1col.appendChild(l1node);
+    l1col.appendChild(l1label);
+    branch.appendChild(l1col);
+
+    // === Horizontal line: L1 -> L2 ===
+    var hl2 = document.createElement('div');
+    hl2.className = 'l2-hline';
+    hl2.id = 'hline-l1-l2-'+catId;
+    branch.appendChild(hl2);
+
+    // === L2 column ===
+    var l2col = document.createElement('div');
+    l2col.className = 'l2-col';
+    l2col.id = 'l2col-'+catId;
+    l2col.style.cssText = '--cat-color:'+cfg.color+';--cat-glow:'+cfg.glow+';';
+
+    // Bio tabs (only for biobanking)
+    if(catId === 'biobanking' && data.tabs){
+      var tabsDiv = document.createElement('div');
+      tabsDiv.className = 'bio-tabs';
+      tabsDiv.id = 'bio-tabs';
+      tabsDiv.style.display = 'none';
+      data.tabs.forEach(function(t){
+        var btn = document.createElement('button');
+        btn.className = 'bio-tab'+(t.id===bioTab?' active':'');
+        btn.setAttribute('data-ko',t.ko);
+        btn.setAttribute('data-en',t.en);
+        btn.textContent = t[lang];
+        btn.onclick = function(e){ e.stopPropagation(); switchBioTab(t.id); };
+        tabsDiv.appendChild(btn);
+      });
+      l2col.appendChild(tabsDiv);
+    }
+
+    // L2 pills
+    items.forEach(function(it){
+      var pill = document.createElement('div');
+      pill.className = 'l2-pill';
+      pill.setAttribute('data-sub',it.id);
+      pill.setAttribute('data-ko',it.ko);
+      pill.setAttribute('data-en',it.en);
+      var pillText = document.createElement('span');
+      pillText.textContent = it[lang];
+      pill.appendChild(pillText);
+      if(it.descKo){
+        var desc = document.createElement('span');
+        desc.className = 'l2-desc';
+        desc.setAttribute('data-ko',it.descKo);
+        desc.setAttribute('data-en',it.descEn);
+        desc.textContent = lang === 'ko' ? it.descKo : it.descEn;
+        pill.appendChild(desc);
+      }
+      pill.onclick = function(e){ e.stopPropagation(); selectSub(catId, it.id); };
+      l2col.appendChild(pill);
+    });
+
+    branch.appendChild(l2col);
+
+    // === Horizontal line: L2 -> L3 ===
+    var hl3 = document.createElement('div');
+    hl3.className = 'l3-hline';
+    hl3.id = 'hline-l2-l3-'+catId;
+    branch.appendChild(hl3);
+
+    // === L3 column ===
+    var l3col = document.createElement('div');
+    l3col.className = 'l3-col';
+    l3col.id = 'l3col-'+catId;
+    branch.appendChild(l3col);
+
+    ct.appendChild(branch);
   });
-  wrap.appendChild(l1Row);
 
-  /* Gap L1 -> L2 */
-  var gap2 = document.createElement('div'); gap2.className = 'level-gap'; gap2.id = 'gap-l1-l2';
-  wrap.appendChild(gap2);
-
-  /* Bio tabs row */
-  var tabsDiv = document.createElement('div');
-  tabsDiv.id = 'bioTabsRow'; tabsDiv.className = 'bio-tabs'; tabsDiv.style.display = 'none';
-  wrap.appendChild(tabsDiv);
-
-  /* L2 container */
-  var l2Wrap = document.createElement('div');
-  l2Wrap.id = 'l2-container';
-  l2Wrap.style.cssText = 'display:flex;flex-direction:column;align-items:center;width:100%;';
-  wrap.appendChild(l2Wrap);
-
-  /* Gap L2 -> L3 */
-  var gap3 = document.createElement('div');
-  gap3.className = 'level-gap-sm'; gap3.id = 'gap-l2-l3'; gap3.style.display = 'none';
-  wrap.appendChild(gap3);
-
-  /* L3 container */
-  var l3Wrap = document.createElement('div');
-  l3Wrap.id = 'l3-container'; l3Wrap.className = 'l3-container'; l3Wrap.style.display = 'none';
-  wrap.appendChild(l3Wrap);
-
-  requestAnimationFrame(function(){ setTimeout(drawConnections, 60); });
+  // Initial: dim L2/L3
+  applyState();
 }
 
 /* ================================================================
-   SELECT L1 CATEGORY
+   APPLY STATE
+   ================================================================ */
+function applyState(){
+  catOrder.forEach(function(catId){
+    var branch = document.getElementById('branch-'+catId);
+    var l1 = document.getElementById('l1-'+catId);
+    var l2col = document.getElementById('l2col-'+catId);
+    var l3col = document.getElementById('l3col-'+catId);
+    var hl1 = document.getElementById('hline-root-'+catId);
+    var hl2 = document.getElementById('hline-l1-l2-'+catId);
+    var hl3 = document.getElementById('hline-l2-l3-'+catId);
+    var cfg = catConfig[catId];
+
+    // Branch dimming
+    if(activeCat && activeCat !== catId){
+      branch.classList.add('dimmed');
+    } else {
+      branch.classList.remove('dimmed');
+    }
+
+    // L1 active
+    if(activeCat === catId){
+      l1.classList.add('active');
+      hl1.style.background = cfg.color;
+      hl1.style.setProperty('--glow-color',cfg.glow);
+      hl1.classList.add('active');
+      hl2.style.background = cfg.color;
+      hl2.classList.add('active');
+      hl2.style.setProperty('--glow-color',cfg.glow);
+
+      // show bio tabs
+      var bt = document.getElementById('bio-tabs');
+      if(bt && catId === 'biobanking') bt.style.display = 'flex';
+
+      // show L2 pills
+      var pills = l2col.querySelectorAll('.l2-pill');
+      pills.forEach(function(p, i){
+        setTimeout(function(){
+          p.classList.add('visible');
+        }, i * 50);
+        // dim non-active subs
+        if(activeSub && p.getAttribute('data-sub') !== activeSub){
+          p.classList.add('dimmed-pill');
+        } else {
+          p.classList.remove('dimmed-pill');
+        }
+        if(activeSub && p.getAttribute('data-sub') === activeSub){
+          p.classList.add('active');
+        } else {
+          p.classList.remove('active');
+        }
+      });
+
+      // L3 products
+      if(activeSub){
+        hl3.style.background = cfg.color;
+        hl3.classList.add('active');
+        hl3.style.setProperty('--glow-color',cfg.glow);
+        showProducts(catId, activeSub);
+      } else {
+        hl3.style.background = 'rgba(255,255,255,0.06)';
+        hl3.classList.remove('active');
+        l3col.innerHTML = '';
+      }
+    } else {
+      l1.classList.remove('active');
+      hl1.style.background = 'rgba(255,255,255,0.06)';
+      hl1.classList.remove('active');
+      hl2.style.background = 'rgba(255,255,255,0.06)';
+      hl2.classList.remove('active');
+      hl3.style.background = 'rgba(255,255,255,0.06)';
+      hl3.classList.remove('active');
+
+      var bt = document.getElementById('bio-tabs');
+      if(bt && catId === 'biobanking') bt.style.display = 'none';
+
+      // hide L2 pills
+      var pills = l2col.querySelectorAll('.l2-pill');
+      pills.forEach(function(p){ p.classList.remove('visible','active','dimmed-pill'); });
+
+      l3col.innerHTML = '';
+    }
+  });
+
+  drawSvgLines();
+  updateBreadcrumb();
+}
+
+/* ================================================================
+   SHOW PRODUCTS (L3)
+   ================================================================ */
+function showProducts(catId, subId){
+  var l3col = document.getElementById('l3col-'+catId);
+  l3col.innerHTML = '';
+  var prods = productData[subId];
+  if(!prods) return;
+  var cfg = catConfig[catId];
+
+  prods.forEach(function(p, i){
+    var card = document.createElement('a');
+    card.className = 'l3-card';
+    card.href = p.url;
+    card.innerHTML =
+      '<div>' +
+        '<div class="l3-name" data-ko="'+p.ko+'" data-en="'+p.en+'">'+p[lang]+'</div>' +
+        '<div class="l3-spec" data-ko="'+p.specKo+'" data-en="'+p.specEn+'">'+(lang==='ko'?p.specKo:p.specEn)+'</div>' +
+      '</div>' +
+      '<span class="l3-arrow">' +
+        '<svg width="14" height="14" fill="none" stroke="'+cfg.color+'" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3"/></svg>' +
+      '</span>';
+    card.style.borderColor = 'rgba('+cfg.rgb+',0.15)';
+    setTimeout(function(){ card.classList.add('visible'); }, i * 60);
+    l3col.appendChild(card);
+  });
+}
+
+/* ================================================================
+   SVG CONNECTION LINES
+   ================================================================ */
+function drawSvgLines(){
+  if(!svgEl) return;
+  svgEl.innerHTML = '';
+  var ct = document.getElementById('treeContainer');
+  var ctRect = ct.getBoundingClientRect();
+
+  function pos(el){
+    var r = el.getBoundingClientRect();
+    return {
+      x: r.left - ctRect.left + r.width/2,
+      y: r.top - ctRect.top + r.height/2,
+      right: r.right - ctRect.left,
+      left: r.left - ctRect.left,
+      top: r.top - ctRect.top,
+      bottom: r.bottom - ctRect.top,
+      w: r.width, h: r.height
+    };
+  }
+
+  // Root vertical backbone
+  var rootNode = document.getElementById('root-node');
+  if(!rootNode) return;
+  var rp = pos(rootNode);
+
+  // Find last branch top
+  var lastCat = catOrder[catOrder.length-1];
+  var lastL1 = document.getElementById('l1-'+lastCat);
+  if(!lastL1) return;
+  var lastP = pos(lastL1);
+
+  // Vertical line from root down
+  var vl = document.createElementNS('http://www.w3.org/2000/svg','line');
+  vl.setAttribute('x1', rp.x); vl.setAttribute('y1', rp.y + rp.h/2);
+  vl.setAttribute('x2', rp.x); vl.setAttribute('y2', lastP.y);
+  vl.setAttribute('stroke', activeCat ? catConfig[activeCat].color : 'rgba(255,255,255,0.06)');
+  vl.setAttribute('stroke-width', '2');
+  if(activeCat){
+    vl.setAttribute('stroke-dasharray','200');
+    vl.setAttribute('stroke-dashoffset','0');
+    vl.style.filter = 'drop-shadow(0 0 4px '+catConfig[activeCat].glow+')';
+  }
+  svgEl.appendChild(vl);
+
+  // Horizontal connectors from backbone to each L1
+  catOrder.forEach(function(catId){
+    var l1 = document.getElementById('l1-'+catId);
+    var cfg = catConfig[catId];
+    var lp = pos(l1);
+    var isActive = activeCat === catId;
+
+    // Horizontal: backbone x -> L1 left edge
+    var hl = document.createElementNS('http://www.w3.org/2000/svg','line');
+    hl.setAttribute('x1', rp.x); hl.setAttribute('y1', lp.y);
+    hl.setAttribute('x2', lp.left); hl.setAttribute('y2', lp.y);
+    hl.setAttribute('stroke', isActive ? cfg.color : 'rgba(255,255,255,0.06)');
+    hl.setAttribute('stroke-width', isActive ? '2' : '1');
+    if(isActive) hl.style.filter = 'drop-shadow(0 0 4px '+cfg.glow+')';
+    svgEl.appendChild(hl);
+
+    // L1 -> L2 pills lines
+    if(isActive){
+      var pills = document.querySelectorAll('#l2col-'+catId+' .l2-pill.visible');
+      if(pills.length > 0){
+        // Main horizontal from L1 right to L2 area
+        var firstPill = pos(pills[0]);
+        var lastPill = pos(pills[pills.length-1]);
+
+        // Horizontal from L1 right edge
+        var l1Right = lp.left + lp.w + 50; // account for label
+        var l1LabelEl = document.querySelector('#branch-'+catId+' .l1-label');
+        if(l1LabelEl) l1Right = pos(l1LabelEl).right + 10;
+
+        var l2Left = firstPill.left - 10;
+
+        var hMain = document.createElementNS('http://www.w3.org/2000/svg','line');
+        hMain.setAttribute('x1', l1Right); hMain.setAttribute('y1', lp.y);
+        hMain.setAttribute('x2', l2Left); hMain.setAttribute('y2', lp.y);
+        hMain.setAttribute('stroke', cfg.color);
+        hMain.setAttribute('stroke-width', '2');
+        hMain.style.filter = 'drop-shadow(0 0 4px '+cfg.glow+')';
+        svgEl.appendChild(hMain);
+
+        // Vertical branch at L2 left
+        if(pills.length > 1){
+          var vBranch = document.createElementNS('http://www.w3.org/2000/svg','line');
+          vBranch.setAttribute('x1', l2Left); vBranch.setAttribute('y1', firstPill.y);
+          vBranch.setAttribute('x2', l2Left); vBranch.setAttribute('y2', lastPill.y);
+          vBranch.setAttribute('stroke', cfg.color);
+          vBranch.setAttribute('stroke-width', '2');
+          vBranch.style.opacity = '0.4';
+          svgEl.appendChild(vBranch);
+        }
+
+        // Small horizontal ticks to each pill
+        pills.forEach(function(pill){
+          var pp = pos(pill);
+          var tick = document.createElementNS('http://www.w3.org/2000/svg','line');
+          tick.setAttribute('x1', l2Left); tick.setAttribute('y1', pp.y);
+          tick.setAttribute('x2', pp.left); tick.setAttribute('y2', pp.y);
+          var isSubActive = pill.classList.contains('active');
+          tick.setAttribute('stroke', isSubActive ? cfg.color : 'rgba('+cfg.rgb+',0.25)');
+          tick.setAttribute('stroke-width', isSubActive ? '2' : '1');
+          if(isSubActive) tick.style.filter = 'drop-shadow(0 0 4px '+cfg.glow+')';
+          svgEl.appendChild(tick);
+        });
+      }
+
+      // L2 active pill -> L3 cards
+      if(activeSub){
+        var activePill = document.querySelector('#l2col-'+catId+' .l2-pill.active');
+        var cards = document.querySelectorAll('#l3col-'+catId+' .l3-card.visible');
+        if(activePill && cards.length > 0){
+          var ap = pos(activePill);
+          var firstCard = pos(cards[0]);
+          var lastCard = pos(cards[cards.length-1]);
+          var l3Left = firstCard.left - 10;
+
+          // Horizontal from pill right to L3 area
+          var hL3 = document.createElementNS('http://www.w3.org/2000/svg','line');
+          hL3.setAttribute('x1', ap.right + 4); hL3.setAttribute('y1', ap.y);
+          hL3.setAttribute('x2', l3Left); hL3.setAttribute('y2', ap.y);
+          hL3.setAttribute('stroke', cfg.color);
+          hL3.setAttribute('stroke-width', '2');
+          hL3.style.filter = 'drop-shadow(0 0 4px '+cfg.glow+')';
+          svgEl.appendChild(hL3);
+
+          // Vertical at L3 left
+          if(cards.length > 1){
+            var vL3 = document.createElementNS('http://www.w3.org/2000/svg','line');
+            vL3.setAttribute('x1', l3Left); vL3.setAttribute('y1', firstCard.y);
+            vL3.setAttribute('x2', l3Left); vL3.setAttribute('y2', lastCard.y);
+            vL3.setAttribute('stroke', cfg.color);
+            vL3.setAttribute('stroke-width', '2');
+            vL3.style.opacity = '0.4';
+            svgEl.appendChild(vL3);
+          }
+
+          // Ticks to each card
+          cards.forEach(function(card){
+            var cp = pos(card);
+            var tick = document.createElementNS('http://www.w3.org/2000/svg','line');
+            tick.setAttribute('x1', l3Left); tick.setAttribute('y1', cp.y);
+            tick.setAttribute('x2', cp.left); tick.setAttribute('y2', cp.y);
+            tick.setAttribute('stroke', cfg.color);
+            tick.setAttribute('stroke-width', '1.5');
+            tick.style.filter = 'drop-shadow(0 0 3px '+cfg.glow+')';
+            svgEl.appendChild(tick);
+          });
+        }
+      }
+    }
+  });
+
+  // Energy dot on active path
+  if(activeCat) fireEnergyDot();
+}
+
+/* ================================================================
+   ENERGY DOT
+   ================================================================ */
+var energyInterval = null;
+function fireEnergyDot(){
+  if(energyInterval) clearInterval(energyInterval);
+  energyInterval = setInterval(function(){
+    if(!activeCat) { clearInterval(energyInterval); return; }
+    var ct = document.getElementById('treeContainer');
+    var ctRect = ct.getBoundingClientRect();
+    var rootNode = document.getElementById('root-node');
+    var l1 = document.getElementById('l1-'+activeCat);
+    if(!rootNode || !l1) return;
+    var cfg = catConfig[activeCat];
+
+    var rr = rootNode.getBoundingClientRect();
+    var lr = l1.getBoundingClientRect();
+
+    var dot = document.createElement('div');
+    dot.className = 'energy-dot';
+    dot.style.setProperty('--dot-color', cfg.color);
+    var sx = rr.left + rr.width/2 - ctRect.left;
+    var sy = rr.top + rr.height/2 - ctRect.top;
+    var ex = lr.left - ctRect.left;
+    var ey = lr.top + lr.height/2 - ctRect.top;
+
+    dot.style.left = sx + 'px';
+    dot.style.top = sy + 'px';
+    ct.appendChild(dot);
+
+    var midX = sx;
+    var midY = ey;
+    var dur = 600;
+    var start = null;
+
+    function step(ts){
+      if(!start) start = ts;
+      var p = Math.min((ts - start) / dur, 1);
+      var ease = p < 0.5 ? 2*p*p : -1+(4-2*p)*p;
+      var cx, cy;
+      if(ease < 0.4){
+        var t = ease / 0.4;
+        cx = sx;
+        cy = sy + (midY - sy) * t;
+      } else {
+        var t = (ease - 0.4) / 0.6;
+        cx = sx + (ex - sx) * t;
+        cy = midY;
+      }
+      dot.style.left = cx + 'px';
+      dot.style.top = cy + 'px';
+      dot.style.opacity = p < 0.1 ? p/0.1 : (p > 0.85 ? (1-p)/0.15 : 0.8);
+      if(p < 1) requestAnimationFrame(step);
+      else dot.remove();
+    }
+    requestAnimationFrame(step);
+  }, 2500);
+}
+
+/* ================================================================
+   SELECT CATEGORY
    ================================================================ */
 function selectCategory(catId){
-  if(activeCat === catId) return;
-  activeCat = catId;
-  activeSub = null;
-  bioTab = 'use';
+  if(activeCat === catId){
+    // Toggle off
+    activeCat = null;
+    activeSub = null;
+  } else {
+    activeCat = catId;
+    activeSub = null;
+    bioTab = 'use';
+  }
 
-  var cats = ['biobanking','animal','cryo','engineering'];
-  cats.forEach(function(c){
-    var el = document.getElementById('node-'+c);
-    if(c === catId){ el.className = 'tree-node active pop'; }
-    else { el.className = 'tree-node unlocked'; }
-  });
+  // Rebuild biobanking L2 if needed
+  if(activeCat === 'biobanking') rebuildBioL2();
 
-  /* Energy: root -> L1 */
-  var rc = nodeCenter(document.getElementById('node-root'));
-  var cc = nodeCenter(document.getElementById('node-'+catId));
-  var cfg = catConfig[catId];
-  fireEnergy(rc.x, rc.y+40, cc.x, cc.y-30, cfg.color, 350, function(){ buildL2(catId); });
-
-  /* Bio tabs */
-  var tabsDiv = document.getElementById('bioTabsRow');
-  if(catId === 'biobanking'){ tabsDiv.style.display = 'flex'; buildBioTabs(); }
-  else { tabsDiv.style.display = 'none'; }
-
-  /* Hide L3 */
-  document.getElementById('l3-container').style.display = 'none';
-  document.getElementById('gap-l2-l3').style.display = 'none';
-
-  updateBreadcrumb();
-  document.getElementById('resetPill').classList.add('show');
+  applyState();
+  document.getElementById('resetPill').classList.toggle('show', !!activeCat);
 }
-window.selectCategory = selectCategory;
 
 /* ================================================================
-   BIOBANKING TABS
+   SELECT SUB
    ================================================================ */
-function buildBioTabs(){
-  var td = document.getElementById('bioTabsRow');
-  td.textContent = '';
-  categorySubcats.biobanking.tabs.forEach(function(t){
-    var btn = document.createElement('button');
-    btn.className = 'bio-tab' + (t.id===bioTab?' active':'');
-    btn.setAttribute('data-tab',t.id);
-    btn.setAttribute('data-ko',t.ko);
-    btn.setAttribute('data-en',t.en);
-    btn.textContent = t[lang];
-    btn.onclick = function(){ switchBioTab(t.id); };
-    td.appendChild(btn);
-  });
+function selectSub(catId, subId){
+  if(activeSub === subId){
+    activeSub = null;
+  } else {
+    activeSub = subId;
+  }
+  applyState();
+  // Redraw after card animations
+  setTimeout(drawSvgLines, 200);
 }
 
+/* ================================================================
+   BIO TAB SWITCH
+   ================================================================ */
 function switchBioTab(tabId){
   bioTab = tabId;
   activeSub = null;
-  buildBioTabs();
-  buildL2(activeCat);
-  document.getElementById('l3-container').style.display = 'none';
-  document.getElementById('gap-l2-l3').style.display = 'none';
-}
-window.switchBioTab = switchBioTab;
-
-/* ================================================================
-   BUILD L2 NODES
-   ================================================================ */
-function buildL2(catId){
-  var container = document.getElementById('l2-container');
-  container.textContent = '';
-  var cfg = catConfig[catId];
-  var data = categorySubcats[catId];
-  var items = data.tabs ? data.panels[bioTab] : data.items;
-
-  var row = document.createElement('div');
-  row.className = 'level-row l2-row';
-
-  items.forEach(function(it){
-    var icon = subIcons[it.id] || '<circle cx="12" cy="12" r="6"/>';
-    var node = document.createElement('div');
-    node.className = 'tree-node unlocked';
-    node.setAttribute('data-level','2');
-    node.setAttribute('data-sub',it.id);
-    node.style.cssText = '--node-color:'+cfg.color+';--node-rgb:'+cfg.rgb+';--node-size:48px;opacity:0;transform:scale(0.7);';
-    node.onclick = function(){ selectSub(it.id); };
-
-    var ring = document.createElement('div'); ring.className = 'node-ring';
-    var inner = document.createElement('div'); inner.className = 'node-inner';
-    inner.insertAdjacentHTML('beforeend','<svg width="20" height="20" fill="none" stroke="'+cfg.color+'" stroke-width="1.5" viewBox="0 0 24 24">'+icon+'</svg>');
-    var label = document.createElement('div'); label.className = 'node-label';
-    label.setAttribute('data-ko',it.ko); label.setAttribute('data-en',it.en);
-    label.textContent = it[lang];
-
-    node.appendChild(ring); node.appendChild(inner); node.appendChild(label);
-
-    if(it.descKo){
-      var desc = document.createElement('div'); desc.className = 'sub-desc';
-      desc.setAttribute('data-ko',it.descKo); desc.setAttribute('data-en',it.descEn);
-      desc.textContent = lang==='ko' ? it.descKo : it.descEn;
-      node.appendChild(desc);
-    }
-    row.appendChild(node);
-  });
-
-  container.appendChild(row);
-
-  /* Stagger reveal */
-  var nodes = row.querySelectorAll('.tree-node');
-  nodes.forEach(function(n,i){
-    setTimeout(function(){
-      n.style.transition = 'opacity .4s cubic-bezier(.16,1,.3,1), transform .4s cubic-bezier(.16,1,.3,1)';
-      n.style.opacity = ''; n.style.transform = '';
-    }, i*80+100);
-  });
-
-  setTimeout(drawConnections, 550);
+  rebuildBioL2();
+  applyState();
 }
 
-/* ================================================================
-   SELECT L2 SUBCATEGORY
-   ================================================================ */
-function selectSub(subId){
-  if(activeSub === subId) return;
-  activeSub = subId;
+function rebuildBioL2(){
+  var l2col = document.getElementById('l2col-biobanking');
+  if(!l2col) return;
+  var data = categorySubcats.biobanking;
+  var items = data.panels[bioTab];
+  var cfg = catConfig.biobanking;
 
-  /* Update L2 states */
-  document.querySelectorAll('#l2-container .tree-node').forEach(function(n){
-    if(n.getAttribute('data-sub')===subId) n.className = 'tree-node active pop';
-    else n.className = 'tree-node unlocked';
-  });
+  // Remove existing pills (keep tabs)
+  var existing = l2col.querySelectorAll('.l2-pill');
+  existing.forEach(function(p){ p.remove(); });
 
-  /* Energy: L1 -> L2 */
-  var catEl = document.getElementById('node-'+activeCat);
-  var subEl = document.querySelector('#l2-container .tree-node[data-sub="'+subId+'"]');
-  if(!catEl||!subEl) return;
-  var cfg = catConfig[activeCat];
-  var c1 = nodeCenter(catEl), c2 = nodeCenter(subEl);
-  fireEnergy(c1.x, c1.y+30, c2.x, c2.y-24, cfg.color, 300, function(){ buildL3(subId); });
-
-  updateBreadcrumb();
-}
-window.selectSub = selectSub;
-
-/* ================================================================
-   BUILD L3 PRODUCT CARDS
-   ================================================================ */
-function buildL3(subId){
-  var container = document.getElementById('l3-container');
-  container.textContent = '';
-  container.style.display = 'flex';
-  document.getElementById('gap-l2-l3').style.display = 'block';
-
-  var products = productData[subId];
-  if(!products||!products.length){
-    container.style.display = 'none';
-    document.getElementById('gap-l2-l3').style.display = 'none';
-    drawConnections();
-    return;
+  // Rebuild tabs
+  var tabsDiv = document.getElementById('bio-tabs');
+  if(tabsDiv){
+    tabsDiv.innerHTML = '';
+    data.tabs.forEach(function(t){
+      var btn = document.createElement('button');
+      btn.className = 'bio-tab'+(t.id===bioTab?' active':'');
+      btn.setAttribute('data-ko',t.ko);
+      btn.setAttribute('data-en',t.en);
+      btn.textContent = t[lang];
+      btn.onclick = function(e){ e.stopPropagation(); switchBioTab(t.id); };
+      tabsDiv.appendChild(btn);
+    });
   }
 
-  var colorMap = {emerald:'#10b981',amber:'#f59e0b',cyan:'#06b6d4',orange:'#f97316'};
-  var linkLabel = lang==='ko' ? '바로가기' : 'View';
-
-  products.forEach(function(p,i){
-    var c = colorMap[p.color]||'#06b6d4';
-    var card = document.createElement('a');
-    card.className = 'prod-card';
-    card.href = p.url;
-
-    var nm = document.createElement('div'); nm.className = 'prod-name'; nm.style.color = c;
-    nm.textContent = p[lang];
-    var sp = document.createElement('div'); sp.className = 'prod-spec';
-    sp.textContent = lang==='ko' ? p.specKo : p.specEn;
-    var lk = document.createElement('div'); lk.className = 'prod-link'; lk.style.color = c;
-    lk.textContent = linkLabel + ' ';
-    var arrow = document.createElement('span'); arrow.textContent = '\u2192';
-    lk.appendChild(arrow);
-
-    card.appendChild(nm); card.appendChild(sp); card.appendChild(lk);
-    container.appendChild(card);
-
-    setTimeout(function(){ card.classList.add('visible'); }, i*80+150);
+  // Add new pills
+  items.forEach(function(it){
+    var pill = document.createElement('div');
+    pill.className = 'l2-pill';
+    pill.setAttribute('data-sub',it.id);
+    pill.setAttribute('data-ko',it.ko);
+    pill.setAttribute('data-en',it.en);
+    var pillText = document.createElement('span');
+    pillText.textContent = it[lang];
+    pill.appendChild(pillText);
+    if(it.descKo){
+      var desc = document.createElement('span');
+      desc.className = 'l2-desc';
+      desc.setAttribute('data-ko',it.descKo);
+      desc.setAttribute('data-en',it.descEn);
+      desc.textContent = lang === 'ko' ? it.descKo : it.descEn;
+      pill.appendChild(desc);
+    }
+    pill.onclick = function(e){ e.stopPropagation(); selectSub('biobanking', it.id); };
+    l2col.appendChild(pill);
   });
-
-  setTimeout(function(){
-    container.scrollIntoView({behavior:'smooth',block:'nearest'});
-    drawConnections();
-  }, 400);
 }
-
-/* ================================================================
-   RESET
-   ================================================================ */
-function resetTree(){
-  activeCat = null; activeSub = null; bioTab = 'use';
-  ['biobanking','animal','cryo','engineering'].forEach(function(c){
-    document.getElementById('node-'+c).className = 'tree-node unlocked';
-  });
-  document.getElementById('l2-container').textContent = '';
-  var l3 = document.getElementById('l3-container'); l3.textContent = ''; l3.style.display = 'none';
-  document.getElementById('gap-l2-l3').style.display = 'none';
-  document.getElementById('bioTabsRow').style.display = 'none';
-  document.getElementById('resetPill').classList.remove('show');
-  updateBreadcrumb();
-  setTimeout(drawConnections, 100);
-  document.getElementById('treeViewport').scrollTo({top:0,behavior:'smooth'});
-}
-window.resetTree = resetTree;
 
 /* ================================================================
    BREADCRUMB
    ================================================================ */
 function updateBreadcrumb(){
   var bc = document.getElementById('breadcrumb');
-  bc.textContent = '';
-  if(activeCat){
-    var bn = branchNames[activeCat];
-    var crumb1 = document.createElement('span');
-    crumb1.className = 'crumb' + (activeSub?'':' active');
-    crumb1.setAttribute('data-ko',bn.ko); crumb1.setAttribute('data-en',bn.en);
-    crumb1.textContent = bn[lang];
-    crumb1.onclick = function(){ selectCategory(activeCat); };
-    bc.appendChild(crumb1);
-  }
-  if(activeSub && subNames[activeSub]){
-    var sep = document.createElement('span'); sep.className = 'sep'; sep.textContent = '/';
-    bc.appendChild(sep);
-    var sn = subNames[activeSub];
-    var crumb2 = document.createElement('span');
-    crumb2.className = 'crumb active';
-    crumb2.setAttribute('data-ko',sn.ko); crumb2.setAttribute('data-en',sn.en);
-    crumb2.textContent = sn[lang];
-    bc.appendChild(crumb2);
+  bc.innerHTML = '';
+  if(!activeCat) return;
+  var sep = '<span class="sep">/</span>';
+  var catName = branchNames[activeCat][lang];
+  bc.innerHTML = sep + '<span class="crumb active">'+catName+'</span>';
+  if(activeSub){
+    var subName = subNames[activeSub] ? subNames[activeSub][lang] : activeSub;
+    bc.innerHTML += sep + '<span class="crumb active">'+subName+'</span>';
   }
 }
+
+/* ================================================================
+   RESET
+   ================================================================ */
+function resetTree(){
+  activeCat = null;
+  activeSub = null;
+  bioTab = 'use';
+  if(energyInterval) clearInterval(energyInterval);
+  buildTree();
+  document.getElementById('resetPill').classList.remove('show');
+}
+window.resetTree = resetTree;
 
 /* ================================================================
    LANGUAGE TOGGLE
    ================================================================ */
 function toggleLang(){
-  lang = lang==='ko' ? 'en' : 'ko';
-  document.getElementById('langToggle').textContent = lang==='ko' ? 'EN' : 'KO';
-
+  lang = lang === 'ko' ? 'en' : 'ko';
+  document.getElementById('langToggle').textContent = lang === 'ko' ? 'EN' : 'KO';
+  // Re-render all text
   document.querySelectorAll('[data-ko]').forEach(function(el){
-    el.textContent = el.getAttribute('data-'+lang);
+    var val = el.getAttribute('data-'+lang);
+    if(val) el.textContent = val;
   });
-
-  if(activeCat){
-    if(activeCat==='biobanking') buildBioTabs();
-    buildL2(activeCat);
-    if(activeSub){
-      setTimeout(function(){
-        document.querySelectorAll('#l2-container .tree-node').forEach(function(n){
-          if(n.getAttribute('data-sub')===activeSub) n.className = 'tree-node active';
-        });
-        buildL3(activeSub);
-      }, 200);
-    }
+  // Rebuild for structural elements
+  var savedCat = activeCat;
+  var savedSub = activeSub;
+  var savedTab = bioTab;
+  buildTree();
+  if(savedCat){
+    activeCat = savedCat;
+    activeSub = savedSub;
+    bioTab = savedTab;
+    if(activeCat === 'biobanking') rebuildBioL2();
+    applyState();
+    setTimeout(drawSvgLines, 250);
+    document.getElementById('resetPill').classList.add('show');
   }
-  updateBreadcrumb();
 }
 window.toggleLang = toggleLang;
-
-/* ================================================================
-   RESIZE HANDLER
-   ================================================================ */
-var resizeTimer;
-window.addEventListener('resize',function(){
-  clearTimeout(resizeTimer);
-  resizeTimer = setTimeout(drawConnections, 150);
-});
 
 /* ================================================================
    INIT
    ================================================================ */
 buildTree();
 
-/* Entrance animation for L1 */
-setTimeout(function(){
-  ['biobanking','animal','cryo','engineering'].forEach(function(c,i){
-    setTimeout(function(){
-      var el = document.getElementById('node-'+c);
-      el.classList.add('pop');
-      setTimeout(function(){ el.classList.remove('pop'); }, 500);
-    }, i*120+300);
-  });
-},200);
+// Redraw lines on scroll/resize
+var viewport = document.getElementById('treeViewport');
+var resizeTimer;
+viewport.addEventListener('scroll', function(){ requestAnimationFrame(drawSvgLines); });
+window.addEventListener('resize', function(){
+  clearTimeout(resizeTimer);
+  resizeTimer = setTimeout(function(){ drawSvgLines(); }, 100);
+});
 
 })();
 </script>
