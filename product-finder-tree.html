@@ -83,8 +83,10 @@ body.dark-mode .lang-btn:hover,body.dark-mode .theme-btn:hover{background:rgba(2
 /* -- Branch row -- */
 .branch{
   display:flex;align-items:flex-start;position:relative;
-  padding:16px 0;transition:opacity 0.4s;
+  padding:6px 0;transition:opacity 0.4s;
+  margin-bottom:28px;
 }
+.branch:last-child{margin-bottom:0;}
 .branch.dimmed{opacity:0.15;filter:grayscale(0.7);}
 .branch.dimmed .l1-node,.branch.dimmed .l2-pill,.branch.dimmed .l3-card{pointer-events:none;}
 
@@ -92,7 +94,7 @@ body.dark-mode .lang-btn:hover,body.dark-mode .theme-btn:hover{background:rgba(2
 .root-col{
   position:sticky;left:0;z-index:20;
   display:flex;flex-direction:column;align-items:center;
-  width:80px;min-width:80px;padding-top:0;align-self:stretch;
+  width:80px;min-width:80px;padding-top:0;
 }
 .root-node{
   width:56px;height:56px;border-radius:50%;
@@ -109,19 +111,11 @@ body.dark-mode .lang-btn:hover,body.dark-mode .theme-btn:hover{background:rgba(2
   0%,100%{box-shadow:0 0 24px rgba(6,182,212,0.15);}
   50%{box-shadow:0 0 32px rgba(6,182,212,0.3);}
 }
-.root-vline{
-  width:2px;flex:1;
-  background:linear-gradient(to bottom,rgba(6,182,212,0.2),var(--line-default));
-  margin-top:-1px;
-}
+.root-vline{ display:none; /* SVG bezier curves replace vertical backbone */ }
 
 /* -- L1 node -- */
 .l1-col{display:flex;align-items:center;width:140px;min-width:140px;padding-left:0;}
-.l1-hline{
-  width:24px;height:2px;flex-shrink:0;
-  background:var(--line-default);transition:all 0.5s;
-}
-.l1-hline.active{box-shadow:0 0 8px var(--glow-color);animation:linePulse 2s ease-in-out infinite;}
+.l1-hline{ display:none; /* SVG bezier replaces */ }
 @keyframes linePulse{0%,100%{opacity:.7;box-shadow:0 0 4px var(--glow-color)}50%{opacity:1;box-shadow:0 0 12px var(--glow-color)}}
 @keyframes flowRight{0%{background-position:-200% 0}100%{background-position:200% 0}}
 @keyframes flowDown{0%{background-position:0 -200%}100%{background-position:0 200%}}
@@ -174,19 +168,8 @@ body.dark-mode .l1-node.active ~ .l1-label{color:#fff;}
 .l2-pill:hover::before{opacity:1;transform:translateX(-50%) scale(1);}
 .l2-pill:hover::after{opacity:1;transform:translateX(-50%) scale(1);}
 
-/* -- L1→L2 bridge line -- */
-.l2-bridge{
-  flex:0 0 40px;height:2px;
-  background:var(--line-default);
-  align-self:flex-start;margin-top:14px;
-  transition:background 0.4s,box-shadow 0.4s;
-}
-.l2-bridge.active{
-  box-shadow:0 0 8px var(--glow-color);
-  background:linear-gradient(90deg,transparent,var(--cat-color,#06b6d4),var(--cat-color,#06b6d4),transparent) !important;
-  background-size:300% 100%;
-  animation:flowRight 2s linear infinite, linePulse 2s ease-in-out infinite;
-}
+/* -- L1→L2 bridge line (hidden — SVG bezier replaces) -- */
+.l2-bridge{ display:none; }
 
 /* -- L2 column (folder-tree pattern) -- */
 .l2-col{
@@ -201,47 +184,9 @@ body.dark-mode .l1-node.active ~ .l1-label{color:#fff;}
   position:relative;
   padding-left:0;
   padding-top:3px;padding-bottom:3px;
-  /* Vertical trunk (left edge) — drawn as border-left on the wrap */
-  border-left:2px solid var(--line-default);
-  transition:border-color 0.4s;
+  /* CSS border connectors removed — SVG bezier curves handle connections */
 }
-.l2-col.active .l2-pill-wrap{
-  border-left-color:var(--cat-color);
-  border-image:linear-gradient(180deg,var(--cat-color),transparent,var(--cat-color)) 1;
-  animation:flowDown 3s linear infinite;
-  background-size:100% 400%;
-}
-/* Last pill: trunk only goes to center, not below */
-.l2-pill-wrap:last-child{
-  border-left-color:transparent !important;
-}
-.l2-pill-wrap:last-child::after{
-  content:'';position:absolute;
-  left:-2px;top:0;width:2px;
-  height:50%;
-  background:var(--line-default);
-  transition:background 0.4s;
-}
-.l2-col.active .l2-pill-wrap:last-child::after{ background:var(--cat-color); }
-/* Horizontal branch from trunk to pill */
-.l2-pill-wrap::before{
-  content:'';position:absolute;
-  left:0;top:50%;
-  width:16px;height:2px;
-  background:var(--line-default);
-  transition:background 0.4s,box-shadow 0.4s;
-}
-.l2-col.active .l2-pill-wrap::before{
-  background:linear-gradient(90deg,transparent,var(--cat-color),var(--cat-color),transparent);
-  background-size:300% 100%;
-  animation:flowRight 2s linear infinite;
-}
-.l2-pill-wrap.active::before{
-  background:var(--cat-color);
-  box-shadow:0 0 6px var(--cat-glow);
-}
-/* Inner pill needs padding to clear the branch line */
-.l2-pill-wrap .l2-pill{ margin-left:16px; }
+.l2-pill-wrap .l2-pill{ margin-left:0; }
 .l2-pill{
   padding:6px 16px;border-radius:20px;
   background:var(--node-bg);
@@ -283,48 +228,13 @@ body.dark-mode .bio-tab.active{color:#6ee7b7;}
 }
 /* Hide the old standalone h-line */
 .l3-hline{ display:none; }
-/* L3 card wrapper: horizontal branch + vertical trunk segment */
+/* L3 card wrapper — SVG bezier curves handle connections */
 .l3-card-wrap{
   position:relative;
   padding-left:0;
   padding-top:3px;padding-bottom:3px;
-  border-left:2px solid transparent;
-  transition:border-color 0.4s;
 }
-.l3-col.active .l3-card-wrap{
-  border-left-color:var(--cat-color);
-  border-image:linear-gradient(180deg,var(--cat-color),rgba(255,255,255,0.1),var(--cat-color)) 1;
-  animation:flowDown 3s linear infinite;
-}
-/* Last card: trunk only to center */
-.l3-card-wrap:last-child{
-  border-left-color:transparent !important;
-  border-image:none !important;
-  animation:none !important;
-}
-.l3-card-wrap:last-child::after{
-  content:'';position:absolute;
-  left:-2px;top:0;width:2px;
-  height:50%;
-  background:transparent;
-  transition:background 0.4s;
-}
-.l3-col.active .l3-card-wrap:last-child::after{ background:var(--cat-color);animation:linePulse 2s ease-in-out infinite; }
-/* Horizontal branch */
-.l3-card-wrap::before{
-  content:'';position:absolute;
-  left:0;top:50%;
-  width:16px;height:2px;
-  background:transparent;
-  transition:background 0.4s;
-}
-.l3-col.active .l3-card-wrap::before{
-  background:linear-gradient(90deg,transparent,var(--cat-color),var(--cat-color),transparent);
-  background-size:300% 100%;
-  animation:flowRight 2s linear infinite;
-}
-/* Inner card needs margin to clear the branch */
-.l3-card-wrap .l3-card{ margin-left:16px; }
+.l3-card-wrap .l3-card{ margin-left:0; }
 .l3-card{
   display:flex;align-items:center;
   padding:8px 14px;border-radius:10px;
@@ -356,8 +266,26 @@ body.dark-mode .l3-thumb{mix-blend-mode:screen;filter:brightness(1.2);}
   flex-shrink:0;margin-left:auto;
 }
 
-/* -- SVG connection lines (disabled — using CSS folder-tree lines) -- */
-.tree-svg{ display:none; }
+/* -- SVG connection lines (bezier curves) -- */
+.tree-svg{
+  position:absolute;top:0;left:0;width:100%;height:100%;
+  pointer-events:none;z-index:0;overflow:visible;
+}
+.tree-svg path{
+  fill:none;stroke-width:2;stroke-linecap:round;
+  transition:opacity 0.4s;
+}
+.tree-svg path.glow{
+  filter:drop-shadow(0 0 6px var(--glow-c));
+}
+@keyframes svgDraw{
+  from{stroke-dashoffset:var(--len,300)}
+  to{stroke-dashoffset:0}
+}
+.tree-svg path.draw-anim{
+  stroke-dasharray:var(--len,300);
+  animation:svgDraw 0.5s ease forwards;
+}
 
 /* -- Energy dot with trail -- */
 .energy-dot{
@@ -726,7 +654,10 @@ function buildTree(){
     return;
   }
 
-  svgEl = null; // SVG disabled — using CSS folder-tree lines
+  // Create SVG overlay for bezier connection lines
+  svgEl = document.createElementNS('http://www.w3.org/2000/svg','svg');
+  svgEl.classList.add('tree-svg');
+  ct.appendChild(svgEl);
 
   catOrder.forEach(function(catId, ci){
     var cfg = catConfig[catId];
@@ -1059,7 +990,10 @@ function applyState(){
       var wraps = l2col.querySelectorAll('.l2-pill-wrap');
       var pills = l2col.querySelectorAll('.l2-pill');
       pills.forEach(function(p, i){
-        setTimeout(function(){ p.classList.add('visible'); }, i * 50);
+        setTimeout(function(){
+          p.classList.add('visible');
+          if(!isMobile) requestAnimationFrame(function(){ drawSvgLines(); });
+        }, i * 50);
         if(activeSub && p.getAttribute('data-sub') !== activeSub){
           p.classList.add('dimmed-pill');
         } else {
@@ -1129,7 +1063,8 @@ function applyState(){
     }
   });
 
-  // Fire energy dot animation (no SVG needed)
+  // Draw SVG bezier curves after DOM updates
+  requestAnimationFrame(function(){ drawSvgLines(); });
   if(activeCat) fireEnergyDot();
   updateBreadcrumb();
 }
@@ -1173,20 +1108,27 @@ function showProducts(catId, subId){
         '<svg width="14" height="14" fill="none" stroke="'+cfg.color+'" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3"/></svg>' +
       '</span>';
     card.style.borderColor = 'rgba('+cfg.rgb+',0.15)';
-    setTimeout(function(){ card.classList.add('visible'); }, i * 60);
+    setTimeout(function(){
+      card.classList.add('visible');
+      // Redraw bezier curves after each card becomes visible
+      if(!isMobile) requestAnimationFrame(function(){ drawSvgLines(); });
+    }, i * 60);
     wrap.appendChild(card);
     l3col.appendChild(wrap);
   });
 }
 
 /* ================================================================
-   SVG CONNECTION LINES — with line-draw animation
+   SVG CONNECTION LINES — smooth bezier curves (NotebookLM style)
    ================================================================ */
 function drawSvgLines(){
   if(!svgEl || isMobile) return;
-  svgEl.innerHTML = '';
+  // Clear existing paths
+  while(svgEl.firstChild) svgEl.removeChild(svgEl.firstChild);
   var ct = document.getElementById('treeContainer');
   var ctRect = ct.getBoundingClientRect();
+  svgEl.setAttribute('width', ct.scrollWidth);
+  svgEl.setAttribute('height', ct.scrollHeight);
 
   function pos(el){
     var r = el.getBoundingClientRect();
@@ -1201,99 +1143,76 @@ function drawSvgLines(){
     };
   }
 
-  function makeLine(x1,y1,x2,y2,stroke,sw,glow,animate){
-    var l = document.createElementNS('http://www.w3.org/2000/svg','line');
-    l.setAttribute('x1',x1); l.setAttribute('y1',y1);
-    l.setAttribute('x2',x2); l.setAttribute('y2',y2);
-    l.setAttribute('stroke',stroke);
-    l.setAttribute('stroke-width',sw);
-    if(glow) l.style.filter = 'drop-shadow(0 0 4px '+glow+')';
-    if(animate){
-      var len = Math.sqrt(Math.pow(x2-x1,2)+Math.pow(y2-y1,2));
-      l.style.setProperty('--line-len', Math.ceil(len));
-      l.classList.add('svg-line-anim');
+  function bezier(x1,y1,x2,y2,color,opacity,sw,animate,glowColor){
+    var p = document.createElementNS('http://www.w3.org/2000/svg','path');
+    var dx = Math.abs(x2-x1);
+    var cpOff = Math.max(dx * 0.5, 30);
+    var d = 'M'+x1+' '+y1+' C'+(x1+cpOff)+' '+y1+' '+(x2-cpOff)+' '+y2+' '+x2+' '+y2;
+    p.setAttribute('d', d);
+    p.setAttribute('stroke', color);
+    p.setAttribute('stroke-width', sw||2);
+    p.style.opacity = opacity;
+    if(glowColor){
+      p.style.setProperty('--glow-c', glowColor);
+      p.classList.add('glow');
     }
-    svgEl.appendChild(l);
-    return l;
+    svgEl.appendChild(p);
+    if(animate && p.getTotalLength){
+      var realLen = Math.ceil(p.getTotalLength());
+      p.style.setProperty('--len', realLen);
+      p.setAttribute('stroke-dasharray', realLen);
+      p.classList.add('draw-anim');
+    }
+    return p;
   }
 
-  // Root vertical backbone
   var rootNode = document.getElementById('root-node');
   if(!rootNode) return;
   var rp = pos(rootNode);
-  var lastCat = catOrder[catOrder.length-1];
-  var lastL1 = document.getElementById('l1-'+lastCat);
-  if(!lastL1) return;
-  var lastP = pos(lastL1);
-
-  makeLine(rp.x, rp.y + rp.h/2, rp.x, lastP.y,
-    activeCat ? catConfig[activeCat].color : 'var(--line-default)', '2',
-    activeCat ? catConfig[activeCat].glow : null, !!activeCat);
 
   catOrder.forEach(function(catId){
     var l1 = document.getElementById('l1-'+catId);
     var cfg = catConfig[catId];
     var lp = pos(l1);
     var isActive = activeCat === catId;
+    var isDimmed = activeCat && activeCat !== catId;
 
-    makeLine(rp.x, lp.y, lp.left, lp.y,
-      isActive ? cfg.color : 'var(--line-default)',
-      isActive ? '2' : '1',
-      isActive ? cfg.glow : null, isActive);
+    // Root -> L1 bezier curve
+    bezier(rp.x + rp.w/2, rp.y, lp.left, lp.y,
+      isActive ? cfg.color : cfg.color,
+      isDimmed ? 0.06 : (isActive ? 0.8 : 0.25),
+      isActive ? 2.5 : 1.8,
+      isActive, isActive ? cfg.glow : null);
 
     if(isActive){
       var pills = document.querySelectorAll('#l2col-'+catId+' .l2-pill.visible');
-      if(pills.length > 0){
-        var firstPill = pos(pills[0]);
-        var lastPill = pos(pills[pills.length-1]);
+      var l1Right = lp.right + 4;
 
-        var l1LabelEl = document.querySelector('#branch-'+catId+' .l1-label');
-        var l1Right = l1LabelEl ? pos(l1LabelEl).right + 10 : lp.left + lp.w + 50;
-        var l2Left = firstPill.left - 10;
-
-        makeLine(l1Right, lp.y, l2Left, lp.y, cfg.color, '2', cfg.glow, true);
-
-        if(pills.length > 1){
-          var vb = makeLine(l2Left, firstPill.y, l2Left, lastPill.y, cfg.color, '2', null, true);
-          vb.style.opacity = '0.4';
-        }
-
-        pills.forEach(function(pill){
-          var pp = pos(pill);
-          var isSubActive = pill.classList.contains('active');
-          makeLine(l2Left, pp.y, pp.left, pp.y,
-            isSubActive ? cfg.color : 'rgba('+cfg.rgb+',0.25)',
-            isSubActive ? '2' : '1',
-            isSubActive ? cfg.glow : null, isSubActive);
-        });
-      }
+      pills.forEach(function(pill){
+        var pp = pos(pill);
+        var isSubActive = pill.classList.contains('active');
+        var isDimmedPill = activeSub && !isSubActive;
+        bezier(l1Right, lp.y, pp.left, pp.y,
+          cfg.color,
+          isDimmedPill ? 0.08 : (isSubActive ? 0.9 : 0.45),
+          isSubActive ? 2.5 : 2,
+          true, isSubActive ? cfg.glow : null);
+      });
 
       if(activeSub){
         var activePill = document.querySelector('#l2col-'+catId+' .l2-pill.active');
         var cards = document.querySelectorAll('#l3col-'+catId+' .l3-card.visible');
         if(activePill && cards.length > 0){
           var ap = pos(activePill);
-          var firstCard = pos(cards[0]);
-          var lastCard = pos(cards[cards.length-1]);
-          var l3Left = firstCard.left - 10;
-
-          makeLine(ap.right + 4, ap.y, l3Left, ap.y, cfg.color, '2', cfg.glow, true);
-
-          if(cards.length > 1){
-            var vl3 = makeLine(l3Left, firstCard.y, l3Left, lastCard.y, cfg.color, '2', null, true);
-            vl3.style.opacity = '0.4';
-          }
-
           cards.forEach(function(card){
             var cp = pos(card);
-            makeLine(l3Left, cp.y, cp.left, cp.y, cfg.color, '1.5', cfg.glow, true);
+            bezier(ap.right + 4, ap.y, cp.left, cp.y,
+              cfg.color, 0.5, 2, true, cfg.glow);
           });
         }
       }
     }
   });
-
-  if(activeCat) fireEnergyDot();
 }
 
 /* ================================================================
@@ -1588,8 +1507,19 @@ window.toggleLang = toggleLang;
    INIT
    ================================================================ */
 buildTree();
+// Initial draw of bezier curves
+requestAnimationFrame(function(){ drawSvgLines(); });
 
-/* Scroll/resize listeners — SVG lines removed, CSS handles alignment */
+/* Scroll/resize listeners — redraw bezier curves on layout change */
+var resizeTimer = null;
+window.addEventListener('resize', function(){
+  clearTimeout(resizeTimer);
+  resizeTimer = setTimeout(function(){ if(!isMobile) drawSvgLines(); }, 100);
+});
+var viewport = document.getElementById('treeViewport');
+if(viewport) viewport.addEventListener('scroll', function(){
+  if(!isMobile) requestAnimationFrame(function(){ drawSvgLines(); });
+});
 
 })();
 </script>
