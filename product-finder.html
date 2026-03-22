@@ -217,6 +217,15 @@ body {
   background:currentColor; opacity:0; transition:opacity .3s;
 }
 .l2-node:hover::before, .l2-node.active::before { opacity:.6; }
+
+/* Bio tab buttons */
+.bio-tab {
+  padding:6px 16px; border-radius:20px; font-size:12px; font-weight:600;
+  background:rgba(255,255,255,0.05); border:1px solid var(--border);
+  color:var(--text-dim); cursor:pointer; transition:all .3s;
+}
+.bio-tab:hover { border-color:rgba(16,185,129,0.3); color:#fff; }
+.bio-tab.active { background:rgba(16,185,129,0.15); border-color:rgba(16,185,129,0.4); color:#6ee7b7; }
 .l2-node-title { font-size:14px; font-weight:500; margin-bottom:4px; }
 .l2-node-sub { font-size:11px; color:var(--text-dim); }
 
@@ -374,24 +383,81 @@ body {
   <div class="level2-section" id="l2-biobanking">
     <div class="l2-header">
       <span class="l2-header-icon">&#x1F9EC;</span>
-      <span class="l2-header-title glow-emerald" data-ko="바이오뱅킹 — 용도를 선택하세요" data-en="Biobanking — Select your application">바이오뱅킹 — 용도를 선택하세요</span>
+      <span class="l2-header-title glow-emerald" data-ko="바이오뱅킹 — 어떻게 찾으시겠어요?" data-en="Biobanking — How would you like to search?">바이오뱅킹 — 어떻게 찾으시겠어요?</span>
     </div>
-    <div class="l2-grid">
-      <div class="l2-node glow-emerald" data-sub="bio-lab" onclick="selectL2(this,'bio-lab','biobanking')">
-        <div class="l2-node-title" data-ko="연구소 / 실험실" data-en="Research Lab">연구소 / 실험실</div>
-        <div class="l2-node-sub" data-ko="소규모~중규모 시료 보관" data-en="Small-to-mid scale sample storage">소규모~중규모 시료 보관</div>
+
+    <!-- 3가지 입구 탭 -->
+    <div style="display:flex;gap:8px;justify-content:center;margin-bottom:20px;flex-wrap:wrap;">
+      <button class="bio-tab active" onclick="switchBioTab('use')" data-ko="용도별" data-en="By Use">용도별</button>
+      <button class="bio-tab" onclick="switchBioTab('scale')" data-ko="규모별" data-en="By Scale">규모별</button>
+      <button class="bio-tab" onclick="switchBioTab('temp')" data-ko="보관 방식별" data-en="By Storage Type">보관 방식별</button>
+    </div>
+
+    <!-- 용도별 -->
+    <div class="l2-grid bio-panel" id="bio-use">
+      <div class="l2-node glow-emerald" data-sub="bio-cell" onclick="selectL2(this,'bio-cell','biobanking')">
+        <div class="l2-node-title" data-ko="세포 / 조직 보관" data-en="Cell / Tissue Storage">세포 / 조직 보관</div>
+        <div class="l2-node-sub" data-ko="줄기세포, CAR-T, 제대혈" data-en="Stem cells, CAR-T, cord blood">줄기세포, CAR-T, 제대혈</div>
       </div>
-      <div class="l2-node glow-emerald" data-sub="bio-bank" onclick="selectL2(this,'bio-bank','biobanking')">
-        <div class="l2-node-title" data-ko="바이오뱅크 / 병원" data-en="Biobank / Hospital">바이오뱅크 / 병원</div>
-        <div class="l2-node-sub" data-ko="대용량 장기 보관" data-en="Large-scale long-term storage">대용량 장기 보관</div>
+      <div class="l2-node glow-emerald" data-sub="bio-semen" onclick="selectL2(this,'bio-semen','biobanking')">
+        <div class="l2-node-title" data-ko="정액 / 배아 보관" data-en="Semen / Embryo Storage">정액 / 배아 보관</div>
+        <div class="l2-node-sub" data-ko="번식 프로그램, 유전자원" data-en="Breeding programs, genetic resources">번식 프로그램, 유전자원</div>
+      </div>
+      <div class="l2-node glow-emerald" data-sub="bio-vaccine" onclick="selectL2(this,'bio-vaccine','biobanking')">
+        <div class="l2-node-title" data-ko="백신 / 혈액 / 검체" data-en="Vaccine / Blood / Specimens">백신 / 혈액 / 검체</div>
+        <div class="l2-node-sub" data-ko="병원, 진단센터, 혈액원" data-en="Hospitals, diagnostic centers, blood banks">병원, 진단센터, 혈액원</div>
       </div>
       <div class="l2-node glow-emerald" data-sub="bio-pharma" onclick="selectL2(this,'bio-pharma','biobanking')">
-        <div class="l2-node-title" data-ko="제약 / GMP" data-en="Pharma / GMP">제약 / GMP</div>
-        <div class="l2-node-sub" data-ko="GMP 규정 준수 보관" data-en="GMP-compliant storage">GMP 규정 준수 보관</div>
+        <div class="l2-node-title" data-ko="제약 / GMP 환경" data-en="Pharma / GMP">제약 / GMP 환경</div>
+        <div class="l2-node-sub" data-ko="cGMP, FDA, 감사추적" data-en="cGMP, FDA, audit trail">cGMP, FDA, 감사추적</div>
       </div>
       <div class="l2-node glow-emerald" data-sub="bio-transport" onclick="selectL2(this,'bio-transport','biobanking')">
         <div class="l2-node-title" data-ko="시료 운송" data-en="Sample Transport">시료 운송</div>
-        <div class="l2-node-sub" data-ko="Vapor Shipper 운송 용기" data-en="Vapor Shipper transport vessels">Vapor Shipper 운송 용기</div>
+        <div class="l2-node-sub" data-ko="국내외 운송, IATA 규정" data-en="Domestic/international, IATA">국내외 운송, IATA 규정</div>
+      </div>
+      <div class="l2-node glow-emerald" data-sub="bio-lab" onclick="selectL2(this,'bio-lab','biobanking')">
+        <div class="l2-node-title" data-ko="일반 연구실" data-en="General Lab">일반 연구실</div>
+        <div class="l2-node-sub" data-ko="LN₂ 보관, 실험실 운용" data-en="LN₂ storage, lab operations">LN₂ 보관, 실험실 운용</div>
+      </div>
+    </div>
+
+    <!-- 규모별 -->
+    <div class="l2-grid bio-panel" id="bio-scale" style="display:none;">
+      <div class="l2-node glow-emerald" data-sub="bio-lab" onclick="selectL2(this,'bio-lab','biobanking')">
+        <div class="l2-node-title" data-ko="소규모 (연구실)" data-en="Small (Lab)">소규모 (연구실)</div>
+        <div class="l2-node-sub" data-ko="~1,000 바이알 / 개인 연구" data-en="Up to 1,000 vials / individual research">~1,000 바이알 / 개인 연구</div>
+      </div>
+      <div class="l2-node glow-emerald" data-sub="bio-semen" onclick="selectL2(this,'bio-semen','biobanking')">
+        <div class="l2-node-title" data-ko="중규모 (병원/클리닉)" data-en="Medium (Hospital/Clinic)">중규모 (병원/클리닉)</div>
+        <div class="l2-node-sub" data-ko="1,000~10,000 바이알" data-en="1,000-10,000 vials">1,000~10,000 바이알</div>
+      </div>
+      <div class="l2-node glow-emerald" data-sub="bio-bank" onclick="selectL2(this,'bio-bank','biobanking')">
+        <div class="l2-node-title" data-ko="대규모 (바이오뱅크)" data-en="Large (Biobank)">대규모 (바이오뱅크)</div>
+        <div class="l2-node-sub" data-ko="10,000~93,000 바이알" data-en="10,000-93,000 vials">10,000~93,000 바이알</div>
+      </div>
+      <div class="l2-node glow-emerald" data-sub="bio-pharma" onclick="selectL2(this,'bio-pharma','biobanking')">
+        <div class="l2-node-title" data-ko="엔터프라이즈 (제약사)" data-en="Enterprise (Pharma)">엔터프라이즈 (제약사)</div>
+        <div class="l2-node-sub" data-ko="98,000+ 바이알 / GMP" data-en="98,000+ vials / GMP">98,000+ 바이알 / GMP</div>
+      </div>
+    </div>
+
+    <!-- 보관 방식별 -->
+    <div class="l2-grid bio-panel" id="bio-temp" style="display:none;">
+      <div class="l2-node glow-emerald" data-sub="bio-lab" onclick="selectL2(this,'bio-lab','biobanking')">
+        <div class="l2-node-title" data-ko="-196°C 액상 보관" data-en="-196°C Liquid Phase">-196°C 액상 보관</div>
+        <div class="l2-node-sub" data-ko="LD, XT, HC, ICB 시리즈" data-en="LD, XT, HC, ICB Series">LD, XT, HC, ICB 시리즈</div>
+      </div>
+      <div class="l2-node glow-emerald" data-sub="bio-bank" onclick="selectL2(this,'bio-bank','biobanking')">
+        <div class="l2-node-title" data-ko="-190°C 증기상 보관" data-en="-190°C Vapor Phase">-190°C 증기상 보관</div>
+        <div class="l2-node-sub" data-ko="Revolution, LABS, LS 시리즈" data-en="Revolution, LABS, LS Series">Revolution, LABS, LS 시리즈</div>
+      </div>
+      <div class="l2-node glow-emerald" data-sub="bio-transport" onclick="selectL2(this,'bio-transport','biobanking')">
+        <div class="l2-node-title" data-ko="운송용 드라이 쉬퍼" data-en="Dry Shipper (Transport)">운송용 드라이 쉬퍼</div>
+        <div class="l2-node-sub" data-ko="ICB Dual, CX/D 시리즈" data-en="ICB Dual, CX/D Series">ICB Dual, CX/D 시리즈</div>
+      </div>
+      <div class="l2-node glow-emerald" data-sub="bio-pharma" onclick="selectL2(this,'bio-pharma','biobanking')">
+        <div class="l2-node-title" data-ko="-20°C ~ -190°C 가변 온도" data-en="-20°C to -190°C Variable">-20°C ~ -190°C 가변 온도</div>
+        <div class="l2-node-sub" data-ko="Revolution Radiance 모드" data-en="Revolution Radiance Mode">Revolution Radiance 모드</div>
       </div>
     </div>
   </div>
@@ -475,6 +541,9 @@ body {
   <div class="level3-section" id="l3-bio-bank"></div>
   <div class="level3-section" id="l3-bio-pharma"></div>
   <div class="level3-section" id="l3-bio-transport"></div>
+  <div class="level3-section" id="l3-bio-cell"></div>
+  <div class="level3-section" id="l3-bio-semen"></div>
+  <div class="level3-section" id="l3-bio-vaccine"></div>
   <div class="level3-section" id="l3-ai-small"></div>
   <div class="level3-section" id="l3-ai-mid"></div>
   <div class="level3-section" id="l3-ai-large"></div>
@@ -524,6 +593,22 @@ body {
     ],
     'bio-transport': [
       { ko:'ICB Dual (Vapor Shippers)', en:'ICB Dual (Vapor Shippers)', specKo:'기내 반입 가능, 10일+ 보관', specEn:'Airline-approved, 10+ day hold time', url:'bio-icb-dual-series.html', color:'emerald' }
+    ],
+    'bio-cell': [
+      { ko:'Revolution Series', en:'Revolution Series', specKo:'cGMP, RFID, 감사추적, -190°C 증기상', specEn:'cGMP, RFID, audit trail, -190°C vapor', url:'bio-revolution-series.html', color:'emerald' },
+      { ko:'LABS Series', en:'LABS Series', specKo:'최대 93,000 바이알, CS 컨트롤러', specEn:'Up to 93,000 vials, CS controller', url:'bio-labs-series.html', color:'emerald' },
+      { ko:'LS Series', en:'LS Series', specKo:'바이알 전용, 750~6,000개', specEn:'Vial-dedicated, 750-6,000', url:'bio-ls-series.html', color:'emerald' }
+    ],
+    'bio-semen': [
+      { ko:'XT Series', en:'XT Series', specKo:'Extended Time, 소형 정액 탱크', specEn:'Extended Time, small semen tanks', url:'bio-xt-series.html', color:'emerald' },
+      { ko:'HC Series', en:'HC Series', specKo:'고용량 캐니스터, 넓은 넥', specEn:'High-capacity canisters, wide neck', url:'bio-hc-series.html', color:'emerald' },
+      { ko:'ICB Series', en:'ICB Series', specKo:'차세대, 범용 캐니스터 호환', specEn:'Next-gen, universal canister compatible', url:'bio-icb-series.html', color:'emerald' },
+      { ko:'AI Shield', en:'AI Shield', specKo:'열 보호 캐니스터, 수태율 향상', specEn:'Thermal protection, improved conception', url:'bio-ai.html', color:'emerald' }
+    ],
+    'bio-vaccine': [
+      { ko:'LS Series', en:'LS Series', specKo:'박스형 랙 바이알 보관', specEn:'Box-rack vial storage', url:'bio-ls-series.html', color:'emerald' },
+      { ko:'LD Series', en:'LD Series', specKo:'소형 LN₂ 듀어, 4~50L', specEn:'Small LN₂ dewars, 4-50L', url:'bio-ld-series.html', color:'emerald' },
+      { ko:'ICB Dual', en:'ICB Dual', specKo:'운송 겸용, Store-Ship-Store', specEn:'Transport combo, Store-Ship-Store', url:'bio-icb-dual-series.html', color:'emerald' }
     ],
     'ai-small': [
       { ko:'AI Shield (AIS 1.5)', en:'AI Shield (AIS 1.5)', specKo:'1.5L, 휴대용 축산 용기', specEn:'1.5L, portable livestock vessel', url:'bio-ai.html', color:'amber' },
@@ -576,6 +661,9 @@ body {
     'bio-bank':{ ko:'바이오뱅크/병원', en:'Biobank/Hospital' },
     'bio-pharma':{ ko:'제약/GMP', en:'Pharma/GMP' },
     'bio-transport':{ ko:'시료 운송', en:'Sample Transport' },
+    'bio-cell':{ ko:'세포/조직 보관', en:'Cell/Tissue Storage' },
+    'bio-semen':{ ko:'정액/배아 보관', en:'Semen/Embryo Storage' },
+    'bio-vaccine':{ ko:'백신/혈액/검체', en:'Vaccine/Blood/Specimens' },
     'ai-small':{ ko:'소규모 목장', en:'Small Ranch' },
     'ai-mid':{ ko:'중/대규모 번식장', en:'Mid/Large Farm' },
     'ai-large':{ ko:'대규모 정액은행', en:'Large Semen Bank' },
@@ -658,6 +746,22 @@ body {
     document.getElementById('resetBtn').classList.add('show');
     updateCounter();
     setTimeout(drawConnections, 500);
+  };
+
+  // ═══════════════════════════════════════════════════
+  // BIO TAB SWITCHING
+  // ═══════════════════════════════════════════════════
+  window.switchBioTab = function(tab) {
+    var panels = document.querySelectorAll('.bio-panel');
+    for (var i = 0; i < panels.length; i++) { panels[i].style.display = 'none'; }
+    var target = document.getElementById('bio-' + tab);
+    if (target) target.style.display = '';
+    var tabs = document.querySelectorAll('.bio-tab');
+    for (var j = 0; j < tabs.length; j++) { tabs[j].classList.remove('active'); }
+    event.target.classList.add('active');
+    // Hide any open L3
+    var l3s = document.querySelectorAll('.level3-section');
+    for (var k = 0; k < l3s.length; k++) { l3s[k].style.display = 'none'; }
   };
 
   // ═══════════════════════════════════════════════════
