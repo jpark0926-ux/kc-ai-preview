@@ -244,7 +244,8 @@ body.dark-mode .l3-card:hover{
   border-color:rgba(255,255,255,0.18);
 }
 .l3-card:hover .l3-arrow{transform:translateX(3px);}
-.l3-thumb{height:40px;width:auto;max-width:50px;object-fit:contain;flex-shrink:0;border-radius:4px;}
+.l3-thumb{height:40px;width:auto;max-width:50px;object-fit:contain;flex-shrink:0;border-radius:4px;mix-blend-mode:multiply;}
+body.dark-mode .l3-thumb{mix-blend-mode:screen;filter:brightness(1.2);}
 .l3-info{flex:1;min-width:0;}
 .l3-name{font-size:12px;font-weight:600;margin-bottom:1px;}
 .l3-spec{font-size:10px;color:var(--text-dim);line-height:1.3;}
