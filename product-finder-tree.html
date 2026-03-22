@@ -1088,6 +1088,13 @@ function applyState(){
         bridgeL3.style.background = cfg.color;
         bridgeL3.style.setProperty('--glow-color',cfg.glow);
         bridgeL3.classList.add('active');
+        // Align bridge3 to selected L2 pill
+        var activeWrap = l2col.querySelector('.l2-pill-wrap.active');
+        if(activeWrap){
+          var wrapRect = activeWrap.getBoundingClientRect();
+          var branchRect = document.getElementById('branch-'+catId).getBoundingClientRect();
+          bridgeL3.style.marginTop = (wrapRect.top - branchRect.top + wrapRect.height/2 - 1) + 'px';
+        }
         showProducts(catId, activeSub);
       } else {
         bridgeL3.style.background = 'var(--line-default)';
