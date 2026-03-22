@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>제품 찾기 — Mind Map | Korea Cryo</title>
+<link rel="icon" href="Logo/logo-kc.png">
+<link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{font-family:'Inter','Noto Sans KR',sans-serif;background:#f8f9fa;color:#1f2937;height:100%;overflow:hidden}
+.topbar{position:fixed;top:0;left:0;right:0;z-index:200;height:52px;display:flex;align-items:center;justify-content:space-between;padding:0 20px;background:#fff;border-bottom:1px solid #e5e7eb;box-shadow:0 1px 3px rgba(0,0,0,0.06)}
+.topbar-left{display:flex;align-items:center;gap:12px}
+.topbar-left img{height:20px}
+.topbar-title{font-size:14px;font-weight:600;color:#374151}
+.topbar-right{display:flex;align-items:center;gap:10px}
+.topbar-right a{color:#6b7280;text-decoration:none;font-size:13px;font-weight:500;transition:color .2s}
+.topbar-right a:hover{color:#111827}
+.lang-btn{background:#f3f4f6;border:1px solid #e5e7eb;border-radius:6px;padding:4px 10px;color:#374151;cursor:pointer;font-size:12px;font-weight:500;transition:all .2s}
+.lang-btn:hover{background:#e5e7eb}
+
+.canvas-wrap{position:fixed;top:52px;left:0;right:0;bottom:0;overflow:auto}
+.canvas{position:relative;width:2000px;height:1600px;margin:0 auto}
+svg.lines{position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:1}
+svg.lines path{fill:none;stroke-width:2;stroke-linecap:round;transition:opacity .4s}
+
+.node{position:absolute;z-index:10;cursor:pointer;transition:transform .3s,opacity .4s,box-shadow .3s}
+.node:hover{transform:translate(-50%,-50%) scale(1.05)!important}
+.node.dimmed{opacity:.25;pointer-events:none}
+
+.node-center{width:72px;height:72px;border-radius:50%;background:#fff;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 12px rgba(0,0,0,0.1);border:2px solid #e5e7eb}
+.node-center img{width:36px;height:36px;object-fit:contain}
+
+.node-l1{background:#fff;border-radius:24px;padding:10px 20px;box-shadow:0 2px 8px rgba(0,0,0,0.08);border-left:4px solid;display:flex;align-items:center;gap:8px;white-space:nowrap;font-size:14px;font-weight:600;color:#374151}
+.node-l1 .icon{width:20px;height:20px;flex-shrink:0;display:flex;align-items:center}
+
+.node-l2{background:#fff;border-radius:16px;padding:8px 16px;box-shadow:0 1px 6px rgba(0,0,0,0.06);font-size:13px;font-weight:500;color:#4b5563;white-space:nowrap;border:1px solid #e5e7eb}
+
+.node-l3{background:#fff;border-radius:12px;padding:8px 14px;box-shadow:0 1px 4px rgba(0,0,0,0.05);font-size:12px;color:#6b7280;white-space:nowrap;border:1px solid #f3f4f6;display:flex;align-items:center;gap:6px}
+.node-l3 a{color:#2563eb;text-decoration:none;font-weight:500;font-size:12px}
+.node-l3 a:hover{text-decoration:underline}
+.node-l3 .prod-name{font-weight:600;color:#374151;font-size:12px}
+
+.clr-emerald{border-color:#10b981}.bg-em{background:#ecfdf5;border-color:#a7f3d0}
+.clr-amber{border-color:#f59e0b}.bg-am{background:#fffbeb;border-color:#fde68a}
+.clr-cyan{border-color:#06b6d4}.bg-cy{background:#ecfeff;border-color:#a5f3fc}
+.clr-orange{border-color:#f97316}.bg-or{background:#fff7ed;border-color:#fed7aa}
+
+.mobile-view{display:none;position:fixed;top:52px;left:0;right:0;bottom:0;overflow-y:auto;padding:16px;background:#f8f9fa}
+.acc-branch{background:#fff;border-radius:12px;margin-bottom:10px;box-shadow:0 1px 4px rgba(0,0,0,0.06);overflow:hidden}
+.acc-branch-head{padding:14px 16px;font-size:15px;font-weight:600;color:#374151;cursor:pointer;display:flex;align-items:center;justify-content:space-between;border-left:4px solid}
+.acc-branch-head svg{width:16px;height:16px;transition:transform .3s;color:#9ca3af}
+.acc-branch.open .acc-branch-head svg{transform:rotate(180deg)}
+.acc-sub{display:none;padding:0 16px 12px}
+.acc-branch.open .acc-sub{display:block}
+.acc-sub-head{padding:8px 0;font-size:13px;font-weight:600;color:#6b7280;cursor:pointer;display:flex;align-items:center;justify-content:space-between}
+.acc-products{display:none;padding:4px 0 8px 12px}
+.acc-sub-item.open .acc-products{display:block}
+.acc-prod{padding:6px 0;font-size:13px;display:flex;align-items:center;gap:6px}
+.acc-prod a{color:#2563eb;text-decoration:none;font-weight:500}
+
+@media(max-width:768px){
+  .canvas-wrap{display:none}
+  .mobile-view{display:block}
+}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="topbar-left">
+    <img src="Logo/logo-kc.png" alt="KC">
+    <span class="topbar-title" data-ko="제품 찾기 — Mind Map" data-en="Product Finder — Mind Map">제품 찾기 — Mind Map</span>
+  </div>
+  <div class="topbar-right">
+    <a href="index.html" data-ko="홈" data-en="Home">홈</a>
+    <a href="product-finder.html" data-ko="트리 뷰" data-en="Tree View">트리 뷰</a>
+    <button class="lang-btn" onclick="toggleLang()">EN</button>
+  </div>
+</div>
+
+<div class="canvas-wrap" id="canvasWrap">
+  <div class="canvas" id="canvas">
+    <svg class="lines" id="svg"></svg>
+  </div>
+</div>
+
+<div class="mobile-view" id="mobileView"></div>
+
+<script>
+var branches={biobanking:{ko:'\uBC14\uC774\uC624\uBC45\uD0B9',en:'Biobanking',color:'emerald',angle:-135,subs:['bio-lab','bio-bank','bio-pharma','bio-transport','bio-cell','bio-semen','bio-vaccine']},animal:{ko:'\uC778\uACF5\uC218\uC815/\uCD95\uC0B0',en:'AI & Animal Husbandry',color:'amber',angle:-45,subs:['ai-small','ai-mid','ai-large','ai-transport']},cryo:{ko:'\uADF9\uC800\uC628 \uC7A5\uBE44',en:'Cryogenic Equipment',color:'cyan',angle:135,subs:['cryo-tank','cryo-helium','cryo-specialty','cryo-medical']},engineering:{ko:'\uC5D4\uC9C0\uB2C8\uC5B4\uB9C1',en:'Engineering',color:'orange',angle:45,subs:['eng-gas','eng-vacuum','eng-flow']}};
+var subNames={'bio-lab':{ko:'\uC5F0\uAD6C\uC18C/\uC2E4\uD5D8\uC2E4',en:'Research Lab'},'bio-bank':{ko:'\uBC14\uC774\uC624\uBC45\uD06C/\uBCD1\uC6D0',en:'Biobank/Hospital'},'bio-pharma':{ko:'\uC81C\uC57D/GMP',en:'Pharma/GMP'},'bio-transport':{ko:'\uC2DC\uB8CC \uC6B4\uC1A1',en:'Sample Transport'},'bio-cell':{ko:'\uC138\uD3EC/\uC870\uC9C1 \uBCF4\uAD00',en:'Cell/Tissue Storage'},'bio-semen':{ko:'\uC815\uC561/\uBC30\uC544 \uBCF4\uAD00',en:'Semen/Embryo Storage'},'bio-vaccine':{ko:'\uBC31\uC2E0/\uD608\uC561/\uAC80\uCCB4',en:'Vaccine/Blood/Specimens'},'ai-small':{ko:'\uC18C\uADDC\uBAA8 \uBAA9\uC7A5',en:'Small Ranch'},'ai-mid':{ko:'\uC911/\uB300\uADDC\uBAA8 \uBC88\uC2DD\uC7A5',en:'Mid/Large Farm'},'ai-large':{ko:'\uB300\uADDC\uBAA8 \uC815\uC561\uC740\uD589',en:'Large Semen Bank'},'ai-transport':{ko:'\uC815\uC561 \uC6B4\uC1A1',en:'Semen Transport'},'cryo-tank':{ko:'\uC561\uD654\uAC00\uC2A4 \uC800\uC7A5\uD0F1\uD06C',en:'Gas Storage Tank'},'cryo-helium':{ko:'\uC561\uCCB4\uD5EC\uB968',en:'Liquid Helium'},'cryo-specialty':{ko:'\uCD08\uACE0\uC21C\uB3C4 \uAC00\uC2A4',en:'Ultra-High Purity Gas'},'cryo-medical':{ko:'\uC758\uB8CC\uC6A9 \uAC00\uC2A4',en:'Medical Gas'},'eng-gas':{ko:'\uAC00\uC2A4 \uBC30\uAD00 \uC124\uACC4',en:'Gas Piping Design'},'eng-vacuum':{ko:'\uC9C4\uACF5 \uBC30\uAD00',en:'Vacuum Piping'},'eng-flow':{ko:'\uC720\uB7C9\uACC4',en:'Flow Meters'}};
+var productData={'bio-lab':[{ko:'LD Series',en:'LD Series',specKo:'\uC18C\uD615 \uC2E4\uD5D8\uC2E4\uC6A9, 10~50L',specEn:'Small lab use, 10-50L',url:'bio-ld-series.html'},{ko:'XT Series',en:'XT Series',specKo:'\uACE0\uD6A8\uC728 \uC815\uC0AC\uAC01\uD615 \uB799',specEn:'High-efficiency square rack',url:'bio-xt-series.html'},{ko:'HC Series',en:'HC Series',specKo:'\uACE0\uC6A9\uB7C9 \uC2DC\uB8CC \uBCF4\uAD00',specEn:'High-capacity storage',url:'bio-hc-series.html'},{ko:'ICB Series',en:'ICB Series',specKo:'\uC18C\uD615 \uC6B4\uBC18/\uBCF4\uAD00 \uAC78\uC6A9',specEn:'Compact transport & storage',url:'bio-icb-series.html'}],'bio-bank':[{ko:'LS Series',en:'LS Series',specKo:'\uB300\uC6A9\uB7C9 \uC2A4\uD14C\uC778\uB9AC\uC2A4 \uBCF4\uAD00',specEn:'Large stainless storage',url:'bio-ls-series.html'},{ko:'LABS Series',en:'LABS Series',specKo:'\uC790\uB3D9\uD654 \uBC14\uC774\uC624\uBC45\uD06C',specEn:'Automated biobank',url:'bio-labs-series.html'}],'bio-pharma':[{ko:'Revolution Series',en:'Revolution Series',specKo:'GMP \uC900\uC218, \uC790\uB3D9 \uCDA9\uC804',specEn:'GMP compliant, auto-fill',url:'bio-revolution-series.html'}],'bio-transport':[{ko:'ICB Dual',en:'ICB Dual',specKo:'\uAE30\uB0B4 \uBC18\uC785 \uAC00\uB2A5, 10\uC77C+',specEn:'Airline-approved, 10+ days',url:'bio-icb-dual-series.html'}],'bio-cell':[{ko:'Revolution Series',en:'Revolution Series',specKo:'cGMP, RFID, \uAC10\uC0AC\uCD94\uC801',specEn:'cGMP, RFID, audit trail',url:'bio-revolution-series.html'},{ko:'LABS Series',en:'LABS Series',specKo:'\uCD5C\uB300 93,000 \uBC14\uC774\uC54C',specEn:'Up to 93,000 vials',url:'bio-labs-series.html'},{ko:'LS Series',en:'LS Series',specKo:'\uBC14\uC774\uC54C \uC804\uC6A9, 750~6,000',specEn:'Vial-dedicated, 750-6,000',url:'bio-ls-series.html'}],'bio-semen':[{ko:'XT Series',en:'XT Series',specKo:'\uC18C\uD615 \uC815\uC561 \uD0F1\uD06C',specEn:'Small semen tanks',url:'bio-xt-series.html'},{ko:'HC Series',en:'HC Series',specKo:'\uACE0\uC6A9\uB7C9 \uCE90\uB2C8\uC2A4\uD130',specEn:'High-capacity canisters',url:'bio-hc-series.html'},{ko:'ICB Series',en:'ICB Series',specKo:'\uBC94\uC6A9 \uCE90\uB2C8\uC2A4\uD130 \uD638\uD658',specEn:'Universal canister',url:'bio-icb-series.html'}],'bio-vaccine':[{ko:'LS Series',en:'LS Series',specKo:'\uBC15\uC2A4\uD615 \uB799 \uBC14\uC774\uC54C \uBCF4\uAD00',specEn:'Box-rack vial storage',url:'bio-ls-series.html'},{ko:'LD Series',en:'LD Series',specKo:'\uC18C\uD615 LN2 \uB4C0\uC5B4',specEn:'Small LN2 dewars',url:'bio-ld-series.html'},{ko:'ICB Dual',en:'ICB Dual',specKo:'Store-Ship-Store',specEn:'Store-Ship-Store',url:'bio-icb-dual-series.html'}],'ai-small':[{ko:'AI Shield (AIS 1.5)',en:'AI Shield (AIS 1.5)',specKo:'1.5L, \uD734\uB300\uC6A9',specEn:'1.5L, portable',url:'bio-ai.html'},{ko:'AI Shield (AIS 3)',en:'AI Shield (AIS 3)',specKo:'3L, \uD655\uC7A5 \uC6A9\uB7C9',specEn:'3L, extended',url:'bio-ai.html'},{ko:'ICB 20 / ICB 24',en:'ICB 20 / ICB 24',specKo:'20~24L',specEn:'20-24L',url:'bio-ai.html'}],'ai-mid':[{ko:'ICB 34 / ICB 35',en:'ICB 34 / ICB 35',specKo:'34~35L',specEn:'34-35L',url:'bio-ai.html'},{ko:'XT 21-AI',en:'XT 21-AI',specKo:'\uACE0\uD6A8\uC728 \uC815\uC0AC\uAC01 AI \uC804\uC6A9',specEn:'Square AI dedicated',url:'bio-ai.html'}],'ai-large':[{ko:'LABS 80K AI',en:'LABS 80K AI',specKo:'80,000 \uC2A4\uD2B8\uB85C',specEn:'80,000 straws',url:'bio-ai.html'},{ko:'AI 91K',en:'AI 91K',specKo:'91,000 \uC2A4\uD2B8\uB85C',specEn:'91,000 straws',url:'bio-ai.html'}],'ai-transport':[{ko:'ICB Dual',en:'ICB Dual',specKo:'\uC815\uC561 \uC6B4\uC1A1\uC6A9 Vapor Shipper',specEn:'Semen transport Vapor Shipper',url:'bio-icb-dual-series.html'}],'cryo-tank':[{ko:'\uC561\uD654\uAC00\uC2A4 \uC800\uC7A5\uD0F1\uD06C',en:'Liquefied Gas Storage Tank',specKo:'LN2, LOX, LAr, CO2 \uBC8C\uD06C',specEn:'LN2, LOX, LAr, CO2 bulk',url:'cryo-equipment.html'}],'cryo-helium':[{ko:'\uC561\uCCB4\uD5EC\uB968 \uACF5\uAE09',en:'Liquid Helium Supply',specKo:'MRI, NMR, \uCD08\uC804\uB3C4',specEn:'MRI, NMR, superconductor',url:'liquid-helium.html'}],'cryo-specialty':[{ko:'\uCD08\uACE0\uC21C\uB3C4 \uAC00\uC2A4 \uC2E4\uB9B0\uB354',en:'Ultra-High Purity Cylinders',specKo:'\uBC18\uB3C4\uCCB4/\uB514\uC2A4\uD50C\uB808\uC774 \uACF5\uC815',specEn:'Semiconductor/display',url:'specialty-gas.html'}],'cryo-medical':[{ko:'\uC758\uB8CC\uC6A9 \uAC00\uC2A4',en:'Medical Gas',specKo:'\uC0B0\uC18C, \uC9C8\uC18C, \uC758\uB8CC \uD63C\uD569\uAC00\uC2A4',specEn:'O2, N2, medical mix',url:'healthcare.html'}],'eng-gas':[{ko:'\uAC00\uC2A4 \uBC30\uAD00 \uC124\uACC4/\uC2DC\uACF5',en:'Gas Piping Design',specKo:'\uACE0\uC555/\uC800\uC555 \uAC00\uC2A4 \uACF5\uAE09 \uB77C\uC778',specEn:'High/low pressure lines',url:'gas-engineering.html'}],'eng-vacuum':[{ko:'\uC9C4\uACF5 \uBC30\uAD00 \uC2DC\uC2A4\uD15C',en:'Vacuum Piping System',specKo:'\uACE0\uC9C4\uACF5, \uCD08\uACE0\uC9C4\uACF5 \uB77C\uC778',specEn:'High/ultra-high vacuum',url:'vacuum-piping.html'}],'eng-flow':[{ko:'\uAC00\uC2A4 \uC720\uB7C9\uACC4',en:'Gas Flow Meters',specKo:'\uC815\uBC00 \uC720\uB7C9 \uCE21\uC815',specEn:'Precision flow measurement',url:'gas-engineering.html#flow-meters'}]};
+
+var lang='ko',activeBranch=null,activeSub=null;
+var CX=1000,CY=800,L1_DIST=280,L2_DIST=200,L3_DIST=140;
+var colorMap={emerald:'#10b981',amber:'#f59e0b',cyan:'#06b6d4',orange:'#f97316'};
+var bgMap={emerald:'bg-em',amber:'bg-am',cyan:'bg-cy',orange:'bg-or'};
+var clrMap={emerald:'clr-emerald',amber:'clr-amber',cyan:'clr-cyan',orange:'clr-orange'};
+var svgIcons={emerald:'<svg viewBox="0 0 20 20" fill="#10b981" width="20" height="20"><path d="M10 2a3 3 0 00-3 3v1H5a2 2 0 00-2 2v8a2 2 0 002 2h10a2 2 0 002-2V8a2 2 0 00-2-2h-2V5a3 3 0 00-3-3zm0 2a1 1 0 011 1v1H9V5a1 1 0 011-1z"/></svg>',amber:'<svg viewBox="0 0 20 20" fill="#f59e0b" width="20" height="20"><path d="M10 2L3 17h14L10 2zm0 4l4.5 9h-9L10 6z"/></svg>',cyan:'<svg viewBox="0 0 20 20" fill="#06b6d4" width="20" height="20"><circle cx="10" cy="10" r="7" fill="none" stroke="#06b6d4" stroke-width="2"/><circle cx="10" cy="10" r="3"/></svg>',orange:'<svg viewBox="0 0 20 20" fill="#f97316" width="20" height="20"><path d="M3 4h14v2H3zm0 5h14v2H3zm0 5h14v2H3z"/></svg>'};
+
+document.addEventListener('DOMContentLoaded',function(){buildDesktop();buildMobile();scrollToCenter()});
+
+function scrollToCenter(){var w=document.getElementById('canvasWrap');if(!w)return;w.scrollLeft=CX-w.clientWidth/2;w.scrollTop=CY-w.clientHeight/2}
+
+function buildDesktop(){
+  var cv=document.getElementById('canvas');
+  var c=document.createElement('div');c.className='node node-center';c.id='center-node';
+  c.style.cssText='left:'+CX+'px;top:'+CY+'px;transform:translate(-50%,-50%)';
+  var img=document.createElement('img');img.src='Logo/logo-kc.png';img.alt='KC';c.appendChild(img);
+  cv.appendChild(c);
+  Object.keys(branches).forEach(function(k){
+    var b=branches[k],rad=b.angle*Math.PI/180;
+    var x=CX+Math.cos(rad)*L1_DIST,y=CY+Math.sin(rad)*L1_DIST;
+    var el=document.createElement('div');el.className='node node-l1 '+clrMap[b.color];
+    el.style.cssText='left:'+x+'px;top:'+y+'px;transform:translate(-50%,-50%)';
+    el.id='l1-'+k;el.dataset.branch=k;
+    var ic=document.createElement('span');ic.className='icon';ic.insertAdjacentHTML('afterbegin',svgIcons[b.color]);
+    var sp=document.createElement('span');sp.dataset.ko=b.ko;sp.dataset.en=b.en;sp.textContent=b[lang];
+    el.appendChild(ic);el.appendChild(sp);
+    el.addEventListener('click',function(e){e.stopPropagation();clickL1(k)});
+    cv.appendChild(el);
+  });
+  drawLines();
+}
+
+function clickL1(key){
+  if(activeBranch===key){collapseAll();return}
+  collapseAll();activeBranch=key;
+  var b=branches[key];
+  Object.keys(branches).forEach(function(k){
+    var el=document.getElementById('l1-'+k);if(k!==key)el.classList.add('dimmed')
+  });
+  var subs=b.subs,base=b.angle,spread=Math.min(30,120/subs.length),startA=base-spread*(subs.length-1)/2;
+  var l1r=base*Math.PI/180,l1x=CX+Math.cos(l1r)*L1_DIST,l1y=CY+Math.sin(l1r)*L1_DIST;
+  subs.forEach(function(sid,i){
+    var a=(startA+i*spread)*Math.PI/180,x=l1x+Math.cos(a)*L2_DIST,y=l1y+Math.sin(a)*L2_DIST;
+    var sn=subNames[sid],el=document.createElement('div');
+    el.className='node node-l2 '+bgMap[b.color];el.id='l2-'+sid;el.dataset.sub=sid;el.dataset.branch=key;
+    el.style.cssText='left:'+x+'px;top:'+y+'px;transform:translate(-50%,-50%);opacity:0';
+    var sp=document.createElement('span');sp.dataset.ko=sn.ko;sp.dataset.en=sn.en;sp.textContent=sn[lang];
+    el.appendChild(sp);
+    el.addEventListener('click',function(e){e.stopPropagation();clickL2(sid,key)});
+    document.getElementById('canvas').appendChild(el);
+    requestAnimationFrame(function(){el.style.opacity='1'});
+  });
+  drawLines();
+}
+
+function clickL2(subId,branchKey){
+  rmClass('node-l3');
+  if(activeSub===subId){activeSub=null;drawLines();return}
+  activeSub=subId;
+  var b=branches[branchKey],subs=b.subs,base=b.angle;
+  var spread=Math.min(30,120/subs.length),startA=base-spread*(subs.length-1)/2;
+  var idx=subs.indexOf(subId),subAngle=startA+idx*spread;
+  var l1r=base*Math.PI/180,l1x=CX+Math.cos(l1r)*L1_DIST,l1y=CY+Math.sin(l1r)*L1_DIST;
+  var sr=subAngle*Math.PI/180,l2x=l1x+Math.cos(sr)*L2_DIST,l2y=l1y+Math.sin(sr)*L2_DIST;
+  var prods=productData[subId]||[],ps=Math.min(25,80/Math.max(prods.length,1)),pst=subAngle-ps*(prods.length-1)/2;
+  prods.forEach(function(p,i){
+    var pa=(pst+i*ps)*Math.PI/180,x=l2x+Math.cos(pa)*L3_DIST,y=l2y+Math.sin(pa)*L3_DIST;
+    var el=document.createElement('div');el.className='node node-l3';el.dataset.l2=subId;
+    el.style.cssText='left:'+x+'px;top:'+y+'px;transform:translate(-50%,-50%);opacity:0';
+    var nm=document.createElement('span');nm.className='prod-name';nm.dataset.ko=p.ko;nm.dataset.en=p.en;nm.textContent=p[lang];
+    var a=document.createElement('a');a.href=p.url;a.title=lang==='ko'?p.specKo:p.specEn;a.textContent='\u2192';
+    el.appendChild(nm);el.appendChild(a);
+    document.getElementById('canvas').appendChild(el);
+    requestAnimationFrame(function(){el.style.opacity='1'});
+  });
+  drawLines();
+}
+
+function collapseAll(){
+  activeBranch=null;activeSub=null;rmClass('node-l2');rmClass('node-l3');
+  Object.keys(branches).forEach(function(k){document.getElementById('l1-'+k).classList.remove('dimmed')});
+  drawLines();
+}
+
+function drawLines(){
+  var svg=document.getElementById('svg'),h='';
+  Object.keys(branches).forEach(function(k){
+    var el=document.getElementById('l1-'+k);if(!el)return;
+    var op=(activeBranch&&activeBranch!==k)?0.1:0.3;
+    h+=bz(CX,CY,pf(el,'left'),pf(el,'top'),colorMap[branches[k].color],op);
+  });
+  if(activeBranch){
+    var b=branches[activeBranch];
+    b.subs.forEach(function(sid){
+      var l1=document.getElementById('l1-'+activeBranch),l2=document.getElementById('l2-'+sid);
+      if(!l1||!l2)return;
+      h+=bz(pf(l1,'left'),pf(l1,'top'),pf(l2,'left'),pf(l2,'top'),colorMap[b.color],0.4);
+    });
+  }
+  if(activeSub){
+    var l2e=document.getElementById('l2-'+activeSub);
+    if(l2e){
+      var bk=l2e.dataset.branch;
+      document.querySelectorAll('.node-l3[data-l2="'+activeSub+'"]').forEach(function(l3){
+        h+=bz(pf(l2e,'left'),pf(l2e,'top'),pf(l3,'left'),pf(l3,'top'),colorMap[branches[bk].color],0.25);
+      });
+    }
+  }
+  svg.innerHTML=h;
+}
+
+function bz(x1,y1,x2,y2,c,o){
+  var mx=(x1+x2)/2;
+  return '<path d="M'+x1+' '+y1+' C'+mx+' '+y1+' '+mx+' '+y2+' '+x2+' '+y2+'" stroke="'+c+'" opacity="'+o+'"/>';
+}
+
+function buildMobile(){
+  var mv=document.getElementById('mobileView');
+  Object.keys(branches).forEach(function(k){
+    var b=branches[k];
+    var sec=document.createElement('div');sec.className='acc-branch';
+    var head=document.createElement('div');head.className='acc-branch-head '+clrMap[b.color];
+    head.style.borderColor=colorMap[b.color];
+    head.addEventListener('click',function(){toggleAcc(sec)});
+    var hs=document.createElement('span');hs.dataset.ko=b.ko;hs.dataset.en=b.en;hs.textContent=b[lang];
+    head.appendChild(hs);
+    head.insertAdjacentHTML('beforeend','<svg viewBox="0 0 20 20" fill="currentColor"><path d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z"/></svg>');
+    sec.appendChild(head);
+    var subDiv=document.createElement('div');subDiv.className='acc-sub';
+    b.subs.forEach(function(sid){
+      var sn=subNames[sid],item=document.createElement('div');item.className='acc-sub-item';
+      var sh=document.createElement('div');sh.className='acc-sub-head';
+      sh.addEventListener('click',function(){toggleAccSub(item)});
+      var ss=document.createElement('span');ss.dataset.ko=sn.ko;ss.dataset.en=sn.en;ss.textContent=sn[lang];
+      sh.appendChild(ss);
+      sh.insertAdjacentHTML('beforeend','<svg viewBox="0 0 16 16" fill="currentColor" width="14" height="14"><path d="M6 3l5 5-5 5V3z"/></svg>');
+      item.appendChild(sh);
+      var pd=document.createElement('div');pd.className='acc-products';
+      (productData[sid]||[]).forEach(function(p){
+        var row=document.createElement('div');row.className='acc-prod';
+        var ps=document.createElement('span');ps.dataset.ko=p.ko;ps.dataset.en=p.en;ps.textContent=p[lang];
+        var pa=document.createElement('a');pa.href=p.url;pa.textContent='\u2192';
+        row.appendChild(ps);row.appendChild(pa);pd.appendChild(row);
+      });
+      item.appendChild(pd);subDiv.appendChild(item);
+    });
+    sec.appendChild(subDiv);mv.appendChild(sec);
+  });
+}
+
+function toggleAcc(el){var o=el.classList.contains('open');document.querySelectorAll('.acc-branch').forEach(function(b){b.classList.remove('open')});if(!o)el.classList.add('open')}
+function toggleAccSub(el){var o=el.classList.contains('open');el.parentElement.querySelectorAll('.acc-sub-item').forEach(function(s){s.classList.remove('open')});if(!o)el.classList.add('open')}
+
+function toggleLang(){
+  lang=lang==='ko'?'en':'ko';
+  document.querySelector('.lang-btn').textContent=lang==='ko'?'EN':'KO';
+  document.querySelectorAll('[data-ko]').forEach(function(el){if(el.dataset[lang])el.textContent=el.dataset[lang]});
+}
+
+function pf(el,p){return parseFloat(el.style[p])}
+function rmClass(c){document.querySelectorAll('.'+c).forEach(function(e){e.remove()})}
+</script>
+</body>
+</html>
