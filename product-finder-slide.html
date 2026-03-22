@@ -1,0 +1,880 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>제품 찾기 | Product Finder — Korea Cryo</title>
+<link rel="icon" href="Logo/logo-kc.png">
+<link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #060d1b;
+  --text: #e2e8f0;
+  --text-dim: #94a3b8;
+  --border: rgba(255,255,255,0.08);
+  --emerald: #10b981;
+  --amber: #f59e0b;
+  --cyan: #06b6d4;
+  --orange: #f97316;
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+html, body {
+  font-family:'Inter','Noto Sans KR',sans-serif;
+  background:var(--bg);
+  color:var(--text);
+  height:100%; overflow:hidden;
+}
+
+/* ── TOP BAR ── */
+.topbar {
+  position:fixed; top:0; left:0; right:0; z-index:200;
+  height:56px; display:flex; align-items:center; justify-content:space-between;
+  padding:0 20px;
+  background:rgba(6,13,27,0.88); backdrop-filter:blur(24px);
+  border-bottom:1px solid var(--border);
+}
+.topbar-left { display:flex; align-items:center; gap:12px; min-width:0; }
+.topbar-left img { height:22px; flex-shrink:0; }
+.topbar-left .divider { width:1px; height:18px; background:var(--border); flex-shrink:0; }
+.back-btn {
+  display:none; align-items:center; gap:4px; cursor:pointer;
+  color:var(--text-dim); font-size:13px; transition:color .2s;
+  background:none; border:none; white-space:nowrap; flex-shrink:0;
+}
+.back-btn:hover { color:#fff; }
+.back-btn.show { display:flex; }
+.breadcrumb {
+  display:flex; align-items:center; gap:6px; font-size:13px;
+  color:var(--text-dim); overflow:hidden; white-space:nowrap;
+}
+.breadcrumb .crumb { cursor:pointer; transition:color .2s; }
+.breadcrumb .crumb:hover { color:#fff; }
+.breadcrumb .crumb.active { color:#fff; font-weight:500; }
+.breadcrumb .sep { opacity:.3; font-size:11px; }
+.topbar-right { display:flex; align-items:center; gap:12px; flex-shrink:0; }
+.topbar-right a { color:var(--text-dim); text-decoration:none; font-size:13px; transition:color .2s; }
+.topbar-right a:hover { color:#fff; }
+.lang-btn {
+  background:rgba(255,255,255,0.06); border:1px solid var(--border);
+  border-radius:6px; padding:4px 12px; color:var(--text); cursor:pointer;
+  font-size:12px; font-weight:500; transition:all .2s;
+}
+.lang-btn:hover { background:rgba(255,255,255,0.12); }
+
+/* ── SCENE SYSTEM (Horizontal Slide) ── */
+.scene {
+  position:fixed; inset:0; top:56px;
+  overflow-y:auto; overflow-x:hidden;
+  transition: transform 0.5s cubic-bezier(0.32, 0.72, 0, 1), opacity 0.3s ease;
+  z-index:1;
+  display:flex; flex-direction:column; align-items:center;
+  padding:48px 20px 120px;
+}
+.scene.active {
+  transform:translateX(0); opacity:1; pointer-events:auto; z-index:10;
+}
+.scene.slide-left {
+  transform:translateX(-30%); opacity:0; pointer-events:none;
+  transition: transform 0.5s cubic-bezier(0.32, 0.72, 0, 1), opacity 0.3s ease;
+}
+.scene.slide-right-ready {
+  transform:translateX(100%); opacity:0; pointer-events:none;
+  transition: none;
+}
+.scene.slide-right-out {
+  transform:translateX(30%); opacity:0; pointer-events:none;
+  transition: transform 0.5s cubic-bezier(0.32, 0.72, 0, 1), opacity 0.3s ease;
+}
+.scene.slide-left-ready {
+  transform:translateX(-100%); opacity:0; pointer-events:none;
+  transition: none;
+}
+.scene.gone { display:none; }
+
+/* ── SCENE 0: LANDING ── */
+#scene0 { background:var(--bg); justify-content:center; }
+.landing-logo { width:100px; height:100px; margin-bottom:20px; object-fit:contain; opacity:.85; }
+.landing-title {
+  font-size:28px; font-weight:300; color:#fff; margin-bottom:48px;
+  letter-spacing:-0.01em; text-align:center; line-height:1.4;
+}
+.cat-stack { display:flex; flex-direction:column; gap:14px; max-width:520px; width:100%; }
+.cat-card {
+  position:relative; display:flex; align-items:center; gap:18px;
+  background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.07);
+  border-radius:16px; padding:24px; cursor:pointer;
+  transition:all .35s cubic-bezier(0.32, 0.72, 0, 1);
+  backdrop-filter:blur(12px); overflow:hidden;
+}
+.cat-card::before {
+  content:''; position:absolute; left:0; top:0; bottom:0; width:3px;
+  background:var(--accent); border-radius:3px 0 0 3px;
+  opacity:0.6; transition:opacity .3s;
+}
+.cat-card:hover::before { opacity:1; }
+.cat-card:hover {
+  background:rgba(255,255,255,0.06); border-color:rgba(255,255,255,0.14);
+  transform:translateX(4px);
+}
+.cat-card-icon {
+  width:48px; height:48px; display:flex; align-items:center; justify-content:center;
+  background:rgba(255,255,255,0.04); border-radius:12px; flex-shrink:0;
+}
+.cat-card-body { flex:1; min-width:0; }
+.cat-card-title { font-size:16px; font-weight:600; margin-bottom:3px; }
+.cat-card-sub { font-size:13px; color:var(--text-dim); }
+.cat-card-arrow {
+  flex-shrink:0; color:var(--text-dim); transition:transform .3s, color .3s;
+}
+.cat-card:hover .cat-card-arrow { transform:translateX(3px); color:#fff; }
+
+/* ── SCENE 1: CATEGORY ── */
+.scene1-header { text-align:center; margin-bottom:36px; }
+.scene1-title {
+  font-size:32px; font-weight:700; letter-spacing:-0.02em; margin-bottom:6px;
+}
+.scene1-sub { font-size:14px; color:rgba(255,255,255,0.5); }
+.bio-tabs {
+  display:flex; gap:8px; margin-bottom:28px; flex-wrap:wrap; justify-content:center;
+}
+.bio-tab {
+  padding:8px 20px; border-radius:24px; font-size:13px; font-weight:500;
+  background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.08);
+  color:var(--text-dim); cursor:pointer; transition:all .25s;
+}
+.bio-tab:hover { border-color:rgba(255,255,255,0.2); color:#fff; }
+.bio-tab.active { background:rgba(16,185,129,0.15); border-color:rgba(16,185,129,0.4); color:#6ee7b7; }
+.sub-stack { display:flex; flex-direction:column; gap:12px; max-width:560px; width:100%; }
+.sub-card {
+  position:relative; display:flex; align-items:center; gap:16px;
+  background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.07);
+  border-radius:14px; padding:20px 24px; cursor:pointer;
+  transition:all .3s cubic-bezier(0.32, 0.72, 0, 1); overflow:hidden;
+}
+.sub-card::before {
+  content:''; position:absolute; left:0; top:0; bottom:0; width:3px;
+  background:var(--cat-color); border-radius:3px 0 0 3px; opacity:0.5;
+}
+.sub-card:hover {
+  background:rgba(255,255,255,0.06); border-color:rgba(255,255,255,0.14);
+  transform:translateX(4px);
+}
+.sub-card-body { flex:1; min-width:0; }
+.sub-card-title { font-size:15px; font-weight:600; margin-bottom:3px; }
+.sub-card-desc { font-size:12px; color:var(--text-dim); line-height:1.5; }
+.sub-card-arrow { flex-shrink:0; color:var(--text-dim); transition:transform .3s, color .3s; }
+.sub-card:hover .sub-card-arrow { transform:translateX(3px); color:#fff; }
+
+/* ── Card Enter Animation ── */
+.card-enter {
+  opacity:0; transform:translateX(40px);
+}
+.card-enter.visible {
+  opacity:1; transform:translateX(0);
+  transition:opacity 0.4s cubic-bezier(0.32, 0.72, 0, 1), transform 0.4s cubic-bezier(0.32, 0.72, 0, 1);
+}
+.card-enter:nth-child(1) { transition-delay:0.05s; }
+.card-enter:nth-child(2) { transition-delay:0.1s; }
+.card-enter:nth-child(3) { transition-delay:0.15s; }
+.card-enter:nth-child(4) { transition-delay:0.2s; }
+.card-enter:nth-child(5) { transition-delay:0.25s; }
+.card-enter:nth-child(6) { transition-delay:0.3s; }
+.card-enter:nth-child(7) { transition-delay:0.35s; }
+.card-enter:nth-child(8) { transition-delay:0.4s; }
+
+/* ── SCENE 2: PRODUCTS ── */
+.scene2-header { text-align:center; margin-bottom:32px; }
+.scene2-title { font-size:26px; font-weight:700; letter-spacing:-0.02em; margin-bottom:4px; }
+.scene2-sub { font-size:13px; color:rgba(255,255,255,0.45); }
+.prod-stack { display:flex; flex-direction:column; gap:12px; max-width:560px; width:100%; }
+.prod-card {
+  position:relative; display:flex; align-items:center; gap:16px;
+  background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.07);
+  border-radius:14px; padding:22px 24px; text-decoration:none; color:inherit;
+  transition:all .3s cubic-bezier(0.32, 0.72, 0, 1); overflow:hidden;
+}
+.prod-card::before {
+  content:''; position:absolute; left:0; top:0; bottom:0; width:3px;
+  background:var(--prod-color); border-radius:3px 0 0 3px; opacity:0.5;
+}
+.prod-card:hover {
+  background:rgba(255,255,255,0.06); border-color:rgba(255,255,255,0.14);
+  transform:translateX(4px);
+}
+.prod-card-body { flex:1; min-width:0; }
+.prod-name { font-size:15px; font-weight:600; margin-bottom:4px; }
+.prod-spec { font-size:12px; color:var(--text-dim); line-height:1.5; }
+.prod-link {
+  flex-shrink:0; font-size:12px; font-weight:500; display:flex;
+  align-items:center; gap:5px; transition:gap .2s;
+  white-space:nowrap;
+}
+.prod-card:hover .prod-link { gap:10px; }
+
+/* ── BOTTOM PILL ── */
+.bottom-pill {
+  position:fixed; bottom:28px; left:50%; transform:translateX(-50%); z-index:200;
+  background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.1);
+  border-radius:28px; padding:10px 24px;
+  backdrop-filter:blur(16px); cursor:pointer;
+  font-size:13px; color:var(--text-dim); font-weight:500;
+  transition:all .3s; display:none; align-items:center; gap:8px;
+}
+.bottom-pill.show { display:flex; }
+.bottom-pill:hover { background:rgba(255,255,255,0.1); border-color:rgba(255,255,255,0.2); color:#fff; }
+
+/* ── DESKTOP: 2x2 grid for landing ── */
+@media (min-width:641px) {
+  .cat-stack {
+    display:grid; grid-template-columns:repeat(2,1fr); gap:16px; max-width:600px;
+  }
+  .cat-card { flex-direction:column; text-align:center; padding:32px 24px; gap:14px; }
+  .cat-card::before { left:0; top:0; bottom:auto; width:100%; height:3px; border-radius:3px 3px 0 0; }
+  .cat-card-icon { margin:0 auto; }
+  .cat-card-arrow { position:absolute; right:16px; top:50%; transform:translateY(-50%); }
+  .cat-card:hover .cat-card-arrow { transform:translateY(-50%) translateX(3px); }
+  .cat-card:hover { transform:translateY(-4px) translateX(0); }
+  .sub-stack { max-width:640px; }
+  .prod-stack { max-width:640px; }
+}
+
+/* ── MOBILE ── */
+@media (max-width:640px) {
+  .topbar { padding:0 14px; }
+  .landing-logo { width:72px; height:72px; }
+  .landing-title { font-size:22px; margin-bottom:36px; }
+  .scene1-title { font-size:24px; }
+  .scene2-title { font-size:22px; }
+  .scene { padding:36px 16px 110px; }
+  .breadcrumb { font-size:12px; }
+  .cat-card { padding:20px; }
+}
+</style>
+</head>
+<body>
+
+<!-- TOP BAR -->
+<nav class="topbar">
+  <div class="topbar-left">
+    <a href="index.html"><img src="Logo/logo-kc.png" alt="KC"></a>
+    <div class="divider"></div>
+    <button class="back-btn" id="backBtn" onclick="goBack()">
+      <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5"/></svg>
+      <span data-ko="뒤로" data-en="Back">뒤로</span>
+    </button>
+    <div class="breadcrumb" id="breadcrumb"></div>
+  </div>
+  <div class="topbar-right">
+    <a href="index.html" data-ko="홈" data-en="Home">홈</a>
+    <button class="lang-btn" id="langToggle" onclick="toggleLang()">EN</button>
+  </div>
+</nav>
+
+<!-- SCENE 0: LANDING -->
+<div class="scene active" id="scene0">
+  <img class="landing-logo" src="Logo/logo-kc.png" alt="Korea Cryo">
+  <div class="landing-title" data-ko="무엇을 찾으시나요?" data-en="What are you looking for?">무엇을 찾으시나요?</div>
+  <div class="cat-stack">
+    <!-- Biobanking -->
+    <div class="cat-card" style="--accent:#10b981;" onclick="goToCategory('biobanking')">
+      <div class="cat-card-icon">
+        <svg width="28" height="28" fill="none" stroke="#10b981" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9.75 3.104v5.714a2.25 2.25 0 01-.659 1.591L5 14.5M9.75 3.104c-.251.023-.501.05-.75.082m.75-.082a24.301 24.301 0 014.5 0m0 0v5.714c0 .597.237 1.17.659 1.591L19.8 15.3M14.25 3.104c.251.023.501.05.75.082M19.8 15.3l-1.57.393A9.065 9.065 0 0112 15a9.065 9.065 0 00-6.23.693L5 14.5m14.8.8l1.402 1.402c1.232 1.232.65 3.318-1.067 3.611A48.309 48.309 0 0112 21c-2.773 0-5.491-.235-8.135-.687-1.718-.293-2.3-2.379-1.067-3.61L5 14.5"/></svg>
+      </div>
+      <div class="cat-card-body">
+        <div class="cat-card-title" style="color:#10b981;" data-ko="바이오뱅킹" data-en="Biobanking">바이오뱅킹</div>
+        <div class="cat-card-sub" data-ko="연구 / 보관 / 운송" data-en="Research / Storage / Transport">연구 / 보관 / 운송</div>
+      </div>
+      <div class="cat-card-arrow"><svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5"/></svg></div>
+    </div>
+    <!-- AI/Animal -->
+    <div class="cat-card" style="--accent:#f59e0b;" onclick="goToCategory('animal')">
+      <div class="cat-card-icon">
+        <svg width="28" height="28" fill="none" stroke="#f59e0b" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m0-10.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.75c0 5.592 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.57-.598-3.75h-.152c-3.196 0-6.1-1.249-8.25-3.286zM12 15.75h.007v.008H12v-.008z"/></svg>
+      </div>
+      <div class="cat-card-body">
+        <div class="cat-card-title" style="color:#f59e0b;" data-ko="인공수정 / 축산" data-en="AI &amp; Animal">인공수정 / 축산</div>
+        <div class="cat-card-sub" data-ko="정액보관 / 번식" data-en="Semen Storage / Breeding">정액보관 / 번식</div>
+      </div>
+      <div class="cat-card-arrow"><svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5"/></svg></div>
+    </div>
+    <!-- Cryo -->
+    <div class="cat-card" style="--accent:#06b6d4;" onclick="goToCategory('cryo')">
+      <div class="cat-card-icon">
+        <svg width="28" height="28" fill="none" stroke="#06b6d4" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M20.25 6.375c0 2.278-3.694 4.125-8.25 4.125S3.75 8.653 3.75 6.375m16.5 0c0-2.278-3.694-4.125-8.25-4.125S3.75 4.097 3.75 6.375m16.5 0v11.25c0 2.278-3.694 4.125-8.25 4.125s-8.25-1.847-8.25-4.125V6.375m16.5 0v3.75m-16.5-3.75v3.75m16.5 0v3.75C20.25 16.153 16.556 18 12 18s-8.25-1.847-8.25-4.125v-3.75m16.5 0c0 2.278-3.694 4.125-8.25 4.125s-8.25-1.847-8.25-4.125"/></svg>
+      </div>
+      <div class="cat-card-body">
+        <div class="cat-card-title" style="color:#06b6d4;" data-ko="극저온 장비" data-en="Cryogenic Equipment">극저온 장비</div>
+        <div class="cat-card-sub" data-ko="탱크 / 가스 / 헬륨" data-en="Tanks / Gas / Helium">탱크 / 가스 / 헬륨</div>
+      </div>
+      <div class="cat-card-arrow"><svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5"/></svg></div>
+    </div>
+    <!-- Engineering -->
+    <div class="cat-card" style="--accent:#f97316;" onclick="goToCategory('engineering')">
+      <div class="cat-card-icon">
+        <svg width="28" height="28" fill="none" stroke="#f97316" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M11.42 15.17l-5.1-5.1a2.25 2.25 0 010-3.18l.96-.96a2.25 2.25 0 013.18 0l.36.36.36-.36a2.25 2.25 0 013.18 0l.96.96a2.25 2.25 0 010 3.18l-5.1 5.1a.75.75 0 01-1.06 0zM21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+      </div>
+      <div class="cat-card-body">
+        <div class="cat-card-title" style="color:#f97316;" data-ko="엔지니어링" data-en="Engineering">엔지니어링</div>
+        <div class="cat-card-sub" data-ko="배관 / 설계 / 시공" data-en="Piping / Design / Construction">배관 / 설계 / 시공</div>
+      </div>
+      <div class="cat-card-arrow"><svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5"/></svg></div>
+    </div>
+  </div>
+</div>
+
+<!-- SCENE 1: CATEGORY (dynamically filled) -->
+<div class="scene gone" id="scene1"></div>
+
+<!-- SCENE 2: PRODUCTS (dynamically filled) -->
+<div class="scene gone" id="scene2"></div>
+
+<!-- BOTTOM PILL -->
+<button class="bottom-pill" id="bottomPill" onclick="resetAll()">
+  <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 12a9 9 0 1 1 3.3-6.9"/><path stroke-linecap="round" stroke-linejoin="round" d="M3 3v5h5"/></svg>
+  <span data-ko="처음으로" data-en="Start Over">처음으로</span>
+</button>
+
+<script>
+(function(){
+  'use strict';
+
+  /* ═══════════════════════════════════════════
+     DATA (identical to product-finder.html)
+     ═══════════════════════════════════════════ */
+  var productData = {
+    'bio-lab': [
+      { ko:'LD Series', en:'LD Series', specKo:'소형 실험실용, 10~50L', specEn:'Small lab use, 10-50L', url:'bio-ld-series.html', color:'emerald' },
+      { ko:'XT Series', en:'XT Series', specKo:'고효율 정사각형 랙 시스템', specEn:'High-efficiency square rack system', url:'bio-xt-series.html', color:'emerald' },
+      { ko:'HC Series', en:'HC Series', specKo:'고용량 시료 보관', specEn:'High-capacity sample storage', url:'bio-hc-series.html', color:'emerald' },
+      { ko:'ICB Series', en:'ICB Series', specKo:'소형 운반/보관 겸용', specEn:'Compact transport & storage', url:'bio-icb-series.html', color:'emerald' }
+    ],
+    'bio-bank': [
+      { ko:'LS Series', en:'LS Series', specKo:'대용량 스테인리스 보관', specEn:'Large-capacity stainless storage', url:'bio-ls-series.html', color:'emerald' },
+      { ko:'LABS Series', en:'LABS Series', specKo:'자동화 바이오뱅크 시스템', specEn:'Automated biobank system', url:'bio-labs-series.html', color:'emerald' }
+    ],
+    'bio-pharma': [
+      { ko:'Revolution Series', en:'Revolution Series', specKo:'GMP 준수, 자동 충전, 모니터링', specEn:'GMP compliant, auto-fill, monitoring', url:'bio-revolution-series.html', color:'emerald' }
+    ],
+    'bio-transport': [
+      { ko:'ICB Dual (Vapor Shippers)', en:'ICB Dual (Vapor Shippers)', specKo:'기내 반입 가능, 10일+ 보관', specEn:'Airline-approved, 10+ day hold time', url:'bio-icb-dual-series.html', color:'emerald' }
+    ],
+    'bio-cell': [
+      { ko:'Revolution Series', en:'Revolution Series', specKo:'cGMP, RFID, 감사추적, -190\u00B0C 증기상', specEn:'cGMP, RFID, audit trail, -190\u00B0C vapor', url:'bio-revolution-series.html', color:'emerald' },
+      { ko:'LABS Series', en:'LABS Series', specKo:'최대 93,000 바이알, CS 컨트롤러', specEn:'Up to 93,000 vials, CS controller', url:'bio-labs-series.html', color:'emerald' },
+      { ko:'LS Series', en:'LS Series', specKo:'바이알 전용, 750~6,000개', specEn:'Vial-dedicated, 750-6,000', url:'bio-ls-series.html', color:'emerald' }
+    ],
+    'bio-semen': [
+      { ko:'XT Series', en:'XT Series', specKo:'Extended Time, 소형 정액 탱크', specEn:'Extended Time, small semen tanks', url:'bio-xt-series.html', color:'emerald' },
+      { ko:'HC Series', en:'HC Series', specKo:'고용량 캐니스터, 넓은 넥', specEn:'High-capacity canisters, wide neck', url:'bio-hc-series.html', color:'emerald' },
+      { ko:'ICB Series', en:'ICB Series', specKo:'차세대, 범용 캐니스터 호환', specEn:'Next-gen, universal canister compatible', url:'bio-icb-series.html', color:'emerald' },
+      { ko:'AI Shield', en:'AI Shield', specKo:'열 보호 캐니스터, 수태율 향상', specEn:'Thermal protection, improved conception', url:'bio-ai.html', color:'emerald' }
+    ],
+    'bio-vaccine': [
+      { ko:'LS Series', en:'LS Series', specKo:'박스형 랙 바이알 보관', specEn:'Box-rack vial storage', url:'bio-ls-series.html', color:'emerald' },
+      { ko:'LD Series', en:'LD Series', specKo:'소형 LN\u2082 듀어, 4~50L', specEn:'Small LN\u2082 dewars, 4-50L', url:'bio-ld-series.html', color:'emerald' },
+      { ko:'ICB Dual', en:'ICB Dual', specKo:'운송 겸용, Store-Ship-Store', specEn:'Transport combo, Store-Ship-Store', url:'bio-icb-dual-series.html', color:'emerald' }
+    ],
+    'ai-small': [
+      { ko:'AI Shield (AIS 1.5)', en:'AI Shield (AIS 1.5)', specKo:'1.5L, 휴대용 축산 용기', specEn:'1.5L, portable livestock vessel', url:'bio-ai.html', color:'amber' },
+      { ko:'AI Shield (AIS 3)', en:'AI Shield (AIS 3)', specKo:'3L, 확장 보관 용량', specEn:'3L, extended storage capacity', url:'bio-ai.html', color:'amber' },
+      { ko:'ICB 20 / ICB 24', en:'ICB 20 / ICB 24', specKo:'20~24L, 소목장 표준', specEn:'20-24L, small ranch standard', url:'bio-ai.html', color:'amber' }
+    ],
+    'ai-mid': [
+      { ko:'ICB 34 / ICB 35', en:'ICB 34 / ICB 35', specKo:'34~35L, 중규모 번식장', specEn:'34-35L, mid-scale breeding', url:'bio-ai.html', color:'amber' },
+      { ko:'XT 21-AI', en:'XT 21-AI', specKo:'고효율 정사각 AI 전용', specEn:'High-efficiency square AI dedicated', url:'bio-ai.html', color:'amber' }
+    ],
+    'ai-large': [
+      { ko:'LABS 80K AI', en:'LABS 80K AI', specKo:'80,000 스트로 보관', specEn:'80,000 straw capacity', url:'bio-ai.html', color:'amber' },
+      { ko:'AI 91K', en:'AI 91K', specKo:'91,000 스트로, 최대 용량', specEn:'91,000 straws, max capacity', url:'bio-ai.html', color:'amber' }
+    ],
+    'ai-transport': [
+      { ko:'ICB Dual', en:'ICB Dual', specKo:'정액 운송용 Vapor Shipper', specEn:'Semen transport Vapor Shipper', url:'bio-icb-dual-series.html', color:'amber' }
+    ],
+    'cryo-tank': [
+      { ko:'액화가스 저장탱크', en:'Liquefied Gas Storage Tank', specKo:'LN2, LOX, LAr, CO2 벌크 저장', specEn:'LN2, LOX, LAr, CO2 bulk storage', url:'cryo-equipment.html', color:'cyan' }
+    ],
+    'cryo-helium': [
+      { ko:'액체헬륨 공급', en:'Liquid Helium Supply', specKo:'MRI, NMR, 초전도 연구', specEn:'MRI, NMR, superconductor research', url:'liquid-helium.html', color:'cyan' }
+    ],
+    'cryo-specialty': [
+      { ko:'초고순도 가스 실린더', en:'Ultra-High Purity Gas Cylinders', specKo:'반도체/디스플레이 공정 가스', specEn:'Semiconductor/display process gas', url:'specialty-gas.html', color:'cyan' }
+    ],
+    'cryo-medical': [
+      { ko:'의료용 가스', en:'Medical Gas', specKo:'산소, 질소, 의료 혼합가스', specEn:'Oxygen, nitrogen, medical gas mix', url:'healthcare.html', color:'cyan' }
+    ],
+    'eng-gas': [
+      { ko:'가스 배관 설계/시공', en:'Gas Piping Design & Construction', specKo:'고압/저압 가스 공급 라인', specEn:'High/low pressure gas supply lines', url:'gas-engineering.html', color:'orange' }
+    ],
+    'eng-vacuum': [
+      { ko:'진공 배관 시스템', en:'Vacuum Piping System', specKo:'고진공, 초고진공 라인', specEn:'High vacuum, ultra-high vacuum lines', url:'vacuum-piping.html', color:'orange' }
+    ],
+    'eng-flow': [
+      { ko:'가스 유량계', en:'Gas Flow Meters', specKo:'정밀 유량 측정 솔루션', specEn:'Precision flow measurement solutions', url:'gas-engineering.html#flow-meters', color:'orange' }
+    ]
+  };
+
+  var branchNames = {
+    biobanking: { ko:'바이오뱅킹', en:'Biobanking' },
+    animal: { ko:'인공수정/축산', en:'AI & Animal Husbandry' },
+    cryo: { ko:'극저온 장비', en:'Cryogenic Equipment' },
+    engineering: { ko:'엔지니어링', en:'Engineering' }
+  };
+
+  var subNames = {
+    'bio-lab':{ ko:'연구소/실험실', en:'Research Lab' },
+    'bio-bank':{ ko:'바이오뱅크/병원', en:'Biobank/Hospital' },
+    'bio-pharma':{ ko:'제약/GMP', en:'Pharma/GMP' },
+    'bio-transport':{ ko:'시료 운송', en:'Sample Transport' },
+    'bio-cell':{ ko:'세포/조직 보관', en:'Cell/Tissue Storage' },
+    'bio-semen':{ ko:'정액/배아 보관', en:'Semen/Embryo Storage' },
+    'bio-vaccine':{ ko:'백신/혈액/검체', en:'Vaccine/Blood/Specimens' },
+    'ai-small':{ ko:'소규모 목장', en:'Small Ranch' },
+    'ai-mid':{ ko:'중/대규모 번식장', en:'Mid/Large Farm' },
+    'ai-large':{ ko:'대규모 정액은행', en:'Large Semen Bank' },
+    'ai-transport':{ ko:'정액 운송', en:'Semen Transport' },
+    'cryo-tank':{ ko:'액화가스 저장탱크', en:'Gas Storage Tank' },
+    'cryo-helium':{ ko:'액체헬륨', en:'Liquid Helium' },
+    'cryo-specialty':{ ko:'초고순도 가스', en:'Ultra-High Purity Gas' },
+    'cryo-medical':{ ko:'의료용 가스', en:'Medical Gas' },
+    'eng-gas':{ ko:'가스 배관 설계', en:'Gas Piping Design' },
+    'eng-vacuum':{ ko:'진공 배관', en:'Vacuum Piping' },
+    'eng-flow':{ ko:'유량계', en:'Flow Meters' }
+  };
+
+  var categoryColors = {
+    biobanking: { main:'#10b981', bg:'radial-gradient(ellipse 80% 50% at 50% 30%, rgba(6,78,59,0.4) 0%, #060d1b 70%)' },
+    animal:     { main:'#f59e0b', bg:'radial-gradient(ellipse 80% 50% at 50% 30%, rgba(120,53,15,0.35) 0%, #060d1b 70%)' },
+    cryo:       { main:'#06b6d4', bg:'radial-gradient(ellipse 80% 50% at 50% 30%, rgba(22,78,99,0.35) 0%, #060d1b 70%)' },
+    engineering:{ main:'#f97316', bg:'radial-gradient(ellipse 80% 50% at 50% 30%, rgba(124,45,18,0.35) 0%, #060d1b 70%)' }
+  };
+
+  var categorySubcats = {
+    biobanking: {
+      tabs: [
+        { id:'use', ko:'용도별', en:'By Use' },
+        { id:'scale', ko:'규모별', en:'By Scale' },
+        { id:'temp', ko:'보관방식별', en:'By Storage Type' }
+      ],
+      panels: {
+        use: [
+          { id:'bio-cell', ko:'세포 / 조직 보관', en:'Cell / Tissue Storage', descKo:'줄기세포, CAR-T, 제대혈', descEn:'Stem cells, CAR-T, cord blood' },
+          { id:'bio-semen', ko:'정액 / 배아 보관', en:'Semen / Embryo Storage', descKo:'번식 프로그램, 유전자원', descEn:'Breeding programs, genetic resources' },
+          { id:'bio-vaccine', ko:'백신 / 혈액 / 검체', en:'Vaccine / Blood / Specimens', descKo:'병원, 진단센터, 혈액원', descEn:'Hospitals, diagnostic centers, blood banks' },
+          { id:'bio-pharma', ko:'제약 / GMP 환경', en:'Pharma / GMP', descKo:'cGMP, FDA, 감사추적', descEn:'cGMP, FDA, audit trail' },
+          { id:'bio-transport', ko:'시료 운송', en:'Sample Transport', descKo:'국내외 운송, IATA 규정', descEn:'Domestic/international, IATA' },
+          { id:'bio-lab', ko:'일반 연구실', en:'General Lab', descKo:'LN\u2082 보관, 실험실 운용', descEn:'LN\u2082 storage, lab operations' }
+        ],
+        scale: [
+          { id:'bio-lab', ko:'소규모 (연구실)', en:'Small (Lab)', descKo:'~1,000 바이알 / 개인 연구', descEn:'Up to 1,000 vials / individual research' },
+          { id:'bio-semen', ko:'중규모 (병원/클리닉)', en:'Medium (Hospital/Clinic)', descKo:'1,000~10,000 바이알', descEn:'1,000-10,000 vials' },
+          { id:'bio-bank', ko:'대규모 (바이오뱅크)', en:'Large (Biobank)', descKo:'10,000~93,000 바이알', descEn:'10,000-93,000 vials' },
+          { id:'bio-pharma', ko:'엔터프라이즈 (제약사)', en:'Enterprise (Pharma)', descKo:'98,000+ 바이알 / GMP', descEn:'98,000+ vials / GMP' }
+        ],
+        temp: [
+          { id:'bio-lab', ko:'-196\u00B0C 액상 보관', en:'-196\u00B0C Liquid Phase', descKo:'LD, XT, HC, ICB 시리즈', descEn:'LD, XT, HC, ICB Series' },
+          { id:'bio-bank', ko:'-190\u00B0C 증기상 보관', en:'-190\u00B0C Vapor Phase', descKo:'Revolution, LABS, LS 시리즈', descEn:'Revolution, LABS, LS Series' },
+          { id:'bio-transport', ko:'운송용 드라이 쉬퍼', en:'Dry Shipper (Transport)', descKo:'ICB Dual, CX/D 시리즈', descEn:'ICB Dual, CX/D Series' },
+          { id:'bio-pharma', ko:'-20\u00B0C ~ -190\u00B0C 가변 온도', en:'-20\u00B0C to -190\u00B0C Variable', descKo:'Revolution Radiance 모드', descEn:'Revolution Radiance Mode' }
+        ]
+      }
+    },
+    animal: {
+      tabs: null,
+      items: [
+        { id:'ai-small', ko:'소규모 목장', en:'Small Ranch', descKo:'100두 미만', descEn:'Under 100 heads' },
+        { id:'ai-mid', ko:'중/대규모 번식장', en:'Mid/Large Breeding Farm', descKo:'100두~1,000두', descEn:'100-1,000 heads' },
+        { id:'ai-large', ko:'대규모 정액은행', en:'Large Semen Bank', descKo:'1,000두 이상 / 정액 유통', descEn:'1,000+ heads / semen distribution' },
+        { id:'ai-transport', ko:'정액 운송', en:'Semen Transport', descKo:'Vapor Shipper / Dry Shipper', descEn:'Vapor Shipper / Dry Shipper' }
+      ]
+    },
+    cryo: {
+      tabs: null,
+      items: [
+        { id:'cryo-tank', ko:'액화가스 저장탱크', en:'Liquefied Gas Tanks', descKo:'LN2, LOX, LAr, CO2', descEn:'LN2, LOX, LAr, CO2' },
+        { id:'cryo-helium', ko:'액체헬륨', en:'Liquid Helium', descKo:'MRI, NMR, 연구용', descEn:'MRI, NMR, Research' },
+        { id:'cryo-specialty', ko:'초고순도 가스 실린더', en:'Ultra-High Purity Gas Cylinders', descKo:'반도체, 디스플레이', descEn:'Semiconductor, Display' },
+        { id:'cryo-medical', ko:'의료용 가스', en:'Medical Gas', descKo:'병원, 의료기관', descEn:'Hospitals, Medical Facilities' }
+      ]
+    },
+    engineering: {
+      tabs: null,
+      items: [
+        { id:'eng-gas', ko:'가스 배관 설계', en:'Gas Piping Design', descKo:'가스 공급 시스템', descEn:'Gas supply systems' },
+        { id:'eng-vacuum', ko:'진공 배관', en:'Vacuum Piping', descKo:'진공 시스템 설치', descEn:'Vacuum system installation' },
+        { id:'eng-flow', ko:'유량계', en:'Flow Meters', descKo:'가스 유량 측정', descEn:'Gas flow measurement' }
+      ]
+    }
+  };
+
+  /* ═══════════════════════════════════════════
+     STATE
+     ═══════════════════════════════════════════ */
+  var currentLang = 'ko';
+  var currentScene = 0;
+  var activeBranch = null;
+  var activeSub = null;
+  var activeBioTab = 'use';
+  var transitioning = false;
+
+  /* ═══════════════════════════════════════════
+     HORIZONTAL SLIDE TRANSITIONS
+     ═══════════════════════════════════════════ */
+  function slideForward(fromId, toId, cb) {
+    if (transitioning) return;
+    transitioning = true;
+    var from = document.getElementById(fromId);
+    var to = document.getElementById(toId);
+    to.className = 'scene slide-right-ready';
+    to.scrollTop = 0;
+    void to.offsetWidth;
+    from.className = 'scene slide-left';
+    to.className = 'scene active';
+    setTimeout(function() {
+      from.className = 'scene gone';
+      transitioning = false;
+      if (cb) cb();
+    }, 520);
+  }
+
+  function slideBack(fromId, toId, cb) {
+    if (transitioning) return;
+    transitioning = true;
+    var from = document.getElementById(fromId);
+    var to = document.getElementById(toId);
+    to.className = 'scene slide-left-ready';
+    void to.offsetWidth;
+    from.className = 'scene slide-right-out';
+    to.className = 'scene active';
+    setTimeout(function() {
+      from.className = 'scene gone';
+      transitioning = false;
+      if (cb) cb();
+    }, 520);
+  }
+
+  /* ═══════════════════════════════════════════
+     SAFE DOM BUILDER HELPERS
+     ═══════════════════════════════════════════ */
+  function el(tag, attrs, children) {
+    var node = document.createElement(tag);
+    if (attrs) {
+      Object.keys(attrs).forEach(function(k) {
+        if (k === 'textContent') { node.textContent = attrs[k]; }
+        else if (k === 'className') { node.className = attrs[k]; }
+        else if (k === 'onclick') { node.onclick = attrs[k]; }
+        else if (k.indexOf('data-') === 0) { node.setAttribute(k, attrs[k]); }
+        else { node.setAttribute(k, attrs[k]); }
+      });
+    }
+    if (children) {
+      children.forEach(function(c) {
+        if (typeof c === 'string') { node.appendChild(document.createTextNode(c)); }
+        else if (c) { node.appendChild(c); }
+      });
+    }
+    return node;
+  }
+
+  function svgArrow(w, h) {
+    var s = document.createElementNS('http://www.w3.org/2000/svg','svg');
+    s.setAttribute('width', w); s.setAttribute('height', h);
+    s.setAttribute('fill','none'); s.setAttribute('stroke','currentColor');
+    s.setAttribute('stroke-width','1.5'); s.setAttribute('viewBox','0 0 24 24');
+    var p = document.createElementNS('http://www.w3.org/2000/svg','path');
+    p.setAttribute('stroke-linecap','round'); p.setAttribute('stroke-linejoin','round');
+    p.setAttribute('d','M8.25 4.5l7.5 7.5-7.5 7.5');
+    s.appendChild(p);
+    return s;
+  }
+
+  function svgArrowRight(w, h) {
+    var s = document.createElementNS('http://www.w3.org/2000/svg','svg');
+    s.setAttribute('width', w); s.setAttribute('height', h);
+    s.setAttribute('fill','none'); s.setAttribute('stroke','currentColor');
+    s.setAttribute('stroke-width','1.5'); s.setAttribute('viewBox','0 0 24 24');
+    var p = document.createElementNS('http://www.w3.org/2000/svg','path');
+    p.setAttribute('stroke-linecap','round'); p.setAttribute('stroke-linejoin','round');
+    p.setAttribute('d','M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3');
+    s.appendChild(p);
+    return s;
+  }
+
+  /* ═══════════════════════════════════════════
+     SCENE 1 BUILDER (DOM-based)
+     ═══════════════════════════════════════════ */
+  function buildScene1(branch) {
+    var s1 = document.getElementById('scene1');
+    var cat = categoryColors[branch];
+    var name = branchNames[branch];
+    var data = categorySubcats[branch];
+    s1.style.background = cat.bg;
+    while (s1.firstChild) s1.removeChild(s1.firstChild);
+
+    var subtitle = {
+      biobanking:{ko:'어떻게 찾으시겠어요?',en:'How would you like to search?'},
+      animal:{ko:'규모를 선택하세요',en:'Select your scale'},
+      cryo:{ko:'분야를 선택하세요',en:'Select category'},
+      engineering:{ko:'서비스를 선택하세요',en:'Select service'}
+    };
+    var sub = subtitle[branch];
+
+    var header = el('div',{className:'scene1-header'},[
+      el('div',{className:'scene1-title',style:'color:'+cat.main+';','data-ko':name.ko,'data-en':name.en,textContent:name[currentLang]}),
+      el('div',{className:'scene1-sub','data-ko':sub.ko,'data-en':sub.en,textContent:sub[currentLang]})
+    ]);
+    s1.appendChild(header);
+
+    if (data.tabs) {
+      var tabsDiv = el('div',{className:'bio-tabs',id:'bioTabs'});
+      data.tabs.forEach(function(tab) {
+        var cls = 'bio-tab' + (tab.id === activeBioTab ? ' active' : '');
+        var btn = el('button',{className:cls,'data-tab':tab.id,'data-ko':tab.ko,'data-en':tab.en,textContent:tab[currentLang]});
+        btn.onclick = function(){ switchBioTab(tab.id); };
+        tabsDiv.appendChild(btn);
+      });
+      s1.appendChild(tabsDiv);
+    }
+
+    var stack = el('div',{className:'sub-stack',id:'subStack'});
+    var items = data.tabs ? data.panels[activeBioTab] : data.items;
+    items.forEach(function(it) {
+      var descKey = 'desc' + currentLang.charAt(0).toUpperCase() + currentLang.slice(1);
+      var card = el('div',{className:'sub-card card-enter',style:'--cat-color:'+cat.main+';','data-sub':it.id},[
+        el('div',{className:'sub-card-body'},[
+          el('div',{className:'sub-card-title',style:'color:'+cat.main+';','data-ko':it.ko,'data-en':it.en,textContent:it[currentLang]}),
+          el('div',{className:'sub-card-desc','data-ko':it.descKo,'data-en':it.descEn,textContent:it[descKey]})
+        ]),
+        el('div',{className:'sub-card-arrow'},[svgArrow(18,18)])
+      ]);
+      card.onclick = function(){ goToProducts(it.id, branch); };
+      stack.appendChild(card);
+    });
+    s1.appendChild(stack);
+
+    setTimeout(function() {
+      var cards = s1.querySelectorAll('.card-enter');
+      for (var j = 0; j < cards.length; j++) cards[j].classList.add('visible');
+    }, 80);
+  }
+
+  /* ═══════════════════════════════════════════
+     SCENE 2 BUILDER (DOM-based)
+     ═══════════════════════════════════════════ */
+  function buildScene2(sub, branch) {
+    var s2 = document.getElementById('scene2');
+    var cat = categoryColors[branch];
+    var sn = subNames[sub];
+    var products = productData[sub];
+    if (!products) return;
+    s2.style.background = cat.bg;
+    while (s2.firstChild) s2.removeChild(s2.firstChild);
+
+    var colorMap = { emerald:'#10b981', amber:'#f59e0b', cyan:'#06b6d4', orange:'#f97316' };
+    var linkText = currentLang === 'ko' ? '바로가기' : 'View';
+    var bn = branchNames[branch];
+
+    var header = el('div',{className:'scene2-header'},[
+      el('div',{className:'scene2-title',style:'color:'+cat.main+';','data-ko':sn.ko,'data-en':sn.en,textContent:sn[currentLang]}),
+      el('div',{className:'scene2-sub','data-ko':bn.ko,'data-en':bn.en,textContent:bn[currentLang]})
+    ]);
+    s2.appendChild(header);
+
+    var stack = el('div',{className:'prod-stack'});
+    products.forEach(function(p) {
+      var pname = p[currentLang];
+      var spec = currentLang === 'ko' ? p.specKo : p.specEn;
+      var c = colorMap[p.color] || '#06b6d4';
+      var card = el('a',{className:'prod-card card-enter',style:'--prod-color:'+c+';',href:p.url},[
+        el('div',{className:'prod-card-body'},[
+          el('div',{className:'prod-name',style:'color:'+c+';',textContent:pname}),
+          el('div',{className:'prod-spec',textContent:spec})
+        ]),
+        el('div',{className:'prod-link',style:'color:'+c+';'},[
+          document.createTextNode(linkText + ' '),
+          svgArrowRight(16,16)
+        ])
+      ]);
+      stack.appendChild(card);
+    });
+    s2.appendChild(stack);
+
+    setTimeout(function() {
+      var cards = s2.querySelectorAll('.card-enter');
+      for (var j = 0; j < cards.length; j++) cards[j].classList.add('visible');
+    }, 80);
+  }
+
+  /* ═══════════════════════════════════════════
+     NAVIGATION
+     ═══════════════════════════════════════════ */
+  window.goToCategory = function(branch) {
+    activeBranch = branch;
+    activeSub = null;
+    activeBioTab = 'use';
+    buildScene1(branch);
+    slideForward('scene0', 'scene1');
+    currentScene = 1;
+    updateUI();
+  };
+
+  window.goToProducts = function(sub, branch) {
+    activeSub = sub;
+    buildScene2(sub, branch);
+    slideForward('scene1', 'scene2');
+    currentScene = 2;
+    updateUI();
+  };
+
+  window.switchBioTab = function(tabId) {
+    activeBioTab = tabId;
+    buildScene1(activeBranch);
+    var cards = document.querySelectorAll('#scene1 .card-enter');
+    for (var j = 0; j < cards.length; j++) cards[j].classList.add('visible');
+  };
+
+  window.goBack = function() {
+    if (transitioning) return;
+    if (currentScene === 2) {
+      activeSub = null;
+      buildScene1(activeBranch);
+      var cards1 = document.querySelectorAll('#scene1 .card-enter');
+      for (var k = 0; k < cards1.length; k++) cards1[k].classList.add('visible');
+      slideBack('scene2', 'scene1');
+      currentScene = 1;
+    } else if (currentScene === 1) {
+      activeBranch = null;
+      slideBack('scene1', 'scene0');
+      currentScene = 0;
+    }
+    updateUI();
+  };
+
+  window.resetAll = function() {
+    if (currentScene === 0 || transitioning) return;
+    transitioning = true;
+    activeBranch = null;
+    activeSub = null;
+    activeBioTab = 'use';
+    var s0 = document.getElementById('scene0');
+    var s1 = document.getElementById('scene1');
+    var s2 = document.getElementById('scene2');
+    s1.className = 'scene gone';
+    s2.className = 'scene gone';
+    s0.className = 'scene slide-right-ready';
+    void s0.offsetWidth;
+    s0.className = 'scene active';
+    currentScene = 0;
+    updateUI();
+    setTimeout(function() { transitioning = false; }, 520);
+  };
+
+  /* ═══════════════════════════════════════════
+     BREADCRUMB + UI
+     ═══════════════════════════════════════════ */
+  function updateUI() {
+    var bar = document.getElementById('breadcrumb');
+    var back = document.getElementById('backBtn');
+    var pill = document.getElementById('bottomPill');
+
+    if (currentScene > 0) { back.classList.add('show'); } else { back.classList.remove('show'); }
+    if (currentScene > 0) { pill.classList.add('show'); } else { pill.classList.remove('show'); }
+
+    while (bar.firstChild) bar.removeChild(bar.firstChild);
+
+    var root = el('span',{className:'crumb' + (currentScene === 0 ? ' active' : ''),textContent:'KC'});
+    root.onclick = function() { window.resetAll(); };
+    bar.appendChild(root);
+
+    if (activeBranch) {
+      bar.appendChild(makeSep());
+      var bn = branchNames[activeBranch];
+      var c1 = el('span',{className:'crumb' + (currentScene === 1 && !activeSub ? ' active' : ''),'data-ko':bn.ko,'data-en':bn.en,textContent:bn[currentLang]});
+      (function(b) {
+        c1.onclick = function() {
+          if (currentScene === 2) {
+            activeSub = null;
+            buildScene1(b);
+            var cards = document.querySelectorAll('#scene1 .card-enter');
+            for (var k = 0; k < cards.length; k++) cards[k].classList.add('visible');
+            slideBack('scene2', 'scene1');
+            currentScene = 1;
+            updateUI();
+          }
+        };
+      })(activeBranch);
+      bar.appendChild(c1);
+    }
+
+    if (activeSub) {
+      bar.appendChild(makeSep());
+      var sn = subNames[activeSub];
+      bar.appendChild(el('span',{className:'crumb active','data-ko':sn.ko,'data-en':sn.en,textContent:sn[currentLang]}));
+    }
+  }
+
+  function makeSep() {
+    return el('span',{className:'sep',textContent:'/'});
+  }
+
+  /* ═══════════════════════════════════════════
+     LANGUAGE
+     ═══════════════════════════════════════════ */
+  window.toggleLang = function() {
+    currentLang = currentLang === 'ko' ? 'en' : 'ko';
+    document.getElementById('langToggle').textContent = currentLang === 'ko' ? 'EN' : 'KO';
+    var els = document.querySelectorAll('[data-ko]');
+    for (var i = 0; i < els.length; i++) {
+      els[i].textContent = els[i].getAttribute('data-' + currentLang);
+    }
+    if (currentScene === 1 && activeBranch) {
+      buildScene1(activeBranch);
+      var cards = document.querySelectorAll('#scene1 .card-enter');
+      for (var j = 0; j < cards.length; j++) cards[j].classList.add('visible');
+    }
+    if (currentScene === 2 && activeSub && activeBranch) {
+      buildScene2(activeSub, activeBranch);
+      var pcards = document.querySelectorAll('#scene2 .card-enter');
+      for (var k = 0; k < pcards.length; k++) pcards[k].classList.add('visible');
+    }
+    updateUI();
+  };
+
+  /* ═══════════════════════════════════════════
+     TOUCH SWIPE (mobile back gesture)
+     ═══════════════════════════════════════════ */
+  var touchStartX = 0;
+  var touchStartY = 0;
+  document.addEventListener('touchstart', function(e) {
+    touchStartX = e.touches[0].clientX;
+    touchStartY = e.touches[0].clientY;
+  }, { passive: true });
+  document.addEventListener('touchend', function(e) {
+    var dx = e.changedTouches[0].clientX - touchStartX;
+    var dy = Math.abs(e.changedTouches[0].clientY - touchStartY);
+    if (dx > 80 && dy < 80 && currentScene > 0) {
+      window.goBack();
+    }
+  }, { passive: true });
+
+  /* ═══════════════════════════════════════════
+     KEYBOARD
+     ═══════════════════════════════════════════ */
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape' || e.key === 'Backspace') {
+      if (currentScene > 0) {
+        e.preventDefault();
+        window.goBack();
+      }
+    }
+  });
+
+  /* ═══════════════════════════════════════════
+     INIT
+     ═══════════════════════════════════════════ */
+  updateUI();
+
+})();
+</script>
+</body>
+</html>
