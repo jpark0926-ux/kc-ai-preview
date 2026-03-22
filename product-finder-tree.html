@@ -171,17 +171,60 @@ body.dark-mode .l1-node.active ~ .l1-label{color:#fff;}
 .l2-pill:hover::before{opacity:1;transform:translateX(-50%) scale(1);}
 .l2-pill:hover::after{opacity:1;transform:translateX(-50%) scale(1);}
 
-/* -- L2 column -- */
+/* -- L1→L2 bridge line -- */
+.l2-bridge{
+  width:24px;height:2px;flex-shrink:0;
+  background:var(--line-default);
+  align-self:flex-start;margin-top:14px;
+  transition:background 0.4s,box-shadow 0.4s;
+}
+.l2-bridge.active{ box-shadow:0 0 8px var(--glow-color); }
+
+/* -- L2 column (folder-tree pattern) -- */
 .l2-col{
-  display:flex;flex-direction:column;gap:6px;
-  padding-left:0;min-width:150px;position:relative;
+  display:flex;flex-direction:column;gap:0;
+  min-width:150px;position:relative;
+  padding-left:20px;margin-left:0;
 }
-.l2-hline{
-  width:28px;height:2px;flex-shrink:0;
-  background:var(--line-default);transition:all 0.5s;
-  align-self:center;margin-top:14px;
+/* Hide the old standalone h-line; connector is now ::before on wrapper */
+.l2-hline{ display:none; }
+/* L2 pill wrapper: horizontal branch + vertical trunk segment */
+.l2-pill-wrap{
+  position:relative;
+  padding-left:0;
+  padding-top:3px;padding-bottom:3px;
+  /* Vertical trunk (left edge) — drawn as border-left on the wrap */
+  border-left:2px solid var(--line-default);
+  transition:border-color 0.4s;
 }
-.l2-hline.active{box-shadow:0 0 6px var(--glow-color);}
+.l2-col.active .l2-pill-wrap{ border-left-color:var(--cat-color); }
+/* Last pill: trunk only goes to center, not below */
+.l2-pill-wrap:last-child{
+  border-left-color:transparent !important;
+}
+.l2-pill-wrap:last-child::after{
+  content:'';position:absolute;
+  left:-2px;top:0;width:2px;
+  height:50%;
+  background:var(--line-default);
+  transition:background 0.4s;
+}
+.l2-col.active .l2-pill-wrap:last-child::after{ background:var(--cat-color); }
+/* Horizontal branch from trunk to pill */
+.l2-pill-wrap::before{
+  content:'';position:absolute;
+  left:0;top:50%;
+  width:16px;height:2px;
+  background:var(--line-default);
+  transition:background 0.4s,box-shadow 0.4s;
+}
+.l2-col.active .l2-pill-wrap::before{ background:var(--cat-color); }
+.l2-pill-wrap.active::before{
+  background:var(--cat-color);
+  box-shadow:0 0 6px var(--cat-glow);
+}
+/* Inner pill needs padding to clear the branch line */
+.l2-pill-wrap .l2-pill{ margin-left:16px; }
 .l2-pill{
   padding:6px 16px;border-radius:20px;
   background:var(--node-bg);
@@ -215,14 +258,46 @@ body.dark-mode .bio-tab:hover{border-color:rgba(255,255,255,0.2);color:#fff;}
 .bio-tab.active{background:rgba(16,185,129,0.12);border-color:rgba(16,185,129,0.35);color:#059669;}
 body.dark-mode .bio-tab.active{color:#6ee7b7;}
 
-/* -- L3 column -- */
-.l3-col{display:flex;flex-direction:column;gap:6px;padding-left:0;min-width:240px;}
-.l3-hline{
-  width:24px;height:2px;flex-shrink:0;
-  background:var(--line-default);transition:all 0.5s;
-  align-self:center;margin-top:10px;
+/* -- L3 column (folder-tree pattern) -- */
+.l3-col{
+  display:flex;flex-direction:column;gap:0;
+  min-width:240px;position:relative;
+  padding-left:20px;margin-left:16px;
 }
-.l3-hline.active{box-shadow:0 0 6px var(--glow-color);}
+/* Hide the old standalone h-line */
+.l3-hline{ display:none; }
+/* L3 card wrapper: horizontal branch + vertical trunk segment */
+.l3-card-wrap{
+  position:relative;
+  padding-left:0;
+  padding-top:3px;padding-bottom:3px;
+  border-left:2px solid transparent;
+  transition:border-color 0.4s;
+}
+.l3-col.active .l3-card-wrap{ border-left-color:var(--cat-color); }
+/* Last card: trunk only to center */
+.l3-card-wrap:last-child{
+  border-left-color:transparent !important;
+}
+.l3-card-wrap:last-child::after{
+  content:'';position:absolute;
+  left:-2px;top:0;width:2px;
+  height:50%;
+  background:transparent;
+  transition:background 0.4s;
+}
+.l3-col.active .l3-card-wrap:last-child::after{ background:var(--cat-color); }
+/* Horizontal branch */
+.l3-card-wrap::before{
+  content:'';position:absolute;
+  left:0;top:50%;
+  width:16px;height:2px;
+  background:transparent;
+  transition:background 0.4s;
+}
+.l3-col.active .l3-card-wrap::before{ background:var(--cat-color); }
+/* Inner card needs margin to clear the branch */
+.l3-card-wrap .l3-card{ margin-left:16px; }
 .l3-card{
   display:flex;align-items:center;
   padding:8px 14px;border-radius:10px;
@@ -254,11 +329,8 @@ body.dark-mode .l3-thumb{mix-blend-mode:screen;filter:brightness(1.2);}
   flex-shrink:0;margin-left:auto;
 }
 
-/* -- SVG connection lines -- */
-.tree-svg{
-  position:absolute;top:0;left:0;width:100%;height:100%;
-  pointer-events:none;z-index:0;overflow:visible;
-}
+/* -- SVG connection lines (disabled — using CSS folder-tree lines) -- */
+.tree-svg{ display:none; }
 
 /* -- Energy dot with trail -- */
 .energy-dot{
@@ -325,7 +397,7 @@ body.dark-mode .reset-pill:hover{background:rgba(255,255,255,0.08);border-color:
   .branch.dimmed{opacity:1;filter:none;}
   .branch.dimmed .l1-node,.branch.dimmed .l2-pill,.branch.dimmed .l3-card{pointer-events:auto;}
   .root-col{display:none;}
-  .l1-hline,.l2-hline,.l3-hline{display:none;}
+  .l1-hline,.l2-hline,.l3-hline,.l2-bridge{display:none;}
   .l1-col{
     width:100%;min-width:unset;padding:0;
     display:flex;align-items:center;gap:12px;
@@ -347,7 +419,11 @@ body.dark-mode .reset-pill:hover{background:rgba(255,255,255,0.08);border-color:
   .l2-col{
     max-height:0;overflow:hidden;transition:max-height .4s ease;
     padding:0 20px;width:100%;
+    border-left:none !important;
   }
+  .l2-pill-wrap{padding-left:0;border-left:none !important;}
+  .l2-pill-wrap::before,.l2-pill-wrap::after{display:none;}
+  .l2-pill-wrap .l2-pill{margin-left:0;}
   .branch[data-expanded="true"] .l2-col{
     max-height:800px;padding:8px 20px 12px;
   }
@@ -362,7 +438,11 @@ body.dark-mode .reset-pill:hover{background:rgba(255,255,255,0.08);border-color:
   .l3-col{
     max-height:0;overflow:hidden;transition:max-height .4s ease;
     padding:0 20px;width:100%;
+    border-left:none !important;margin-left:0;
   }
+  .l3-card-wrap{padding-left:0;border-left:none !important;}
+  .l3-card-wrap::before,.l3-card-wrap::after{display:none;}
+  .l3-card-wrap .l3-card{margin-left:0;}
   .branch[data-l3-expanded="true"] .l3-col{
     max-height:1200px;padding:4px 20px 12px;
   }
@@ -619,11 +699,7 @@ function buildTree(){
     return;
   }
 
-  // SVG layer
-  svgEl = document.createElementNS('http://www.w3.org/2000/svg','svg');
-  svgEl.setAttribute('class','tree-svg');
-  svgEl.style.cssText = 'position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:0;overflow:visible;';
-  ct.appendChild(svgEl);
+  svgEl = null; // SVG disabled — using CSS folder-tree lines
 
   catOrder.forEach(function(catId, ci){
     var cfg = catConfig[catId];
@@ -696,11 +772,13 @@ function buildTree(){
     l1col.appendChild(l1hint);
     branch.appendChild(l1col);
 
-    // H-line L1 -> L2
-    var hl2 = document.createElement('div');
-    hl2.className = 'l2-hline';
-    hl2.id = 'hline-l1-l2-'+catId;
-    branch.appendChild(hl2);
+    // Bridge line L1 -> L2
+    var bridge = document.createElement('div');
+    bridge.className = 'l2-bridge';
+    bridge.id = 'bridge-'+catId;
+    bridge.style.alignSelf = 'flex-start';
+    bridge.style.marginTop = ci === 0 ? '23px' : '14px';
+    branch.appendChild(bridge);
 
     // L2 column
     var l2col = document.createElement('div');
@@ -726,8 +804,12 @@ function buildTree(){
       l2col.appendChild(tabsDiv);
     }
 
-    // L2 pills
+    // L2 pills (wrapped for folder-tree connectors)
     items.forEach(function(it){
+      var wrap = document.createElement('div');
+      wrap.className = 'l2-pill-wrap';
+      wrap.setAttribute('data-sub',it.id);
+
       var pill = document.createElement('div');
       pill.className = 'l2-pill';
       pill.setAttribute('data-sub',it.id);
@@ -749,16 +831,19 @@ function buildTree(){
         pill.appendChild(desc);
       }
       pill.onclick = function(e){ e.stopPropagation(); selectSub(catId, it.id); };
-      l2col.appendChild(pill);
+      wrap.appendChild(pill);
+      l2col.appendChild(wrap);
     });
 
     branch.appendChild(l2col);
 
-    // H-line L2 -> L3
-    var hl3 = document.createElement('div');
-    hl3.className = 'l3-hline';
-    hl3.id = 'hline-l2-l3-'+catId;
-    branch.appendChild(hl3);
+    // Bridge line L2 -> L3
+    var bridge3 = document.createElement('div');
+    bridge3.className = 'l2-bridge';
+    bridge3.id = 'bridge3-'+catId;
+    bridge3.style.alignSelf = 'flex-start';
+    bridge3.style.marginTop = ci === 0 ? '23px' : '14px';
+    branch.appendChild(bridge3);
 
     // L3 column
     var l3col = document.createElement('div');
@@ -917,8 +1002,8 @@ function applyState(){
     var l2col = document.getElementById('l2col-'+catId);
     var l3col = document.getElementById('l3col-'+catId);
     var hl1 = document.getElementById('hline-root-'+catId);
-    var hl2 = document.getElementById('hline-l1-l2-'+catId);
-    var hl3 = document.getElementById('hline-l2-l3-'+catId);
+    var bridgeL2 = document.getElementById('bridge-'+catId);
+    var bridgeL3 = document.getElementById('bridge3-'+catId);
     var cfg = catConfig[catId];
 
     if(activeCat && activeCat !== catId){
@@ -932,13 +1017,19 @@ function applyState(){
       hl1.style.background = cfg.color;
       hl1.style.setProperty('--glow-color',cfg.glow);
       hl1.classList.add('active');
-      hl2.style.background = cfg.color;
-      hl2.classList.add('active');
-      hl2.style.setProperty('--glow-color',cfg.glow);
+
+      // Activate bridges
+      bridgeL2.style.background = cfg.color;
+      bridgeL2.style.setProperty('--glow-color',cfg.glow);
+      bridgeL2.classList.add('active');
+
+      // Activate L2 column border
+      l2col.classList.add('active');
 
       var bt = document.getElementById('bio-tabs');
       if(bt && catId === 'biobanking') bt.style.display = 'flex';
 
+      var wraps = l2col.querySelectorAll('.l2-pill-wrap');
       var pills = l2col.querySelectorAll('.l2-pill');
       pills.forEach(function(p, i){
         setTimeout(function(){ p.classList.add('visible'); }, i * 50);
@@ -953,37 +1044,59 @@ function applyState(){
           p.classList.remove('active');
         }
       });
+      // Activate wrapper ::before lines
+      wraps.forEach(function(w){
+        var subId = w.getAttribute('data-sub');
+        if(activeSub && subId === activeSub){
+          w.classList.add('active');
+        } else {
+          w.classList.remove('active');
+        }
+        // Set CSS vars for glow
+        w.style.setProperty('--cat-color', cfg.color);
+        w.style.setProperty('--cat-glow', cfg.glow);
+      });
 
       if(activeSub){
-        hl3.style.background = cfg.color;
-        hl3.classList.add('active');
-        hl3.style.setProperty('--glow-color',cfg.glow);
+        bridgeL3.style.background = cfg.color;
+        bridgeL3.style.setProperty('--glow-color',cfg.glow);
+        bridgeL3.classList.add('active');
         showProducts(catId, activeSub);
       } else {
-        hl3.style.background = 'var(--line-default)';
-        hl3.classList.remove('active');
+        bridgeL3.style.background = 'var(--line-default)';
+        bridgeL3.classList.remove('active');
+        l3col.classList.remove('active');
         l3col.innerHTML = '';
       }
     } else {
       l1.classList.remove('active');
       hl1.style.background = 'var(--line-default)';
       hl1.classList.remove('active');
-      hl2.style.background = 'var(--line-default)';
-      hl2.classList.remove('active');
-      hl3.style.background = 'var(--line-default)';
-      hl3.classList.remove('active');
+
+      // Deactivate bridges
+      bridgeL2.style.background = 'var(--line-default)';
+      bridgeL2.classList.remove('active');
+      bridgeL3.style.background = 'var(--line-default)';
+      bridgeL3.classList.remove('active');
+
+      // Deactivate L2 column border
+      l2col.classList.remove('active');
 
       var bt = document.getElementById('bio-tabs');
       if(bt && catId === 'biobanking') bt.style.display = 'none';
 
       var pills = l2col.querySelectorAll('.l2-pill');
       pills.forEach(function(p){ p.classList.remove('visible','active','dimmed-pill'); });
+      var wraps = l2col.querySelectorAll('.l2-pill-wrap');
+      wraps.forEach(function(w){ w.classList.remove('active'); });
 
+      l3col.classList.remove('active');
       l3col.innerHTML = '';
     }
   });
 
-  drawSvgLines();
+  // Fire energy dot animation (no SVG needed)
+  if(activeCat) fireEnergyDot();
   updateBreadcrumb();
 }
 
@@ -997,7 +1110,15 @@ function showProducts(catId, subId){
   if(!prods) return;
   var cfg = catConfig[catId];
 
+  // Activate L3 column border + set color vars
+  l3col.classList.add('active');
+  l3col.style.setProperty('--cat-color', cfg.color);
+  l3col.style.setProperty('--cat-glow', cfg.glow);
+
   prods.forEach(function(p, i){
+    var wrap = document.createElement('div');
+    wrap.className = 'l3-card-wrap';
+
     var card = document.createElement('a');
     card.className = 'l3-card';
     card.href = p.url;
@@ -1019,7 +1140,8 @@ function showProducts(catId, subId){
       '</span>';
     card.style.borderColor = 'rgba('+cfg.rgb+',0.15)';
     setTimeout(function(){ card.classList.add('visible'); }, i * 60);
-    l3col.appendChild(card);
+    wrap.appendChild(card);
+    l3col.appendChild(wrap);
   });
 }
 
@@ -1246,7 +1368,6 @@ function selectSub(catId, subId){
     activeSub = subId;
   }
   applyState();
-  setTimeout(drawSvgLines, 200);
 }
 
 /* ================================================================
@@ -1271,8 +1392,11 @@ function rebuildBioL2(){
   var items = data.panels[bioTab];
   var cfg = catConfig.biobanking;
 
-  var existing = l2col.querySelectorAll('.l2-pill');
+  var existing = l2col.querySelectorAll('.l2-pill-wrap');
   existing.forEach(function(p){ p.remove(); });
+  // Also remove any unwrapped pills (legacy)
+  var legacyPills = l2col.querySelectorAll('.l2-pill');
+  legacyPills.forEach(function(p){ p.remove(); });
 
   var tabsDiv = document.getElementById('bio-tabs');
   if(tabsDiv){
@@ -1289,6 +1413,10 @@ function rebuildBioL2(){
   }
 
   items.forEach(function(it){
+    var wrap = document.createElement('div');
+    wrap.className = 'l2-pill-wrap';
+    wrap.setAttribute('data-sub',it.id);
+
     var pill = document.createElement('div');
     pill.className = 'l2-pill';
     pill.setAttribute('data-sub',it.id);
@@ -1309,7 +1437,8 @@ function rebuildBioL2(){
       pill.appendChild(desc);
     }
     pill.onclick = function(e){ e.stopPropagation(); selectSub('biobanking', it.id); };
-    l2col.appendChild(pill);
+    wrap.appendChild(pill);
+    l2col.appendChild(wrap);
   });
 }
 
@@ -1415,7 +1544,6 @@ function toggleLang(){
     } else {
       if(activeCat === 'biobanking') rebuildBioL2();
       applyState();
-      setTimeout(drawSvgLines, 250);
     }
     document.getElementById('resetPill').classList.add('show');
   }
@@ -1427,13 +1555,7 @@ window.toggleLang = toggleLang;
    ================================================================ */
 buildTree();
 
-var viewport = document.getElementById('treeViewport');
-var resizeTimer;
-viewport.addEventListener('scroll', function(){ if(!isMobile) requestAnimationFrame(drawSvgLines); });
-window.addEventListener('resize', function(){
-  clearTimeout(resizeTimer);
-  resizeTimer = setTimeout(function(){ if(!isMobile) drawSvgLines(); }, 100);
-});
+/* Scroll/resize listeners — SVG lines removed, CSS handles alignment */
 
 })();
 </script>
