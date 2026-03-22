@@ -1,0 +1,986 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>제품 찾기 | Skill Tree — Korea Cryo</title>
+<link rel="icon" href="Logo/logo-kc.png">
+<link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:#060d1b; --text:#e2e8f0; --text-dim:#94a3b8;
+  --border:rgba(255,255,255,0.08);
+  --emerald:#10b981; --amber:#f59e0b; --cyan:#06b6d4; --orange:#f97316;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html,body{
+  font-family:'Inter','Noto Sans KR',sans-serif;
+  background:var(--bg); color:var(--text);
+  height:100%; overflow:hidden;
+}
+
+/* hex grid bg */
+body::before{
+  content:''; position:fixed; inset:0; z-index:0; pointer-events:none;
+  background-image:
+    radial-gradient(ellipse 50% 40% at 50% 40%, rgba(6,182,212,0.06) 0%, transparent 100%),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='56' height='100'%3E%3Cpath d='M28 66L0 50V16L28 0l28 16v34L28 66zm0 34L0 84V50l28-16 28 16v34L28 100z' fill='none' stroke='rgba(255,255,255,0.03)' stroke-width='0.5'/%3E%3C/svg%3E");
+  background-size: cover, 56px 100px;
+}
+
+/* topbar */
+.topbar{
+  position:fixed;top:0;left:0;right:0;z-index:200;height:52px;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 20px;
+  background:rgba(6,13,27,0.88);backdrop-filter:blur(20px);
+  border-bottom:1px solid var(--border);
+}
+.topbar-left{display:flex;align-items:center;gap:12px;}
+.topbar-left img{height:20px;}
+.topbar-left .divider{width:1px;height:18px;background:var(--border);}
+.topbar-title{font-size:13px;font-weight:500;color:var(--text-dim);}
+.breadcrumb{display:flex;align-items:center;gap:5px;font-size:12px;color:var(--text-dim);margin-left:8px;}
+.breadcrumb .sep{opacity:.3;font-size:10px;}
+.breadcrumb .crumb{cursor:pointer;transition:color .2s;}
+.breadcrumb .crumb:hover{color:#fff;}
+.breadcrumb .crumb.active{color:#fff;font-weight:500;}
+.topbar-right{display:flex;align-items:center;gap:12px;}
+.topbar-right a{color:var(--text-dim);text-decoration:none;font-size:12px;transition:color .2s;}
+.topbar-right a:hover{color:#fff;}
+.lang-btn{
+  background:rgba(255,255,255,0.06);border:1px solid var(--border);
+  border-radius:6px;padding:3px 10px;color:var(--text);cursor:pointer;
+  font-size:11px;font-weight:500;transition:all .2s;
+}
+.lang-btn:hover{background:rgba(255,255,255,0.12);}
+
+/* tree container */
+.tree-viewport{
+  position:fixed;inset:0;top:52px;
+  overflow:auto;z-index:1;
+  display:flex;justify-content:center;
+  padding:30px 16px 60px;
+}
+.tree-wrap{
+  position:relative;
+  display:flex;flex-direction:column;align-items:center;
+  min-width:320px;max-width:1100px;width:100%;
+}
+
+/* node base */
+.tree-node{
+  position:relative;display:flex;flex-direction:column;align-items:center;
+  cursor:pointer;transition:all .4s cubic-bezier(.16,1,.3,1);
+  z-index:10;
+}
+.tree-node.locked{opacity:.18;filter:grayscale(1);pointer-events:none;}
+.tree-node.unlocked{opacity:.55;filter:none;pointer-events:auto;}
+.tree-node.unlocked:hover{opacity:.8;transform:scale(1.08);}
+.tree-node.active{opacity:1;filter:none;pointer-events:auto;}
+.tree-node.completed{opacity:1;filter:none;}
+
+/* node shapes */
+.node-ring{
+  position:absolute;inset:-6px;border-radius:50%;
+  border:2px solid transparent;
+  transition:all .4s;
+}
+.tree-node.active .node-ring{
+  border-color:var(--node-color);
+  box-shadow:0 0 20px rgba(var(--node-rgb),.35), 0 0 40px rgba(var(--node-rgb),.15);
+  animation:ring-pulse 2s ease-in-out infinite;
+}
+@keyframes ring-pulse{
+  0%,100%{box-shadow:0 0 20px rgba(var(--node-rgb),.35),0 0 40px rgba(var(--node-rgb),.15);}
+  50%{box-shadow:0 0 28px rgba(var(--node-rgb),.5),0 0 56px rgba(var(--node-rgb),.25);}
+}
+
+.node-inner{
+  width:var(--node-size,60px);height:var(--node-size,60px);
+  border-radius:50%;
+  background:rgba(6,13,27,.9);
+  border:2px solid rgba(255,255,255,.1);
+  display:flex;align-items:center;justify-content:center;
+  transition:all .4s;position:relative;overflow:hidden;
+}
+.tree-node.active .node-inner{
+  border-color:var(--node-color);
+  background:radial-gradient(circle at center, rgba(var(--node-rgb),.15), rgba(6,13,27,.95));
+}
+.tree-node.unlocked .node-inner{border-color:rgba(var(--node-rgb),.3);}
+
+.node-inner svg{width:50%;height:50%;transition:all .3s;}
+.tree-node.active .node-inner svg{filter:drop-shadow(0 0 6px var(--node-color));}
+
+.node-label{
+  margin-top:8px;font-size:12px;font-weight:500;
+  color:var(--text-dim);transition:color .3s;text-align:center;
+  white-space:nowrap;
+}
+.tree-node.active .node-label{color:#fff;font-weight:600;}
+.tree-node.unlocked .node-label{color:rgba(255,255,255,.5);}
+
+/* root node */
+.root-node .node-inner{
+  --node-size:80px;width:80px;height:80px;
+  border-color:var(--cyan);
+  background:radial-gradient(circle at center, rgba(6,182,212,.12), rgba(6,13,27,.95));
+}
+.root-node .node-ring{
+  border-color:var(--cyan);
+  box-shadow:0 0 30px rgba(6,182,212,.3),0 0 60px rgba(6,182,212,.1);
+  animation:ring-pulse-root 3s ease-in-out infinite;
+}
+@keyframes ring-pulse-root{
+  0%,100%{box-shadow:0 0 30px rgba(6,182,212,.3),0 0 60px rgba(6,182,212,.1);}
+  50%{box-shadow:0 0 40px rgba(6,182,212,.5),0 0 80px rgba(6,182,212,.2);}
+}
+.root-node .node-inner img{width:44px;height:44px;object-fit:contain;}
+
+/* level rows */
+.level-row{
+  display:flex;justify-content:center;gap:48px;
+  position:relative;width:100%;flex-wrap:wrap;
+}
+.level-row.l2-row{gap:28px;}
+
+/* energy dot */
+.energy-dot{
+  position:absolute;width:6px;height:6px;border-radius:50%;
+  background:var(--dot-color);
+  box-shadow:0 0 12px var(--dot-color),0 0 24px var(--dot-color);
+  z-index:50;pointer-events:none;opacity:0;
+}
+
+/* activation pop */
+@keyframes node-pop{
+  0%{transform:scale(.8);opacity:.5;}
+  60%{transform:scale(1.12);}
+  100%{transform:scale(1);opacity:1;}
+}
+.tree-node.pop{animation:node-pop .4s cubic-bezier(.16,1,.3,1) forwards;}
+
+/* bio tabs */
+.bio-tabs{
+  display:flex;gap:6px;margin-bottom:6px;flex-wrap:wrap;justify-content:center;
+}
+.bio-tab{
+  padding:5px 14px;border-radius:20px;font-size:11px;font-weight:500;
+  background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);
+  color:var(--text-dim);cursor:pointer;transition:all .25s;
+}
+.bio-tab:hover{border-color:rgba(255,255,255,.2);color:#fff;}
+.bio-tab.active{background:rgba(16,185,129,.15);border-color:rgba(16,185,129,.4);color:#6ee7b7;}
+
+/* product cards (L3) */
+.l3-container{
+  display:flex;flex-wrap:wrap;gap:12px;justify-content:center;
+  width:100%;max-width:900px;margin-top:10px;
+}
+.prod-card{
+  background:linear-gradient(145deg, rgba(255,255,255,.05), rgba(255,255,255,.02));
+  border:1px solid rgba(255,255,255,.08);
+  border-radius:12px;padding:16px 18px;text-decoration:none;color:inherit;
+  display:block;transition:all .35s cubic-bezier(.16,1,.3,1);
+  width:220px;opacity:0;transform:translateY(12px);
+}
+.prod-card.visible{opacity:1;transform:translateY(0);}
+.prod-card:hover{
+  background:linear-gradient(145deg, rgba(255,255,255,.08), rgba(255,255,255,.04));
+  border-color:rgba(255,255,255,.18);transform:translateY(-3px);
+}
+.prod-name{font-size:13px;font-weight:600;margin-bottom:4px;}
+.prod-spec{font-size:11px;color:var(--text-dim);margin-bottom:10px;line-height:1.5;}
+.prod-link{font-size:11px;font-weight:500;display:inline-flex;align-items:center;gap:4px;transition:gap .2s;}
+.prod-card:hover .prod-link{gap:8px;}
+
+/* spacing between levels */
+.level-gap{height:50px;position:relative;width:100%;flex-shrink:0;}
+.level-gap-sm{height:36px;position:relative;width:100%;flex-shrink:0;}
+
+/* sub-label */
+.sub-desc{font-size:10px;color:var(--text-dim);text-align:center;max-width:100px;line-height:1.3;margin-top:2px;}
+
+/* reset pill */
+.reset-pill{
+  position:fixed;bottom:20px;left:50%;transform:translateX(-50%);z-index:200;
+  background:rgba(6,13,27,.8);border:1px solid rgba(255,255,255,.1);
+  border-radius:24px;padding:8px 20px;backdrop-filter:blur(16px);
+  cursor:pointer;font-size:12px;color:var(--text-dim);font-weight:500;
+  transition:all .3s;display:none;align-items:center;gap:6px;
+}
+.reset-pill.show{display:flex;}
+.reset-pill:hover{background:rgba(255,255,255,.08);border-color:rgba(255,255,255,.2);color:#fff;}
+
+/* mobile */
+@media(max-width:640px){
+  .topbar{padding:0 12px;}
+  .level-row{gap:20px;}
+  .level-row.l2-row{gap:14px;}
+  .tree-node .node-inner{width:48px!important;height:48px!important;}
+  .root-node .node-inner{width:64px!important;height:64px!important;}
+  .node-label{font-size:10px;}
+  .prod-card{width:100%;max-width:280px;}
+  .level-gap{height:36px;}
+  .level-gap-sm{height:24px;}
+  .tree-viewport{padding:20px 10px 70px;}
+  .breadcrumb{display:none;}
+}
+@media(min-width:641px) and (max-width:900px){
+  .level-row{gap:32px;}
+  .prod-card{width:200px;}
+}
+</style>
+</head>
+<body>
+
+<!-- TOP BAR -->
+<nav class="topbar">
+  <div class="topbar-left">
+    <a href="index.html"><img src="Logo/logo-kc.png" alt="KC"></a>
+    <div class="divider"></div>
+    <span class="topbar-title" data-ko="제품 찾기" data-en="Product Finder">제품 찾기</span>
+    <div class="breadcrumb" id="breadcrumb"></div>
+  </div>
+  <div class="topbar-right">
+    <a href="index.html" data-ko="홈" data-en="Home">홈</a>
+    <button class="lang-btn" id="langToggle" onclick="toggleLang()">EN</button>
+  </div>
+</nav>
+
+<!-- TREE -->
+<div class="tree-viewport" id="treeViewport">
+  <div class="tree-wrap" id="treeWrap">
+  </div>
+</div>
+
+<!-- RESET PILL -->
+<button class="reset-pill" id="resetPill" onclick="resetTree()">
+  <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 12a9 9 0 1 1 3.3-6.9"/><path stroke-linecap="round" stroke-linejoin="round" d="M3 3v5h5"/></svg>
+  <span data-ko="처음으로" data-en="Start Over">처음으로</span>
+</button>
+
+<script>
+(function(){
+'use strict';
+
+/* ================================================================
+   DATA — identical to product-finder.html
+   ================================================================ */
+var productData = {
+  'bio-lab': [
+    { ko:'LD Series', en:'LD Series', specKo:'소형 실험실용, 10~50L', specEn:'Small lab use, 10-50L', url:'bio-ld-series.html', color:'emerald' },
+    { ko:'XT Series', en:'XT Series', specKo:'고효율 정사각형 랙 시스템', specEn:'High-efficiency square rack system', url:'bio-xt-series.html', color:'emerald' },
+    { ko:'HC Series', en:'HC Series', specKo:'고용량 시료 보관', specEn:'High-capacity sample storage', url:'bio-hc-series.html', color:'emerald' },
+    { ko:'ICB Series', en:'ICB Series', specKo:'소형 운반/보관 겸용', specEn:'Compact transport & storage', url:'bio-icb-series.html', color:'emerald' }
+  ],
+  'bio-bank': [
+    { ko:'LS Series', en:'LS Series', specKo:'대용량 스테인리스 보관', specEn:'Large-capacity stainless storage', url:'bio-ls-series.html', color:'emerald' },
+    { ko:'LABS Series', en:'LABS Series', specKo:'자동화 바이오뱅크 시스템', specEn:'Automated biobank system', url:'bio-labs-series.html', color:'emerald' }
+  ],
+  'bio-pharma': [
+    { ko:'Revolution Series', en:'Revolution Series', specKo:'GMP 준수, 자동 충전, 모니터링', specEn:'GMP compliant, auto-fill, monitoring', url:'bio-revolution-series.html', color:'emerald' }
+  ],
+  'bio-transport': [
+    { ko:'ICB Dual (Vapor Shippers)', en:'ICB Dual (Vapor Shippers)', specKo:'기내 반입 가능, 10일+ 보관', specEn:'Airline-approved, 10+ day hold time', url:'bio-icb-dual-series.html', color:'emerald' }
+  ],
+  'bio-cell': [
+    { ko:'Revolution Series', en:'Revolution Series', specKo:'cGMP, RFID, 감사추적, -190\u00B0C 증기상', specEn:'cGMP, RFID, audit trail, -190\u00B0C vapor', url:'bio-revolution-series.html', color:'emerald' },
+    { ko:'LABS Series', en:'LABS Series', specKo:'최대 93,000 바이알, CS 컨트롤러', specEn:'Up to 93,000 vials, CS controller', url:'bio-labs-series.html', color:'emerald' },
+    { ko:'LS Series', en:'LS Series', specKo:'바이알 전용, 750~6,000개', specEn:'Vial-dedicated, 750-6,000', url:'bio-ls-series.html', color:'emerald' }
+  ],
+  'bio-semen': [
+    { ko:'XT Series', en:'XT Series', specKo:'Extended Time, 소형 정액 탱크', specEn:'Extended Time, small semen tanks', url:'bio-xt-series.html', color:'emerald' },
+    { ko:'HC Series', en:'HC Series', specKo:'고용량 캐니스터, 넓은 넥', specEn:'High-capacity canisters, wide neck', url:'bio-hc-series.html', color:'emerald' },
+    { ko:'ICB Series', en:'ICB Series', specKo:'차세대, 범용 캐니스터 호환', specEn:'Next-gen, universal canister compatible', url:'bio-icb-series.html', color:'emerald' },
+    { ko:'AI Shield', en:'AI Shield', specKo:'열 보호 캐니스터, 수태율 향상', specEn:'Thermal protection, improved conception', url:'bio-ai.html', color:'emerald' }
+  ],
+  'bio-vaccine': [
+    { ko:'LS Series', en:'LS Series', specKo:'박스형 랙 바이알 보관', specEn:'Box-rack vial storage', url:'bio-ls-series.html', color:'emerald' },
+    { ko:'LD Series', en:'LD Series', specKo:'소형 LN\u2082 듀어, 4~50L', specEn:'Small LN\u2082 dewars, 4-50L', url:'bio-ld-series.html', color:'emerald' },
+    { ko:'ICB Dual', en:'ICB Dual', specKo:'운송 겸용, Store-Ship-Store', specEn:'Transport combo, Store-Ship-Store', url:'bio-icb-dual-series.html', color:'emerald' }
+  ],
+  'ai-small': [
+    { ko:'AI Shield (AIS 1.5)', en:'AI Shield (AIS 1.5)', specKo:'1.5L, 휴대용 축산 용기', specEn:'1.5L, portable livestock vessel', url:'bio-ai.html', color:'amber' },
+    { ko:'AI Shield (AIS 3)', en:'AI Shield (AIS 3)', specKo:'3L, 확장 보관 용량', specEn:'3L, extended storage capacity', url:'bio-ai.html', color:'amber' },
+    { ko:'ICB 20 / ICB 24', en:'ICB 20 / ICB 24', specKo:'20~24L, 소목장 표준', specEn:'20-24L, small ranch standard', url:'bio-ai.html', color:'amber' }
+  ],
+  'ai-mid': [
+    { ko:'ICB 34 / ICB 35', en:'ICB 34 / ICB 35', specKo:'34~35L, 중규모 번식장', specEn:'34-35L, mid-scale breeding', url:'bio-ai.html', color:'amber' },
+    { ko:'XT 21-AI', en:'XT 21-AI', specKo:'고효율 정사각 AI 전용', specEn:'High-efficiency square AI dedicated', url:'bio-ai.html', color:'amber' }
+  ],
+  'ai-large': [
+    { ko:'LABS 80K AI', en:'LABS 80K AI', specKo:'80,000 스트로 보관', specEn:'80,000 straw capacity', url:'bio-ai.html', color:'amber' },
+    { ko:'AI 91K', en:'AI 91K', specKo:'91,000 스트로, 최대 용량', specEn:'91,000 straws, max capacity', url:'bio-ai.html', color:'amber' }
+  ],
+  'ai-transport': [
+    { ko:'ICB Dual', en:'ICB Dual', specKo:'정액 운송용 Vapor Shipper', specEn:'Semen transport Vapor Shipper', url:'bio-icb-dual-series.html', color:'amber' }
+  ],
+  'cryo-tank': [
+    { ko:'액화가스 저장탱크', en:'Liquefied Gas Storage Tank', specKo:'LN2, LOX, LAr, CO2 벌크 저장', specEn:'LN2, LOX, LAr, CO2 bulk storage', url:'cryo-equipment.html', color:'cyan' }
+  ],
+  'cryo-helium': [
+    { ko:'액체헬륨 공급', en:'Liquid Helium Supply', specKo:'MRI, NMR, 초전도 연구', specEn:'MRI, NMR, superconductor research', url:'liquid-helium.html', color:'cyan' }
+  ],
+  'cryo-specialty': [
+    { ko:'초고순도 가스 실린더', en:'Ultra-High Purity Gas Cylinders', specKo:'반도체/디스플레이 공정 가스', specEn:'Semiconductor/display process gas', url:'specialty-gas.html', color:'cyan' }
+  ],
+  'cryo-medical': [
+    { ko:'의료용 가스', en:'Medical Gas', specKo:'산소, 질소, 의료 혼합가스', specEn:'Oxygen, nitrogen, medical gas mix', url:'healthcare.html', color:'cyan' }
+  ],
+  'eng-gas': [
+    { ko:'가스 배관 설계/시공', en:'Gas Piping Design & Construction', specKo:'고압/저압 가스 공급 라인', specEn:'High/low pressure gas supply lines', url:'gas-engineering.html', color:'orange' }
+  ],
+  'eng-vacuum': [
+    { ko:'진공 배관 시스템', en:'Vacuum Piping System', specKo:'고진공, 초고진공 라인', specEn:'High vacuum, ultra-high vacuum lines', url:'vacuum-piping.html', color:'orange' }
+  ],
+  'eng-flow': [
+    { ko:'가스 유량계', en:'Gas Flow Meters', specKo:'정밀 유량 측정 솔루션', specEn:'Precision flow measurement solutions', url:'gas-engineering.html#flow-meters', color:'orange' }
+  ]
+};
+
+var branchNames = {
+  biobanking:{ ko:'바이오뱅킹', en:'Biobanking' },
+  animal:{ ko:'인공수정/축산', en:'AI & Animal' },
+  cryo:{ ko:'극저온 장비', en:'Cryo Equipment' },
+  engineering:{ ko:'엔지니어링', en:'Engineering' }
+};
+
+var subNames = {
+  'bio-lab':{ ko:'연구소/실험실', en:'Research Lab' },
+  'bio-bank':{ ko:'바이오뱅크/병원', en:'Biobank/Hospital' },
+  'bio-pharma':{ ko:'제약/GMP', en:'Pharma/GMP' },
+  'bio-transport':{ ko:'시료 운송', en:'Sample Transport' },
+  'bio-cell':{ ko:'세포/조직 보관', en:'Cell/Tissue Storage' },
+  'bio-semen':{ ko:'정액/배아 보관', en:'Semen/Embryo Storage' },
+  'bio-vaccine':{ ko:'백신/혈액/검체', en:'Vaccine/Blood/Specimens' },
+  'ai-small':{ ko:'소규모 목장', en:'Small Ranch' },
+  'ai-mid':{ ko:'중/대규모 번식장', en:'Mid/Large Farm' },
+  'ai-large':{ ko:'대규모 정액은행', en:'Large Semen Bank' },
+  'ai-transport':{ ko:'정액 운송', en:'Semen Transport' },
+  'cryo-tank':{ ko:'액화가스 저장탱크', en:'Gas Storage Tank' },
+  'cryo-helium':{ ko:'액체헬륨', en:'Liquid Helium' },
+  'cryo-specialty':{ ko:'초고순도 가스', en:'Ultra-High Purity Gas' },
+  'cryo-medical':{ ko:'의료용 가스', en:'Medical Gas' },
+  'eng-gas':{ ko:'가스 배관 설계', en:'Gas Piping Design' },
+  'eng-vacuum':{ ko:'진공 배관', en:'Vacuum Piping' },
+  'eng-flow':{ ko:'유량계', en:'Flow Meters' }
+};
+
+var categorySubcats = {
+  biobanking:{
+    tabs:[
+      {id:'use',ko:'용도별',en:'By Use'},
+      {id:'scale',ko:'규모별',en:'By Scale'},
+      {id:'temp',ko:'보관방식별',en:'By Storage Type'}
+    ],
+    panels:{
+      use:[
+        {id:'bio-cell',ko:'세포/조직 보관',en:'Cell/Tissue Storage',descKo:'줄기세포, CAR-T, 제대혈',descEn:'Stem cells, CAR-T, cord blood'},
+        {id:'bio-semen',ko:'정액/배아 보관',en:'Semen/Embryo Storage',descKo:'번식 프로그램, 유전자원',descEn:'Breeding programs, genetic resources'},
+        {id:'bio-vaccine',ko:'백신/혈액/검체',en:'Vaccine/Blood/Specimens',descKo:'병원, 진단센터, 혈액원',descEn:'Hospitals, diagnostic centers'},
+        {id:'bio-pharma',ko:'제약/GMP',en:'Pharma/GMP',descKo:'cGMP, FDA, 감사추적',descEn:'cGMP, FDA, audit trail'},
+        {id:'bio-transport',ko:'시료 운송',en:'Sample Transport',descKo:'국내외 운송, IATA 규정',descEn:'Domestic/international, IATA'},
+        {id:'bio-lab',ko:'일반 연구실',en:'General Lab',descKo:'LN\u2082 보관, 실험실 운용',descEn:'LN\u2082 storage, lab operations'}
+      ],
+      scale:[
+        {id:'bio-lab',ko:'소규모 (연구실)',en:'Small (Lab)',descKo:'~1,000 바이알',descEn:'Up to 1,000 vials'},
+        {id:'bio-semen',ko:'중규모 (병원)',en:'Medium (Hospital)',descKo:'1,000~10,000 바이알',descEn:'1,000-10,000 vials'},
+        {id:'bio-bank',ko:'대규모 (바이오뱅크)',en:'Large (Biobank)',descKo:'10,000~93,000 바이알',descEn:'10,000-93,000 vials'},
+        {id:'bio-pharma',ko:'엔터프라이즈 (제약사)',en:'Enterprise (Pharma)',descKo:'98,000+ 바이알 / GMP',descEn:'98,000+ vials / GMP'}
+      ],
+      temp:[
+        {id:'bio-lab',ko:'-196\u00B0C 액상 보관',en:'-196\u00B0C Liquid Phase',descKo:'LD, XT, HC, ICB 시리즈',descEn:'LD, XT, HC, ICB Series'},
+        {id:'bio-bank',ko:'-190\u00B0C 증기상 보관',en:'-190\u00B0C Vapor Phase',descKo:'Revolution, LABS, LS',descEn:'Revolution, LABS, LS Series'},
+        {id:'bio-transport',ko:'운송용 드라이 쉬퍼',en:'Dry Shipper',descKo:'ICB Dual, CX/D 시리즈',descEn:'ICB Dual, CX/D Series'},
+        {id:'bio-pharma',ko:'-20~-190\u00B0C 가변',en:'-20 to -190\u00B0C Variable',descKo:'Revolution Radiance',descEn:'Revolution Radiance Mode'}
+      ]
+    }
+  },
+  animal:{
+    tabs:null,
+    items:[
+      {id:'ai-small',ko:'소규모 목장',en:'Small Ranch',descKo:'100두 미만',descEn:'Under 100 heads'},
+      {id:'ai-mid',ko:'중/대규모 번식장',en:'Mid/Large Farm',descKo:'100~1,000두',descEn:'100-1,000 heads'},
+      {id:'ai-large',ko:'대규모 정액은행',en:'Large Semen Bank',descKo:'1,000두 이상',descEn:'1,000+ heads'},
+      {id:'ai-transport',ko:'정액 운송',en:'Semen Transport',descKo:'Vapor Shipper',descEn:'Vapor Shipper'}
+    ]
+  },
+  cryo:{
+    tabs:null,
+    items:[
+      {id:'cryo-tank',ko:'액화가스 저장탱크',en:'Gas Storage Tanks',descKo:'LN2, LOX, LAr, CO2',descEn:'LN2, LOX, LAr, CO2'},
+      {id:'cryo-helium',ko:'액체헬륨',en:'Liquid Helium',descKo:'MRI, NMR, 연구용',descEn:'MRI, NMR, Research'},
+      {id:'cryo-specialty',ko:'초고순도 가스',en:'Ultra-HP Gas',descKo:'반도체, 디스플레이',descEn:'Semiconductor, Display'},
+      {id:'cryo-medical',ko:'의료용 가스',en:'Medical Gas',descKo:'병원, 의료기관',descEn:'Hospitals'}
+    ]
+  },
+  engineering:{
+    tabs:null,
+    items:[
+      {id:'eng-gas',ko:'가스 배관 설계',en:'Gas Piping',descKo:'가스 공급 시스템',descEn:'Gas supply systems'},
+      {id:'eng-vacuum',ko:'진공 배관',en:'Vacuum Piping',descKo:'진공 시스템 설치',descEn:'Vacuum system installation'},
+      {id:'eng-flow',ko:'유량계',en:'Flow Meters',descKo:'가스 유량 측정',descEn:'Gas flow measurement'}
+    ]
+  }
+};
+
+/* ================================================================
+   CATEGORY CONFIG — colors, rgb, SVG icon paths
+   ================================================================ */
+var catConfig = {
+  biobanking:{color:'#10b981',rgb:'16,185,129',
+    icon:'<path stroke-linecap="round" stroke-linejoin="round" d="M9.75 3.104v5.714a2.25 2.25 0 01-.659 1.591L5 14.5M9.75 3.104c-.251.023-.501.05-.75.082m.75-.082a24.301 24.301 0 014.5 0m0 0v5.714c0 .597.237 1.17.659 1.591L19.8 15.3M14.25 3.104c.251.023.501.05.75.082M19.8 15.3l-1.57.393A9.065 9.065 0 0112 15a9.065 9.065 0 00-6.23.693L5 14.5m14.8.8l1.402 1.402c1.232 1.232.65 3.318-1.067 3.611A48.309 48.309 0 0112 21c-2.773 0-5.491-.235-8.135-.687-1.718-.293-2.3-2.379-1.067-3.61L5 14.5"/>'},
+  animal:{color:'#f59e0b',rgb:'245,158,11',
+    icon:'<path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m0-10.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.75c0 5.592 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.57-.598-3.75h-.152c-3.196 0-6.1-1.249-8.25-3.286zM12 15.75h.007v.008H12v-.008z"/>'},
+  cryo:{color:'#06b6d4',rgb:'6,182,212',
+    icon:'<path stroke-linecap="round" stroke-linejoin="round" d="M20.25 6.375c0 2.278-3.694 4.125-8.25 4.125S3.75 8.653 3.75 6.375m16.5 0c0-2.278-3.694-4.125-8.25-4.125S3.75 4.097 3.75 6.375m16.5 0v11.25c0 2.278-3.694 4.125-8.25 4.125s-8.25-1.847-8.25-4.125V6.375m16.5 0v3.75m-16.5-3.75v3.75m16.5 0v3.75C20.25 16.153 16.556 18 12 18s-8.25-1.847-8.25-4.125v-3.75m16.5 0c0 2.278-3.694 4.125-8.25 4.125s-8.25-1.847-8.25-4.125"/>'},
+  engineering:{color:'#f97316',rgb:'249,115,22',
+    icon:'<path stroke-linecap="round" stroke-linejoin="round" d="M11.42 15.17l-5.1-5.1a2.25 2.25 0 010-3.18l.96-.96a2.25 2.25 0 013.18 0l.36.36.36-.36a2.25 2.25 0 013.18 0l.96.96a2.25 2.25 0 010 3.18l-5.1 5.1a.75.75 0 01-1.06 0zM21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>'}
+};
+
+/* Subcategory icons */
+var subIcons = {
+  'bio-cell':'<circle cx="12" cy="12" r="3"/><path d="M12 2v4m0 12v4M2 12h4m12 0h4m-2.93-7.07l-2.83 2.83m-8.48 8.48l-2.83 2.83m14.14 0l-2.83-2.83M6.34 6.34L3.51 3.51"/>',
+  'bio-semen':'<path d="M12 2a10 10 0 100 20 10 10 0 000-20zm0 14a4 4 0 110-8 4 4 0 010 8z"/>',
+  'bio-vaccine':'<path d="M7 2l-4 4 1.5 1.5L6 6l5 5-1.5 1.5 1 1L12 12l5 5-1.5 1.5 1 1 1.5-1.5L20 16l1.5 1.5L22 18l-4 4"/>',
+  'bio-pharma':'<path d="M9 3v2H4v2h1v11a2 2 0 002 2h10a2 2 0 002-2V7h1V5h-5V3H9zm0 7h2v7H9v-7zm4 0h2v7h-2v-7z"/>',
+  'bio-transport':'<path d="M20 8h-3V4H3v13h2m12 0h4v-5l-3-4zM7 18a2 2 0 100-4 2 2 0 000 4zm10 0a2 2 0 100-4 2 2 0 000 4z"/>',
+  'bio-lab':'<path d="M9 3v6l-4 8a2 2 0 001.7 3h10.6a2 2 0 001.7-3l-4-8V3M9 3h6"/>',
+  'bio-bank':'<path d="M3 21h18M3 10h18M5 6l7-3 7 3M4 10v11m16-11v11M8 14v4m4-4v4m4-4v4"/>',
+  'ai-small':'<path d="M12 5a3 3 0 100 6 3 3 0 000-6zM5 19c0-3.9 3.1-7 7-7s7 3.1 7 7"/>',
+  'ai-mid':'<path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2m22-2v-2a3 3 0 00-2.1-2.9M13 3.1A3 3 0 0116 6a3 3 0 01-3 2.9M9 7a3 3 0 110-6 3 3 0 010 6z"/>',
+  'ai-large':'<path d="M20 7H4a2 2 0 00-2 2v10a2 2 0 002 2h16a2 2 0 002-2V9a2 2 0 00-2-2zM6 3h12l2 4H4l2-4z"/>',
+  'ai-transport':'<path d="M13 16V6a1 1 0 00-1-1H4a1 1 0 00-1 1v10m10 0H3m10 0l3 3m0-6l3 3M6 19a2 2 0 100-4 2 2 0 000 4z"/>',
+  'cryo-tank':'<path d="M12 2v20M8 6a4 4 0 018 0v12a4 4 0 01-8 0V6z"/>',
+  'cryo-helium':'<path d="M12 3v18m-6-6l6 6 6-6M6 9l6-6 6 6"/>',
+  'cryo-specialty':'<path d="M4 4h16v16H4zM9 9h6v6H9z"/>',
+  'cryo-medical':'<path d="M12 4v16m-8-8h16"/>',
+  'eng-gas':'<path d="M4 6h16M4 12h16M4 18h16"/>',
+  'eng-vacuum':'<path d="M12 2a10 10 0 100 20 10 10 0 000-20zm0 4a6 6 0 110 12 6 6 0 010-12z"/>',
+  'eng-flow':'<path d="M3 12h4l3-9 4 18 3-9h4"/>'
+};
+
+/* ================================================================
+   STATE
+   ================================================================ */
+var lang = 'ko';
+var activeCat = null;
+var activeSub = null;
+var bioTab = 'use';
+var svgNS = 'http://www.w3.org/2000/svg';
+var svgLayer = null;
+
+/* ================================================================
+   SVG CONNECTOR LAYER
+   ================================================================ */
+function createSvgLayer(){
+  if(svgLayer) svgLayer.remove();
+  svgLayer = document.createElementNS(svgNS,'svg');
+  svgLayer.style.cssText = 'position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:1;overflow:visible;';
+  document.getElementById('treeWrap').prepend(svgLayer);
+}
+
+function ensureDefs(){
+  var d = svgLayer.querySelector('defs');
+  if(!d){ d = document.createElementNS(svgNS,'defs'); svgLayer.appendChild(d); }
+  return d;
+}
+
+function addGlowFilter(id, rgb){
+  var defs = ensureDefs();
+  if(defs.querySelector('#glow-'+id)) return;
+  var f = document.createElementNS(svgNS,'filter');
+  f.setAttribute('id','glow-'+id);
+  f.setAttribute('x','-50%');f.setAttribute('y','-50%');
+  f.setAttribute('width','200%');f.setAttribute('height','200%');
+  var gb = document.createElementNS(svgNS,'feGaussianBlur');
+  gb.setAttribute('stdDeviation','4');gb.setAttribute('result','blur');
+  f.appendChild(gb);
+  var mg = document.createElementNS(svgNS,'feMerge');
+  var m1 = document.createElementNS(svgNS,'feMergeNode'); m1.setAttribute('in','blur');
+  var m2 = document.createElementNS(svgNS,'feMergeNode'); m2.setAttribute('in','SourceGraphic');
+  mg.appendChild(m1); mg.appendChild(m2);
+  f.appendChild(mg);
+  defs.appendChild(f);
+}
+
+function drawLine(x1,y1,x2,y2,color,rgb,lit,id){
+  var line = document.createElementNS(svgNS,'line');
+  line.setAttribute('x1',x1); line.setAttribute('y1',y1);
+  line.setAttribute('x2',x2); line.setAttribute('y2',y2);
+  if(lit){
+    line.setAttribute('stroke',color);
+    line.setAttribute('stroke-width','2');
+    addGlowFilter(id,rgb);
+    line.setAttribute('filter','url(#glow-'+id+')');
+  } else {
+    line.setAttribute('stroke','rgba(255,255,255,0.05)');
+    line.setAttribute('stroke-width','1');
+    line.setAttribute('stroke-dasharray','4 4');
+  }
+  svgLayer.appendChild(line);
+  return line;
+}
+
+/* ================================================================
+   ENERGY DOT ANIMATION
+   ================================================================ */
+function fireEnergy(x1,y1,x2,y2,color,duration,cb){
+  var dot = document.createElement('div');
+  dot.className = 'energy-dot';
+  dot.style.setProperty('--dot-color',color);
+  dot.style.left = x1+'px'; dot.style.top = y1+'px';
+  document.getElementById('treeWrap').appendChild(dot);
+  var start = null, dur = duration||400;
+  function step(ts){
+    if(!start) start = ts;
+    var p = Math.min((ts-start)/dur,1);
+    var ease = p<0.5 ? 2*p*p : -1+(4-2*p)*p;
+    dot.style.left = (x1+(x2-x1)*ease)+'px';
+    dot.style.top  = (y1+(y2-y1)*ease)+'px';
+    dot.style.opacity = p<0.1 ? p/0.1 : (p>0.85 ? (1-p)/0.15 : 1);
+    if(p<1) requestAnimationFrame(step);
+    else { dot.remove(); if(cb) cb(); }
+  }
+  requestAnimationFrame(step);
+}
+
+/* ================================================================
+   HELPERS — center of element relative to treeWrap
+   ================================================================ */
+function nodeCenter(el){
+  var wrap = document.getElementById('treeWrap');
+  var wr = wrap.getBoundingClientRect();
+  var r = el.getBoundingClientRect();
+  return { x: r.left+r.width/2 - wr.left, y: r.top+r.height/2 - wr.top };
+}
+
+/* ================================================================
+   DRAW ALL CONNECTIONS
+   ================================================================ */
+function drawConnections(){
+  if(!svgLayer) return;
+  while(svgLayer.lastChild) svgLayer.removeChild(svgLayer.lastChild);
+
+  var rootEl = document.getElementById('node-root');
+  if(!rootEl) return;
+  var rc = nodeCenter(rootEl);
+  var cats = ['biobanking','animal','cryo','engineering'];
+
+  cats.forEach(function(catId){
+    var el = document.getElementById('node-'+catId);
+    if(!el) return;
+    var cc = nodeCenter(el);
+    var cfg = catConfig[catId];
+    var lit = activeCat === catId;
+    drawLine(rc.x, rc.y+40, cc.x, cc.y-30, cfg.color, cfg.rgb, lit, catId);
+  });
+
+  if(activeCat){
+    var catEl = document.getElementById('node-'+activeCat);
+    if(!catEl) return;
+    var catC = nodeCenter(catEl);
+    var cfg = catConfig[activeCat];
+
+    var l2nodes = document.querySelectorAll('#l2-container .tree-node');
+    l2nodes.forEach(function(n){
+      var nc = nodeCenter(n);
+      var subId = n.getAttribute('data-sub');
+      var lit2 = n.classList.contains('active') || n.classList.contains('unlocked');
+      drawLine(catC.x, catC.y+30, nc.x, nc.y-24, cfg.color, cfg.rgb, lit2, 'l2-'+subId);
+    });
+
+    if(activeSub){
+      var subEl = document.querySelector('#l2-container .tree-node[data-sub="'+activeSub+'"]');
+      if(subEl){
+        var sc = nodeCenter(subEl);
+        var cards = document.querySelectorAll('#l3-container .prod-card');
+        cards.forEach(function(card,i){
+          var cardC = nodeCenter(card);
+          drawLine(sc.x, sc.y+24, cardC.x, cardC.y-20, cfg.color, cfg.rgb, true, 'l3-'+i);
+        });
+      }
+    }
+  }
+}
+
+/* ================================================================
+   BUILD THE TREE SKELETON
+   ================================================================ */
+function buildTree(){
+  var wrap = document.getElementById('treeWrap');
+  wrap.textContent = '';
+  createSvgLayer();
+
+  /* Root node */
+  var rootDiv = document.createElement('div');
+  rootDiv.style.cssText = 'display:flex;flex-direction:column;align-items:center;width:100%;';
+  var rootNode = document.createElement('div');
+  rootNode.className = 'tree-node root-node active';
+  rootNode.id = 'node-root';
+  rootNode.style.cssText = '--node-color:#06b6d4;--node-rgb:6,182,212;';
+  rootNode.setAttribute('data-level','0');
+
+  var rRing = document.createElement('div'); rRing.className = 'node-ring';
+  var rInner = document.createElement('div'); rInner.className = 'node-inner';
+  var rImg = document.createElement('img'); rImg.src = 'Logo/logo-kc.png'; rImg.alt = 'KC';
+  rInner.appendChild(rImg);
+  var rLabel = document.createElement('div'); rLabel.className = 'node-label';
+  rLabel.setAttribute('data-ko','Korea Cryo'); rLabel.setAttribute('data-en','Korea Cryo');
+  rLabel.textContent = 'Korea Cryo';
+  rootNode.appendChild(rRing); rootNode.appendChild(rInner); rootNode.appendChild(rLabel);
+  rootDiv.appendChild(rootNode);
+  wrap.appendChild(rootDiv);
+
+  /* Gap root -> L1 */
+  var gap1 = document.createElement('div'); gap1.className = 'level-gap'; gap1.id = 'gap-root-l1';
+  wrap.appendChild(gap1);
+
+  /* L1 row */
+  var l1Row = document.createElement('div'); l1Row.className = 'level-row'; l1Row.id = 'l1-row';
+  var cats = ['biobanking','animal','cryo','engineering'];
+  cats.forEach(function(catId){
+    var cfg = catConfig[catId];
+    var name = branchNames[catId];
+    var node = document.createElement('div');
+    node.className = 'tree-node unlocked';
+    node.id = 'node-'+catId;
+    node.setAttribute('data-level','1');
+    node.setAttribute('data-cat',catId);
+    node.style.cssText = '--node-color:'+cfg.color+';--node-rgb:'+cfg.rgb+';--node-size:60px;';
+    node.onclick = function(){ selectCategory(catId); };
+
+    var ring = document.createElement('div'); ring.className = 'node-ring';
+    var inner = document.createElement('div'); inner.className = 'node-inner';
+    inner.insertAdjacentHTML('beforeend','<svg width="28" height="28" fill="none" stroke="'+cfg.color+'" stroke-width="1.5" viewBox="0 0 24 24">'+cfg.icon+'</svg>');
+    var label = document.createElement('div'); label.className = 'node-label';
+    label.setAttribute('data-ko',name.ko); label.setAttribute('data-en',name.en);
+    label.textContent = name[lang];
+    node.appendChild(ring); node.appendChild(inner); node.appendChild(label);
+    l1Row.appendChild(node);
+  });
+  wrap.appendChild(l1Row);
+
+  /* Gap L1 -> L2 */
+  var gap2 = document.createElement('div'); gap2.className = 'level-gap'; gap2.id = 'gap-l1-l2';
+  wrap.appendChild(gap2);
+
+  /* Bio tabs row */
+  var tabsDiv = document.createElement('div');
+  tabsDiv.id = 'bioTabsRow'; tabsDiv.className = 'bio-tabs'; tabsDiv.style.display = 'none';
+  wrap.appendChild(tabsDiv);
+
+  /* L2 container */
+  var l2Wrap = document.createElement('div');
+  l2Wrap.id = 'l2-container';
+  l2Wrap.style.cssText = 'display:flex;flex-direction:column;align-items:center;width:100%;';
+  wrap.appendChild(l2Wrap);
+
+  /* Gap L2 -> L3 */
+  var gap3 = document.createElement('div');
+  gap3.className = 'level-gap-sm'; gap3.id = 'gap-l2-l3'; gap3.style.display = 'none';
+  wrap.appendChild(gap3);
+
+  /* L3 container */
+  var l3Wrap = document.createElement('div');
+  l3Wrap.id = 'l3-container'; l3Wrap.className = 'l3-container'; l3Wrap.style.display = 'none';
+  wrap.appendChild(l3Wrap);
+
+  requestAnimationFrame(function(){ setTimeout(drawConnections, 60); });
+}
+
+/* ================================================================
+   SELECT L1 CATEGORY
+   ================================================================ */
+function selectCategory(catId){
+  if(activeCat === catId) return;
+  activeCat = catId;
+  activeSub = null;
+  bioTab = 'use';
+
+  var cats = ['biobanking','animal','cryo','engineering'];
+  cats.forEach(function(c){
+    var el = document.getElementById('node-'+c);
+    if(c === catId){ el.className = 'tree-node active pop'; }
+    else { el.className = 'tree-node unlocked'; }
+  });
+
+  /* Energy: root -> L1 */
+  var rc = nodeCenter(document.getElementById('node-root'));
+  var cc = nodeCenter(document.getElementById('node-'+catId));
+  var cfg = catConfig[catId];
+  fireEnergy(rc.x, rc.y+40, cc.x, cc.y-30, cfg.color, 350, function(){ buildL2(catId); });
+
+  /* Bio tabs */
+  var tabsDiv = document.getElementById('bioTabsRow');
+  if(catId === 'biobanking'){ tabsDiv.style.display = 'flex'; buildBioTabs(); }
+  else { tabsDiv.style.display = 'none'; }
+
+  /* Hide L3 */
+  document.getElementById('l3-container').style.display = 'none';
+  document.getElementById('gap-l2-l3').style.display = 'none';
+
+  updateBreadcrumb();
+  document.getElementById('resetPill').classList.add('show');
+}
+window.selectCategory = selectCategory;
+
+/* ================================================================
+   BIOBANKING TABS
+   ================================================================ */
+function buildBioTabs(){
+  var td = document.getElementById('bioTabsRow');
+  td.textContent = '';
+  categorySubcats.biobanking.tabs.forEach(function(t){
+    var btn = document.createElement('button');
+    btn.className = 'bio-tab' + (t.id===bioTab?' active':'');
+    btn.setAttribute('data-tab',t.id);
+    btn.setAttribute('data-ko',t.ko);
+    btn.setAttribute('data-en',t.en);
+    btn.textContent = t[lang];
+    btn.onclick = function(){ switchBioTab(t.id); };
+    td.appendChild(btn);
+  });
+}
+
+function switchBioTab(tabId){
+  bioTab = tabId;
+  activeSub = null;
+  buildBioTabs();
+  buildL2(activeCat);
+  document.getElementById('l3-container').style.display = 'none';
+  document.getElementById('gap-l2-l3').style.display = 'none';
+}
+window.switchBioTab = switchBioTab;
+
+/* ================================================================
+   BUILD L2 NODES
+   ================================================================ */
+function buildL2(catId){
+  var container = document.getElementById('l2-container');
+  container.textContent = '';
+  var cfg = catConfig[catId];
+  var data = categorySubcats[catId];
+  var items = data.tabs ? data.panels[bioTab] : data.items;
+
+  var row = document.createElement('div');
+  row.className = 'level-row l2-row';
+
+  items.forEach(function(it){
+    var icon = subIcons[it.id] || '<circle cx="12" cy="12" r="6"/>';
+    var node = document.createElement('div');
+    node.className = 'tree-node unlocked';
+    node.setAttribute('data-level','2');
+    node.setAttribute('data-sub',it.id);
+    node.style.cssText = '--node-color:'+cfg.color+';--node-rgb:'+cfg.rgb+';--node-size:48px;opacity:0;transform:scale(0.7);';
+    node.onclick = function(){ selectSub(it.id); };
+
+    var ring = document.createElement('div'); ring.className = 'node-ring';
+    var inner = document.createElement('div'); inner.className = 'node-inner';
+    inner.insertAdjacentHTML('beforeend','<svg width="20" height="20" fill="none" stroke="'+cfg.color+'" stroke-width="1.5" viewBox="0 0 24 24">'+icon+'</svg>');
+    var label = document.createElement('div'); label.className = 'node-label';
+    label.setAttribute('data-ko',it.ko); label.setAttribute('data-en',it.en);
+    label.textContent = it[lang];
+
+    node.appendChild(ring); node.appendChild(inner); node.appendChild(label);
+
+    if(it.descKo){
+      var desc = document.createElement('div'); desc.className = 'sub-desc';
+      desc.setAttribute('data-ko',it.descKo); desc.setAttribute('data-en',it.descEn);
+      desc.textContent = lang==='ko' ? it.descKo : it.descEn;
+      node.appendChild(desc);
+    }
+    row.appendChild(node);
+  });
+
+  container.appendChild(row);
+
+  /* Stagger reveal */
+  var nodes = row.querySelectorAll('.tree-node');
+  nodes.forEach(function(n,i){
+    setTimeout(function(){
+      n.style.transition = 'opacity .4s cubic-bezier(.16,1,.3,1), transform .4s cubic-bezier(.16,1,.3,1)';
+      n.style.opacity = ''; n.style.transform = '';
+    }, i*80+100);
+  });
+
+  setTimeout(drawConnections, 550);
+}
+
+/* ================================================================
+   SELECT L2 SUBCATEGORY
+   ================================================================ */
+function selectSub(subId){
+  if(activeSub === subId) return;
+  activeSub = subId;
+
+  /* Update L2 states */
+  document.querySelectorAll('#l2-container .tree-node').forEach(function(n){
+    if(n.getAttribute('data-sub')===subId) n.className = 'tree-node active pop';
+    else n.className = 'tree-node unlocked';
+  });
+
+  /* Energy: L1 -> L2 */
+  var catEl = document.getElementById('node-'+activeCat);
+  var subEl = document.querySelector('#l2-container .tree-node[data-sub="'+subId+'"]');
+  if(!catEl||!subEl) return;
+  var cfg = catConfig[activeCat];
+  var c1 = nodeCenter(catEl), c2 = nodeCenter(subEl);
+  fireEnergy(c1.x, c1.y+30, c2.x, c2.y-24, cfg.color, 300, function(){ buildL3(subId); });
+
+  updateBreadcrumb();
+}
+window.selectSub = selectSub;
+
+/* ================================================================
+   BUILD L3 PRODUCT CARDS
+   ================================================================ */
+function buildL3(subId){
+  var container = document.getElementById('l3-container');
+  container.textContent = '';
+  container.style.display = 'flex';
+  document.getElementById('gap-l2-l3').style.display = 'block';
+
+  var products = productData[subId];
+  if(!products||!products.length){
+    container.style.display = 'none';
+    document.getElementById('gap-l2-l3').style.display = 'none';
+    drawConnections();
+    return;
+  }
+
+  var colorMap = {emerald:'#10b981',amber:'#f59e0b',cyan:'#06b6d4',orange:'#f97316'};
+  var linkLabel = lang==='ko' ? '바로가기' : 'View';
+
+  products.forEach(function(p,i){
+    var c = colorMap[p.color]||'#06b6d4';
+    var card = document.createElement('a');
+    card.className = 'prod-card';
+    card.href = p.url;
+
+    var nm = document.createElement('div'); nm.className = 'prod-name'; nm.style.color = c;
+    nm.textContent = p[lang];
+    var sp = document.createElement('div'); sp.className = 'prod-spec';
+    sp.textContent = lang==='ko' ? p.specKo : p.specEn;
+    var lk = document.createElement('div'); lk.className = 'prod-link'; lk.style.color = c;
+    lk.textContent = linkLabel + ' ';
+    var arrow = document.createElement('span'); arrow.textContent = '\u2192';
+    lk.appendChild(arrow);
+
+    card.appendChild(nm); card.appendChild(sp); card.appendChild(lk);
+    container.appendChild(card);
+
+    setTimeout(function(){ card.classList.add('visible'); }, i*80+150);
+  });
+
+  setTimeout(function(){
+    container.scrollIntoView({behavior:'smooth',block:'nearest'});
+    drawConnections();
+  }, 400);
+}
+
+/* ================================================================
+   RESET
+   ================================================================ */
+function resetTree(){
+  activeCat = null; activeSub = null; bioTab = 'use';
+  ['biobanking','animal','cryo','engineering'].forEach(function(c){
+    document.getElementById('node-'+c).className = 'tree-node unlocked';
+  });
+  document.getElementById('l2-container').textContent = '';
+  var l3 = document.getElementById('l3-container'); l3.textContent = ''; l3.style.display = 'none';
+  document.getElementById('gap-l2-l3').style.display = 'none';
+  document.getElementById('bioTabsRow').style.display = 'none';
+  document.getElementById('resetPill').classList.remove('show');
+  updateBreadcrumb();
+  setTimeout(drawConnections, 100);
+  document.getElementById('treeViewport').scrollTo({top:0,behavior:'smooth'});
+}
+window.resetTree = resetTree;
+
+/* ================================================================
+   BREADCRUMB
+   ================================================================ */
+function updateBreadcrumb(){
+  var bc = document.getElementById('breadcrumb');
+  bc.textContent = '';
+  if(activeCat){
+    var bn = branchNames[activeCat];
+    var crumb1 = document.createElement('span');
+    crumb1.className = 'crumb' + (activeSub?'':' active');
+    crumb1.setAttribute('data-ko',bn.ko); crumb1.setAttribute('data-en',bn.en);
+    crumb1.textContent = bn[lang];
+    crumb1.onclick = function(){ selectCategory(activeCat); };
+    bc.appendChild(crumb1);
+  }
+  if(activeSub && subNames[activeSub]){
+    var sep = document.createElement('span'); sep.className = 'sep'; sep.textContent = '/';
+    bc.appendChild(sep);
+    var sn = subNames[activeSub];
+    var crumb2 = document.createElement('span');
+    crumb2.className = 'crumb active';
+    crumb2.setAttribute('data-ko',sn.ko); crumb2.setAttribute('data-en',sn.en);
+    crumb2.textContent = sn[lang];
+    bc.appendChild(crumb2);
+  }
+}
+
+/* ================================================================
+   LANGUAGE TOGGLE
+   ================================================================ */
+function toggleLang(){
+  lang = lang==='ko' ? 'en' : 'ko';
+  document.getElementById('langToggle').textContent = lang==='ko' ? 'EN' : 'KO';
+
+  document.querySelectorAll('[data-ko]').forEach(function(el){
+    el.textContent = el.getAttribute('data-'+lang);
+  });
+
+  if(activeCat){
+    if(activeCat==='biobanking') buildBioTabs();
+    buildL2(activeCat);
+    if(activeSub){
+      setTimeout(function(){
+        document.querySelectorAll('#l2-container .tree-node').forEach(function(n){
+          if(n.getAttribute('data-sub')===activeSub) n.className = 'tree-node active';
+        });
+        buildL3(activeSub);
+      }, 200);
+    }
+  }
+  updateBreadcrumb();
+}
+window.toggleLang = toggleLang;
+
+/* ================================================================
+   RESIZE HANDLER
+   ================================================================ */
+var resizeTimer;
+window.addEventListener('resize',function(){
+  clearTimeout(resizeTimer);
+  resizeTimer = setTimeout(drawConnections, 150);
+});
+
+/* ================================================================
+   INIT
+   ================================================================ */
+buildTree();
+
+/* Entrance animation for L1 */
+setTimeout(function(){
+  ['biobanking','animal','cryo','engineering'].forEach(function(c,i){
+    setTimeout(function(){
+      var el = document.getElementById('node-'+c);
+      el.classList.add('pop');
+      setTimeout(function(){ el.classList.remove('pop'); }, 500);
+    }, i*120+300);
+  });
+},200);
+
+})();
+</script>
+</body>
+</html>
