@@ -291,10 +291,16 @@ body.dark-mode .bio-tab.active{color:#6ee7b7;}
   border-left:2px solid transparent;
   transition:border-color 0.4s;
 }
-.l3-col.active .l3-card-wrap{ border-left-color:var(--cat-color); }
+.l3-col.active .l3-card-wrap{
+  border-left-color:var(--cat-color);
+  border-image:linear-gradient(180deg,var(--cat-color),rgba(255,255,255,0.1),var(--cat-color)) 1;
+  animation:flowDown 3s linear infinite;
+}
 /* Last card: trunk only to center */
 .l3-card-wrap:last-child{
   border-left-color:transparent !important;
+  border-image:none !important;
+  animation:none !important;
 }
 .l3-card-wrap:last-child::after{
   content:'';position:absolute;
@@ -303,7 +309,7 @@ body.dark-mode .bio-tab.active{color:#6ee7b7;}
   background:transparent;
   transition:background 0.4s;
 }
-.l3-col.active .l3-card-wrap:last-child::after{ background:var(--cat-color); }
+.l3-col.active .l3-card-wrap:last-child::after{ background:var(--cat-color);animation:linePulse 2s ease-in-out infinite; }
 /* Horizontal branch */
 .l3-card-wrap::before{
   content:'';position:absolute;
@@ -312,7 +318,11 @@ body.dark-mode .bio-tab.active{color:#6ee7b7;}
   background:transparent;
   transition:background 0.4s;
 }
-.l3-col.active .l3-card-wrap::before{ background:var(--cat-color); }
+.l3-col.active .l3-card-wrap::before{
+  background:linear-gradient(90deg,transparent,var(--cat-color),var(--cat-color),transparent);
+  background-size:300% 100%;
+  animation:flowRight 2s linear infinite;
+}
 /* Inner card needs margin to clear the branch */
 .l3-card-wrap .l3-card{ margin-left:16px; }
 .l3-card{
