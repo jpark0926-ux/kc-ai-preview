@@ -674,7 +674,7 @@ var chatHistory = [];
 async function handleFreeChat(){
   var input = document.getElementById('chatInput');
   var text = input.value.trim();
-  if(!text) return;
+  if(!text || text.length < 2) return;
   input.value = '';
 
   addUserMsg(text);
