@@ -1079,8 +1079,11 @@ function applyState(){
     }
   });
 
-  // Draw SVG bezier curves after DOM updates
+  // Draw SVG bezier curves — immediate + after transitions settle
   requestAnimationFrame(function(){ drawSvgLines(); });
+  // Redraw during CSS transitions (margin/max-height animate over 0.5s)
+  var transFrames = [50,100,200,350,500];
+  transFrames.forEach(function(ms){ setTimeout(function(){ drawSvgLines(); }, ms); });
   if(activeCat) fireEnergyDot();
   updateBreadcrumb();
 }
@@ -1257,11 +1260,13 @@ function drawSvgLines(){
     var isActive = activeCat === catId;
     var isDimmed = activeCat && activeCat !== catId;
 
-    // Root -> L1: first branch uses straight horizontal line (same Y as root)
+    // Root -> L1: curves anchor to circle perimeters
     var isFirst = (catId === catOrder[0]);
+    var startX = rp.x + 28; // root circle radius = 28
     var startY = rp.y;
+    var endX = lp.x - 24; // L1 circle radius = 24
     var endY = isFirst ? rp.y : lp.y;
-    bezier(rp.x + rp.w/2, startY, lp.left, endY,
+    bezier(startX, startY, endX, endY,
       cfg.color,
       isDimmed ? 0.06 : (isActive ? 0.8 : 0.25),
       isActive ? 2.5 : 1.8,
@@ -1270,7 +1275,7 @@ function drawSvgLines(){
 
     if(isActive){
       var pills = document.querySelectorAll('#l2col-'+catId+' .l2-pill.visible');
-      var l1Right = lp.right + 4;
+      var l1Right = lp.x + 24; // L1 circle right edge (radius 24)
 
       pills.forEach(function(pill){
         var pp = pos(pill);
@@ -1525,6 +1530,11 @@ function resetTree(){
   setTimeout(function(){
     buildTree();
     document.getElementById('resetPill').classList.remove('show');
+    // Redraw curves after reset rebuild + transitions
+    requestAnimationFrame(function(){ drawSvgLines(); });
+    setTimeout(function(){ drawSvgLines(); }, 100);
+    setTimeout(function(){ drawSvgLines(); }, 300);
+    setTimeout(function(){ drawSvgLines(); }, 600);
   }, 300);
 }
 window.resetTree = resetTree;
