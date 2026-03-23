@@ -30,7 +30,7 @@ var kcProducts = {
    ======================================================================== */
 var isOpen = false;
 var chatHistory = [];
-var GEMINI_KEY = localStorage.getItem('kc-gemini-key') || '';
+var GEMINI_KEY = localStorage.getItem('kc-gemini-key') || window.KC_GEMINI_KEY || '';
 var markedReady = false;
 var welcomeShown = false;
 
@@ -606,6 +606,9 @@ function addProductCard(key){
   });
   body.appendChild(specs);
 
+  var btnRow = document.createElement('div');
+  btnRow.style.cssText = 'display:flex;gap:8px;align-items:center;margin-top:4px;';
+
   var link = document.createElement('a');
   link.className = 'kc-product-card-link';
   link.href = p.url;
@@ -621,7 +624,30 @@ function addProductCard(key){
   arrowPath.setAttribute('d','M5 12h14M12 5l7 7-7 7');
   arrowSvg.appendChild(arrowPath);
   link.appendChild(arrowSvg);
-  body.appendChild(link);
+  btnRow.appendChild(link);
+
+  var quoteBtn = document.createElement('a');
+  quoteBtn.className = 'kc-product-card-link kc-product-card-quote';
+  quoteBtn.href = 'javascript:void(0)';
+  quoteBtn.textContent = '\uACAC\uC801 \uC694\uCCAD ';
+  quoteBtn.style.cssText = 'color:#10b981;cursor:pointer;';
+  quoteBtn.addEventListener('mouseover', function(){ this.style.color='#34d399'; });
+  quoteBtn.addEventListener('mouseout', function(){ this.style.color='#10b981'; });
+  (function(k){ quoteBtn.addEventListener('click', function(){ showQuoteForm(k); }); })(key);
+  var quoteSvg = document.createElementNS('http://www.w3.org/2000/svg','svg');
+  quoteSvg.setAttribute('width','14');
+  quoteSvg.setAttribute('height','14');
+  quoteSvg.setAttribute('viewBox','0 0 24 24');
+  quoteSvg.setAttribute('fill','none');
+  quoteSvg.setAttribute('stroke','currentColor');
+  quoteSvg.setAttribute('stroke-width','2');
+  var quotePath = document.createElementNS('http://www.w3.org/2000/svg','path');
+  quotePath.setAttribute('d','M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2');
+  quoteSvg.appendChild(quotePath);
+  quoteBtn.appendChild(quoteSvg);
+  btnRow.appendChild(quoteBtn);
+
+  body.appendChild(btnRow);
 
   card.appendChild(body);
   row.appendChild(card);
@@ -1308,6 +1334,101 @@ function handleSend(){
   var text = chatInput.value.trim();
   if(!text || text.length < 2) return;
   sendMessage(text);
+}
+
+/* ========================================================================
+   QUOTE REQUEST (견적 요청)
+   ======================================================================== */
+function showQuoteForm(productKey){
+  var product = kcProducts[productKey];
+  if(!product) return;
+
+  addBotMessage('**' + product.name + '** 견적을 요청해주세요! 아래 정보를 입력하시면 담당자가 빠르게 연락드리겠습니다.');
+
+  var formWrap = document.createElement('div');
+  formWrap.style.cssText = 'margin:8px 0 16px 42px;max-width:320px;padding:20px;border-radius:16px;background:rgba(16,185,129,0.06);border:1px solid rgba(16,185,129,0.15);';
+
+  var fields = [
+    {id:'kc-q-name', label:'\uC131\uD568', placeholder:'\uD64D\uAE38\uB3D9', type:'text'},
+    {id:'kc-q-phone', label:'\uC5F0\uB77D\uCC98', placeholder:'010-0000-0000', type:'tel'},
+    {id:'kc-q-email', label:'\uC774\uBA54\uC77C', placeholder:'name@company.com', type:'email'},
+    {id:'kc-q-org', label:'\uC18C\uC18D \uAE30\uAD00', placeholder:'OO\uBCD1\uC6D0 / \uC5F0\uAD6C\uC18C', type:'text'},
+    {id:'kc-q-note', label:'\uC694\uCCAD \uC0AC\uD56D', placeholder:'\uC218\uB7C9, \uBAA8\uB378, \uB0A9\uAE30 \uB4F1', type:'text'}
+  ];
+
+  fields.forEach(function(f){
+    var label = document.createElement('div');
+    label.textContent = f.label;
+    label.style.cssText = 'font-size:11px;color:rgba(16,185,129,0.7);margin-bottom:4px;margin-top:10px;font-weight:600;';
+    var input = document.createElement('input');
+    input.type = f.type;
+    input.id = f.id;
+    input.placeholder = f.placeholder;
+    input.style.cssText = 'width:100%;padding:8px 12px;border-radius:10px;border:1px solid rgba(255,255,255,0.08);background:rgba(255,255,255,0.04);color:#e2e8f0;font-size:13px;outline:none;font-family:inherit;box-sizing:border-box;';
+    input.addEventListener('focus', function(){ this.style.borderColor='rgba(16,185,129,0.3)'; });
+    input.addEventListener('blur', function(){ this.style.borderColor='rgba(255,255,255,0.08)'; });
+    formWrap.appendChild(label);
+    formWrap.appendChild(input);
+  });
+
+  var hiddenProduct = document.createElement('input');
+  hiddenProduct.type = 'hidden';
+  hiddenProduct.id = 'kc-q-product';
+  hiddenProduct.value = product.name;
+  formWrap.appendChild(hiddenProduct);
+
+  var submitBtn = document.createElement('button');
+  submitBtn.textContent = '\uACAC\uC801 \uC694\uCCAD \uBCF4\uB0B4\uAE30';
+  submitBtn.style.cssText = 'width:100%;margin-top:16px;padding:10px;border-radius:12px;border:none;background:linear-gradient(135deg,#10b981,#059669);color:white;font-size:14px;font-weight:600;cursor:pointer;transition:all 0.25s;font-family:inherit;';
+  submitBtn.addEventListener('mouseover', function(){ this.style.transform='translateY(-1px)'; this.style.boxShadow='0 4px 12px rgba(16,185,129,0.3)'; });
+  submitBtn.addEventListener('mouseout', function(){ this.style.transform=''; this.style.boxShadow=''; });
+  (function(k){ submitBtn.addEventListener('click', function(){ submitQuote(k); }); })(productKey);
+  formWrap.appendChild(submitBtn);
+
+  chatMessages.appendChild(formWrap);
+  scrollBottom();
+}
+
+function submitQuote(productKey){
+  var product = kcProducts[productKey];
+  var name = document.getElementById('kc-q-name').value.trim();
+  var phone = document.getElementById('kc-q-phone').value.trim();
+  var email = document.getElementById('kc-q-email').value.trim();
+  var org = document.getElementById('kc-q-org').value.trim();
+  var note = document.getElementById('kc-q-note').value.trim();
+
+  if(!name || (!phone && !email)){
+    alert('\uC131\uD568\uACFC \uC5F0\uB77D\uCC98(\uC804\uD654 \uB610\uB294 \uC774\uBA54\uC77C)\uC744 \uC785\uB825\uD574\uC8FC\uC138\uC694.');
+    return;
+  }
+
+  if(typeof emailjs === 'undefined'){
+    var s = document.createElement('script');
+    s.src = 'https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js';
+    s.onload = function(){
+      try { emailjs.init('sQsYCTrE1oUQdNLYN'); } catch(e){}
+      sendQuoteEmail(product.name, name, phone, email, org, note);
+    };
+    document.head.appendChild(s);
+  } else {
+    sendQuoteEmail(product.name, name, phone, email, org, note);
+  }
+}
+
+function sendQuoteEmail(productName, name, phone, email, org, note){
+  var params = {
+    from_name: name,
+    reply_to: email || 'noreply@koreacryo.com',
+    subject: '[AI\uCC57\uBD07 \uACAC\uC801\uC694\uCCAD] ' + productName + ' - ' + name,
+    message: '\uC81C\uD488: ' + productName + '\n\uC131\uD568: ' + name + '\n\uC5F0\uB77D\uCC98: ' + phone + '\n\uC774\uBA54\uC77C: ' + email + '\n\uC18C\uC18D: ' + org + '\n\uC694\uCCAD\uC0AC\uD56D: ' + note
+  };
+
+  emailjs.send('service_v89smv9', 'template_xweueym', params)
+    .then(function(){
+      addBotMessage('\u2705 **\uACAC\uC801 \uC694\uCCAD\uC774 \uC804\uC1A1\uB418\uC5C8\uC2B5\uB2C8\uB2E4!**\n\n' + name + '\uB2D8, \uB2F4\uB2F9\uC790\uAC00 \uD655\uC778 \uD6C4 \uBE60\uB974\uAC8C \uC5F0\uB77D\uB4DC\uB9AC\uACA0\uC2B5\uB2C8\uB2E4.\n\n\uD83D\uDCDE \uAE09\uD55C \uBB38\uC758: 031-737-8171');
+    }, function(){
+      addBotMessage('\u26A0\uFE0F \uC804\uC1A1\uC5D0 \uC2E4\uD328\uD588\uC2B5\uB2C8\uB2E4. \uC9C1\uC811 \uC5F0\uB77D \uBD80\uD0C1\uB4DC\uB9BD\uB2C8\uB2E4.\n\uD83D\uDCDE 031-737-8171\n\uD83D\uDCE7 info@koreacryo.com');
+    });
 }
 
 /* ========================================================================
