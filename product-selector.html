@@ -1,0 +1,639 @@
+<!DOCTYPE html>
+<html lang="ko" class="scroll-smooth">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>제품 상담 | 한국초저온용기(주)</title>
+<meta name="description" content="한국초저온용기(주) 제품 상담 — 대화형 제품 추천 시스템. 용도와 조건에 맞는 IC Biomedical 극저온 장비를 찾아드립니다.">
+<meta name="robots" content="index, follow">
+<meta property="og:title" content="KC · 제품 상담 | Product Consultation">
+<meta property="og:description" content="대화형 제품 추천 — 용도와 조건에 맞는 IC Biomedical 극저온 장비를 안내합니다.">
+<meta property="og:type" content="website">
+<meta property="og:image" content="https://koreacryo.com/Logo/logo-kc.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preconnect" href="https://cdn.tailwindcss.com">
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+tailwind.config = {
+  theme: {
+    extend: {
+      colors: {
+        cryo: {
+          950: '#060d1b',
+          900: '#0a1628',
+          800: '#0f2240',
+          700: '#143060',
+          600: '#1a4080',
+          500: '#10b981',
+          400: '#34d399',
+          300: '#6ee7b7',
+          200: '#a7f3d0',
+          100: '#d1fae5',
+          50:  '#ecfdf5',
+        },
+        emerald: {
+          500: '#10b981',
+          600: '#059669',
+          glow: 'rgba(16, 185, 129, 0.6)',
+        }
+      }
+    }
+  }
+}
+</script>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Noto+Sans+KR:wght@300;400;500;600;700&display=swap');
+body {
+  font-family: 'Noto Sans KR', 'Inter', sans-serif;
+  background: #060d1b;
+  color: #e2e8f0;
+  margin: 0;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ===== Chat Messages ===== */
+@keyframes msgIn {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.chat-msg { animation: msgIn 0.4s ease; }
+
+/* ===== Typing Indicator ===== */
+.typing-dots span {
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: rgba(6,182,212,0.5);
+  margin: 0 2px;
+  animation: dotBounce 1.2s infinite;
+}
+.typing-dots span:nth-child(2) { animation-delay: 0.2s; }
+.typing-dots span:nth-child(3) { animation-delay: 0.4s; }
+@keyframes dotBounce {
+  0%, 80%, 100% { transform: translateY(0); }
+  40% { transform: translateY(-6px); }
+}
+
+/* ===== Answer Buttons ===== */
+.answer-btn {
+  padding: 10px 20px;
+  border-radius: 24px;
+  border: 1px solid rgba(6,182,212,0.2);
+  background: rgba(6,182,212,0.05);
+  color: #e2e8f0;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.25s;
+  text-align: left;
+  line-height: 1.5;
+}
+.answer-btn:hover {
+  background: rgba(6,182,212,0.12);
+  border-color: rgba(6,182,212,0.4);
+  transform: translateY(-1px);
+}
+.answer-btn.selected {
+  background: rgba(16,185,129,0.15);
+  border-color: rgba(16,185,129,0.4);
+  color: #6ee7b7;
+  cursor: default;
+  pointer-events: none;
+}
+
+/* ===== Result Card ===== */
+@keyframes resultIn {
+  from { opacity: 0; transform: translateY(20px) scale(0.97); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+.result-card { animation: resultIn 0.5s ease; }
+
+/* ===== Scrollbar ===== */
+#chat-area::-webkit-scrollbar { width: 6px; }
+#chat-area::-webkit-scrollbar-track { background: transparent; }
+#chat-area::-webkit-scrollbar-thumb { background: rgba(6,182,212,0.15); border-radius: 3px; }
+#chat-area::-webkit-scrollbar-thumb:hover { background: rgba(6,182,212,0.3); }
+
+/* ===== KC Avatar ===== */
+.kc-avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, rgba(6,182,212,0.2), rgba(16,185,129,0.2));
+  border: 1px solid rgba(6,182,212,0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  font-size: 11px;
+  font-weight: 700;
+  color: #67e8f9;
+  letter-spacing: 0.5px;
+}
+
+/* ===== Product Image ===== */
+.product-img {
+  width: 100%;
+  max-width: 280px;
+  height: 200px;
+  object-fit: contain;
+  border-radius: 12px;
+  background: rgba(255,255,255,0.03);
+}
+
+/* ===== Pulse ring for CTA ===== */
+@keyframes pulseRing {
+  0%   { box-shadow: 0 0 0 0 rgba(16,185,129,0.4); }
+  70%  { box-shadow: 0 0 0 8px rgba(16,185,129,0); }
+  100% { box-shadow: 0 0 0 0 rgba(16,185,129,0); }
+}
+.pulse-ring { animation: pulseRing 2s infinite; }
+</style>
+</head>
+<body>
+
+<!-- ===== TOP BAR ===== -->
+<header class="sticky top-0 z-50 border-b border-white/5" style="background:rgba(6,13,27,0.92);backdrop-filter:blur(12px);">
+  <div class="max-w-3xl mx-auto px-4 h-14 flex items-center justify-between">
+    <!-- Left: Logo + Title -->
+    <div class="flex items-center gap-3">
+      <a href="index.html" class="flex items-center gap-2">
+        <img src="bio-images/kc_logo01.png" alt="KC" class="h-7 sm:h-8"
+             onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
+        <span class="kc-avatar" style="display:none;">KC</span>
+      </a>
+      <div class="hidden sm:block h-5 w-px bg-white/10"></div>
+      <h1 class="text-sm sm:text-base font-semibold text-white/90">
+        <span data-ko="제품 상담" data-en="Product Consultation">제품 상담</span>
+      </h1>
+    </div>
+    <!-- Right: Home + Lang -->
+    <div class="flex items-center gap-3">
+      <a href="biobanking.html" class="text-xs text-white/50 hover:text-white/80 transition"
+         data-ko="바이오뱅킹" data-en="Biobanking">바이오뱅킹</a>
+      <div class="h-4 w-px bg-white/10"></div>
+      <a href="index.html" class="text-xs text-white/50 hover:text-white/80 transition"
+         data-ko="홈" data-en="Home">홈</a>
+      <div class="h-4 w-px bg-white/10"></div>
+      <button id="lang-toggle" onclick="toggleLang()"
+              class="text-xs font-medium px-2.5 py-1 rounded-full border border-cyan-500/20 text-cyan-400/70 hover:text-cyan-300 hover:border-cyan-500/40 transition">
+        EN
+      </button>
+    </div>
+  </div>
+</header>
+
+<!-- ===== CHAT AREA ===== -->
+<main class="flex-1 flex flex-col max-w-3xl mx-auto w-full">
+  <div id="chat-area" class="flex-1 overflow-y-auto px-4 py-6 space-y-4">
+    <!-- Messages injected here by JS -->
+  </div>
+  <!-- Answer buttons area -->
+  <div id="answer-area" class="px-4 pb-6 pt-2">
+    <!-- Buttons injected here by JS -->
+  </div>
+</main>
+
+<!-- ===== FOOTER ===== -->
+<footer class="border-t border-white/5 py-3 text-center text-[11px] text-white/25">
+  <span data-ko="한국초저온용기(주) &middot; IC Biomedical 공식 파트너" data-en="Korea Cryogenic Vessel Co., Ltd. &middot; Official IC Biomedical Partner">한국초저온용기(주) &middot; IC Biomedical 공식 파트너</span>
+</footer>
+
+<script>
+/* ============================================================
+   PRODUCT DATA
+   Note: All data is hardcoded — no user-generated content.
+   DOM construction uses a mix of createElement + textContent
+   for user-facing text and trusted template strings for layout.
+   ============================================================ */
+var products = {
+  'ls':         { name:'LS Series',              nameEn:'LS Series',              descKo:'\uC2A4\uD14C\uC778\uB9AC\uC2A4 \uBC14\uC774\uC54C \uC800\uC7A5 \uC2DC\uC2A4\uD15C',    descEn:'Stainless vial storage system',     specs:[{ko:'\uC6A9\uB7C9',en:'Capacity',val:'750~6,000 \uBC14\uC774\uC54C'},{ko:'\uC628\uB3C4',en:'Temperature',val:'-190\u00B0C vapor'},{ko:'\uC6D0\uACA9 \uBAA8\uB2C8\uD130\uB9C1',en:'Remote Monitoring',val:'\uC635\uC158'},{ko:'\uC7AC\uC9C8',en:'Material',val:'\uC2A4\uD14C\uC778\uB9AC\uC2A4'}], url:'bio-ls-series.html', img:'bio-images/ls-series-hires.png' },
+  'labs':       { name:'LABS Series',             nameEn:'LABS Series',             descKo:'\uB300\uC6A9\uB7C9 \uC790\uB3D9\uD654 \uBC14\uC774\uC624\uBF45\uD06C',       descEn:'Large-scale automated biobank',    specs:[{ko:'\uCD5C\uB300 \uC6A9\uB7C9',en:'Max Capacity',val:'93,000 \uBC14\uC774\uC54C'},{ko:'\uCEE8\uD2B8\uB864\uB7EC',en:'Controller',val:'CS \u00B10.1\u00B0C'},{ko:'\uC790\uB3D9 \uB514\uD3EC\uAE45',en:'Auto Defog',val:'O'},{ko:'\uD134\uD14C\uC774\uBE14',en:'Turntable',val:'4\uAD6C\uC5ED'}], url:'bio-labs-series.html', img:'bio-images/labs-family-hires.png' },
+  'revolution': { name:'Revolution Series',       nameEn:'Revolution Series',       descKo:'cGMP \uD504\uB9AC\uBBF8\uC5C4 \uBC14\uC774\uC624 \uC800\uC7A5',      descEn:'cGMP premium bio storage',         specs:[{ko:'\uC628\uB3C4',en:'Temperature',val:'-190\u00B0C vapor'},{ko:'\uC790\uB3D9 LN\u2082',en:'Auto LN\u2082',val:'O'},{ko:'RFID / \uAC10\uC0AC\uCD94\uC801',en:'RFID / Audit Trail',val:'O'},{ko:'FDA 21 CFR Part 11',en:'FDA 21 CFR Part 11',val:'O'}], url:'bio-revolution-series.html', img:'bio-images/revolution-hires.png' },
+  'ld':         { name:'LD Series',               nameEn:'LD Series',               descKo:'\uC18C\uD615 \uC2E4\uD5D8\uC2E4\uC6A9 LN\u2082 \uB4C0\uC5B4',    descEn:'Small lab LN\u2082 dewars',        specs:[{ko:'\uC6A9\uB7C9',en:'Capacity',val:'4~50L'},{ko:'\uC6A9\uB3C4',en:'Use',val:'LN\u2082 \uC800\uC7A5/\uBD84\uC8FC'},{ko:'\uBB34\uAC8C',en:'Weight',val:'\uACBD\uB7C9 \uC124\uACC4'},{ko:'\uBAA8\uB378',en:'Models',val:'LD4~LD50'}], url:'bio-ld-series.html', img:'bio-images/ld-series-hires.png' },
+  'xt':         { name:'XT Series',               nameEn:'XT Series',               descKo:'Extended Time \uC7A5\uAE30 \uBCF4\uAD00',        descEn:'Extended Time long-term storage',  specs:[{ko:'\uBCF4\uAD00 \uBC29\uC2DD',en:'Storage',val:'Cane \uD0C0\uC785'},{ko:'\uC99D\uBC1C\uB960',en:'Evaporation',val:'\uC5C5\uACC4 \uCD5C\uC800'},{ko:'\uBAA8\uB378',en:'Models',val:'XT3~XT34'},{ko:'\uC6A9\uB3C4',en:'Use',val:'\uC815\uC561/\uBC30\uC544/\uC138\uD3EC'}], url:'bio-xt-series.html', img:'bio-images/xt-series-hires.png' },
+  'hc':         { name:'HC Series',               nameEn:'HC Series',               descKo:'\uACE0\uC6A9\uB7C9 Canister \uBCF4\uAD00',           descEn:'High-capacity canister storage',   specs:[{ko:'\uCD5C\uB300 \uBC14\uC774\uC54C',en:'Max Vials',val:'1,260\uAC1C'},{ko:'\uBCF4\uAD00 \uBC29\uC2DD',en:'Storage',val:'Canister/Cane'},{ko:'\uBAA8\uB378',en:'Models',val:'HC12~VHC38'},{ko:'\uC6A9\uB3C4',en:'Use',val:'\uB300\uC6A9\uB7C9 \uC2DC\uB8CC'}], url:'bio-hc-series.html', img:'bio-images/hc-series-hires.png' },
+  'icb-dual':   { name:'ICB Dual',                nameEn:'ICB Dual',                descKo:'IATA \uC2B9\uC778 Vapor Shipper',        descEn:'IATA approved Vapor Shipper',      specs:[{ko:'\uC720\uC9C0\uC2DC\uAC04',en:'Hold Time',val:'10\uC77C \uC774\uC0C1'},{ko:'IATA \uC2B9\uC778',en:'IATA',val:'O'},{ko:'\uC6B4\uC6A9',en:'Operation',val:'Store-Ship-Store'},{ko:'\uAE30\uB0B4 \uBC18\uC785',en:'Cabin',val:'\uC2B9\uC778'}], url:'bio-icb-dual-series.html', img:'bio-images/icb-dual-series-hires.png' },
+  'cx':         { name:'CX/DX Series',            nameEn:'CX/DX Series',            descKo:'\uB2E8\uAC70\uB9AC \uC2DC\uB8CC \uC6B4\uC1A1 \uB4DC\uB77C\uC774\uC26C\uD37C',    descEn:'Short-range dry shipper',          specs:[{ko:'\uC6A9\uB7C9',en:'Capacity',val:'CX100~CX500'},{ko:'\uBC29\uC2DD',en:'Method',val:'Vapor Phase'},{ko:'\uC628\uB3C4 \uAE30\uB85D',en:'Temp Log',val:'\uC635\uC158'},{ko:'IATA',en:'IATA',val:'\uADDC\uC815 \uC801\uC6A9'}], url:'bio-icb-dual-series.html', img:'bio-images/icb-dual-series-hires.png' },
+  'ai-shield':  { name:'AI Shield',               nameEn:'AI Shield',               descKo:'\uC18C\uADDC\uBAA8 \uBAA9\uC7A5 \uD734\uB300\uC6A9',             descEn:'Small ranch portable',             specs:[{ko:'\uC6A9\uB7C9',en:'Capacity',val:'1.5L / 3L'},{ko:'\uC5F4 \uBCF4\uD638',en:'Thermal',val:'AI Shield \uAE30\uC220'},{ko:'\uD734\uB300\uC131',en:'Portable',val:'O'},{ko:'\uB300\uC0C1',en:'For',val:'\uC18C/\uB9D0/\uB3FC\uC9C0/\uC591'}], url:'bio-ai.html', img:'bio-images/AIS_Group_Freezersr-600x400.png' },
+  'ai-mid':     { name:'ICB 34/35 + XT 21-AI',    nameEn:'ICB 34/35 + XT 21-AI',    descKo:'\uC911\uADDC\uBAA8 \uBC88\uC2DD\uC7A5 \uC804\uC6A9',             descEn:'Mid-scale breeding farm',          specs:[{ko:'\uC6A9\uB7C9',en:'Capacity',val:'34~35L'},{ko:'XT 21-AI',en:'XT 21-AI',val:'\uC815\uC0AC\uAC01 AI \uC804\uC6A9'},{ko:'\uB300\uC0C1',en:'For',val:'\uC911\uADDC\uBAA8 \uBC88\uC2DD\uC7A5'},{ko:'\uCE90\uB2C8\uC2A4\uD130',en:'Canisters',val:'\uB2E4\uC218'}], url:'bio-ai.html', img:'bio-images/icb-series-hires.png' },
+  'ai-large':   { name:'LABS 80K AI',             nameEn:'LABS 80K AI',             descKo:'\uB300\uADDC\uBAA8 \uC815\uC561\uC740\uD589',                descEn:'Large-scale semen bank',           specs:[{ko:'\uC2A4\uD2B8\uB85C \uC6A9\uB7C9',en:'Straw Capacity',val:'80,000\uAC1C'},{ko:'\uCEE8\uD2B8\uB864\uB7EC',en:'Controller',val:'CS'},{ko:'\uC790\uB3D9\uD654',en:'Automation',val:'O'},{ko:'\uB300\uC0C1',en:'For',val:'\uB300\uADDC\uBAA8 \uC815\uC561\uC740\uD589'}], url:'bio-ai.html', img:'bio-images/LABS-80K-AI_ICBiomedical_Web-500x520.png' }
+};
+
+/* ============================================================
+   DECISION TREE
+   ============================================================ */
+var questions = {
+  'Q1': {
+    ko: '\uC5B4\uB5A4 \uC6A9\uB3C4\uB85C \uC0AC\uC6A9\uD558\uC2DC\uB098\uC694?',
+    en: 'What is your intended use?',
+    options: [
+      { ko: '\uC2DC\uB8CC \uBCF4\uAD00 (Storage)',           en: 'Sample Storage',              next: 'Q2' },
+      { ko: '\uC2DC\uB8CC \uC6B4\uC1A1 (Transport)',         en: 'Sample Transport',            next: 'Q_TRANSPORT' },
+      { ko: '\uC778\uACF5\uC218\uC815 / \uCD95\uC0B0 (AI/Livestock)', en: 'AI / Livestock',             next: 'Q_AI' }
+    ]
+  },
+  'Q2': {
+    ko: '\uC2DC\uB8CC\uB97C \uC5B4\uB5A4 \uC628\uB3C4\uC5D0\uC11C \uBCF4\uAD00\uD558\uC2DC\uB098\uC694?',
+    en: 'At what temperature do you store samples?',
+    options: [
+      { ko: '\uC99D\uAE30\uC0C1 -190\u00B0C (Vapor Phase)', en: 'Vapor Phase -190\u00B0C',  next: 'Q3_VAPOR' },
+      { ko: '\uC561\uC0C1 -196\u00B0C (Liquid Phase)',   en: 'Liquid Phase -196\u00B0C', next: 'Q4_LIQUID' },
+      { ko: '\uC798 \uBAA8\uB974\uACA0\uC5B4\uC694',                      en: "I'm not sure",            next: 'Q3_VAPOR' }
+    ]
+  },
+  'Q3_VAPOR': {
+    ko: '\uBCF4\uAD00\uD560 \uC2DC\uB8CC \uC218\uB7C9\uC740?',
+    en: 'How many samples do you need to store?',
+    options: [
+      { ko: '6,000\uAC1C \uC774\uD558',                           en: 'Up to 6,000',                       next: null, result: 'ls' },
+      { ko: '6,000 ~ 50,000\uAC1C',                       en: '6,000 ~ 50,000',                    next: null, result: 'labs' },
+      { ko: '50,000\uAC1C \uC774\uC0C1 \uB610\uB294 cGMP \uD544\uC694',            en: '50,000+ or cGMP required',          next: null, result: 'revolution' }
+    ]
+  },
+  'Q4_LIQUID': {
+    ko: '\uC8FC\uC694 \uBCF4\uAD00 \uB300\uC0C1\uC740?',
+    en: 'What is the primary storage target?',
+    options: [
+      { ko: '\uC2E4\uD5D8\uC2E4 \uC77C\uBC18 LN\u2082 \uC0AC\uC6A9',                en: 'General lab LN\u2082 use',             next: null, result: 'ld' },
+      { ko: '\uC7A5\uAE30 Cane \uBCF4\uAD00 (\uC815\uC561/\uBC30\uC544/\uC138\uD3EC)',           en: 'Long-term Cane storage (semen/embryo/cells)', next: 'Q5_CANE' },
+      { ko: '\uB300\uC6A9\uB7C9 Canister \uBCF4\uAD00',                    en: 'Large-capacity Canister storage',      next: null, result: 'hc' }
+    ]
+  },
+  'Q5_CANE': {
+    ko: '\uBCF4\uAD00 \uC218\uB7C9\uC740?',
+    en: 'How many samples?',
+    options: [
+      { ko: '\uC18C\uADDC\uBAA8 (100\uAC1C \uC774\uD558)',    en: 'Small (up to 100)',       next: null, result: 'xt' },
+      { ko: '\uC911\uADDC\uBAA8 (100~1,000\uAC1C)',  en: 'Medium (100~1,000)',      next: null, result: 'hc' },
+      { ko: '\uB300\uADDC\uBAA8 (1,000\uAC1C \uC774\uC0C1)', en: 'Large (1,000+)',          next: null, result: 'ls' }
+    ]
+  },
+  'Q_TRANSPORT': {
+    ko: '\uC6B4\uC1A1 \uAC70\uB9AC\uC640 \uBC29\uBC95\uC740?',
+    en: 'What is the transport distance and method?',
+    options: [
+      { ko: '\uAD6D\uB0B4 \uB2E8\uAC70\uB9AC (\uCC28\uB7C9)',  en: 'Domestic short-range (vehicle)', next: null, result: 'cx' },
+      { ko: '\uAD6D\uC81C \uD56D\uACF5 \uC6B4\uC1A1',      en: 'International air transport',    next: null, result: 'icb-dual' },
+      { ko: '\uC815\uC561 \uC6B4\uC1A1 (\uCD95\uC0B0)',    en: 'Semen transport (livestock)',     next: null, result: 'icb-dual' }
+    ]
+  },
+  'Q_AI': {
+    ko: '\uBAA9\uC7A5 \uADDC\uBAA8\uB294?',
+    en: 'What is the ranch scale?',
+    options: [
+      { ko: '\uC18C\uADDC\uBAA8 (100\uB450 \uBBF8\uB9CC)',      en: 'Small (under 100 head)',    next: null, result: 'ai-shield' },
+      { ko: '\uC911\uADDC\uBAA8 (100~1,000\uB450)',     en: 'Medium (100~1,000 head)',   next: null, result: 'ai-mid' },
+      { ko: '\uB300\uADDC\uBAA8 (1,000\uB450 \uC774\uC0C1)',    en: 'Large (1,000+ head)',       next: null, result: 'ai-large' }
+    ]
+  }
+};
+
+/* ============================================================
+   STATE
+   ============================================================ */
+var lang = 'ko';
+var chatArea = null;
+var answerArea = null;
+
+/* ============================================================
+   LANGUAGE TOGGLE
+   ============================================================ */
+function toggleLang() {
+  lang = (lang === 'ko') ? 'en' : 'ko';
+  document.getElementById('lang-toggle').textContent = (lang === 'ko') ? 'EN' : 'KO';
+  document.querySelectorAll('[data-ko][data-en]').forEach(function(el) {
+    var val = el.getAttribute('data-' + lang);
+    if (val !== null) {
+      if (el.children.length === 0) {
+        el.textContent = val;
+      } else {
+        // For elements that might contain HTML like <br>, use a safe approach
+        while (el.firstChild) el.removeChild(el.firstChild);
+        // Check if the value contains <br> tags and handle safely
+        if (val.indexOf('<br') !== -1) {
+          var parts = val.split(/<br\s*\/?>/gi);
+          parts.forEach(function(part, i) {
+            el.appendChild(document.createTextNode(part));
+            if (i < parts.length - 1) el.appendChild(document.createElement('br'));
+          });
+        } else {
+          el.textContent = val;
+        }
+      }
+    }
+  });
+}
+
+/* ============================================================
+   CHAT HELPERS
+   ============================================================ */
+function scrollToBottom() {
+  setTimeout(function() {
+    chatArea.scrollTop = chatArea.scrollHeight;
+  }, 50);
+}
+
+function createKCAvatar() {
+  var av = document.createElement('div');
+  av.className = 'kc-avatar';
+  av.textContent = 'KC';
+  return av;
+}
+
+function createMsgBubble(textKo, textEn, isUser) {
+  var bubble = document.createElement('div');
+  if (isUser) {
+    bubble.className = 'inline-block rounded-2xl rounded-tr-sm px-4 py-2.5 text-sm font-medium max-w-[85%] sm:max-w-[75%]';
+    bubble.style.cssText = 'background:rgba(16,185,129,0.12);border:1px solid rgba(16,185,129,0.3);color:#6ee7b7;';
+  } else {
+    bubble.className = 'max-w-[85%] sm:max-w-[75%] rounded-2xl rounded-tl-sm px-4 py-3 text-sm leading-relaxed';
+    bubble.style.cssText = 'background:rgba(6,182,212,0.06);border:1px solid rgba(6,182,212,0.12);';
+  }
+
+  var span = document.createElement('span');
+  span.setAttribute('data-ko', textKo);
+  span.setAttribute('data-en', textEn);
+  var text = (lang === 'ko') ? textKo : textEn;
+
+  // Handle <br> safely
+  if (text.indexOf('<br') !== -1) {
+    var parts = text.split(/<br\s*\/?>/gi);
+    parts.forEach(function(part, i) {
+      span.appendChild(document.createTextNode(part));
+      if (i < parts.length - 1) span.appendChild(document.createElement('br'));
+    });
+  } else {
+    span.textContent = text;
+  }
+
+  bubble.appendChild(span);
+  return bubble;
+}
+
+function addKCMessage(textKo, textEn, cb) {
+  // Show typing indicator first
+  var typingDiv = document.createElement('div');
+  typingDiv.className = 'flex items-start gap-3 chat-msg';
+  typingDiv.appendChild(createKCAvatar());
+  var dotsWrap = document.createElement('div');
+  dotsWrap.className = 'typing-dots mt-2';
+  for (var i = 0; i < 3; i++) {
+    dotsWrap.appendChild(document.createElement('span'));
+  }
+  typingDiv.appendChild(dotsWrap);
+  chatArea.appendChild(typingDiv);
+  scrollToBottom();
+
+  setTimeout(function() {
+    chatArea.removeChild(typingDiv);
+    var msgDiv = document.createElement('div');
+    msgDiv.className = 'flex items-start gap-3 chat-msg';
+    msgDiv.appendChild(createKCAvatar());
+    msgDiv.appendChild(createMsgBubble(textKo, textEn, false));
+    chatArea.appendChild(msgDiv);
+    scrollToBottom();
+    if (cb) cb();
+  }, 400);
+}
+
+function addUserMessage(textKo, textEn) {
+  var msgDiv = document.createElement('div');
+  msgDiv.className = 'flex justify-end chat-msg';
+  msgDiv.appendChild(createMsgBubble(textKo, textEn, true));
+  chatArea.appendChild(msgDiv);
+  scrollToBottom();
+}
+
+function clearAnswers() {
+  while (answerArea.firstChild) answerArea.removeChild(answerArea.firstChild);
+}
+
+/* ============================================================
+   SHOW QUESTION + ANSWER BUTTONS
+   ============================================================ */
+function showQuestion(qId) {
+  var q = questions[qId];
+  if (!q) return;
+
+  addKCMessage(q.ko, q.en, function() {
+    clearAnswers();
+    var btnWrap = document.createElement('div');
+    btnWrap.className = 'flex flex-wrap gap-2 chat-msg';
+
+    q.options.forEach(function(opt) {
+      var btn = document.createElement('button');
+      btn.className = 'answer-btn';
+      btn.textContent = (lang === 'ko') ? opt.ko : opt.en;
+      btn.setAttribute('data-ko', opt.ko);
+      btn.setAttribute('data-en', opt.en);
+
+      btn.addEventListener('click', function() {
+        // Disable all buttons visually
+        var allBtns = btnWrap.querySelectorAll('.answer-btn');
+        for (var i = 0; i < allBtns.length; i++) {
+          allBtns[i].classList.add('selected');
+          allBtns[i].style.pointerEvents = 'none';
+          allBtns[i].style.opacity = '0.4';
+        }
+        btn.style.opacity = '1';
+
+        addUserMessage(opt.ko, opt.en);
+        clearAnswers();
+
+        if (opt.result) {
+          showResult(opt.result);
+        } else if (opt.next) {
+          setTimeout(function() { showQuestion(opt.next); }, 200);
+        }
+      });
+
+      btnWrap.appendChild(btn);
+    });
+
+    answerArea.appendChild(btnWrap);
+    scrollToBottom();
+  });
+}
+
+/* ============================================================
+   SHOW RESULT
+   ============================================================ */
+function showResult(productKey) {
+  var p = products[productKey];
+  if (!p) return;
+
+  var recKo = '\uCD94\uCC9C \uC81C\uD488\uC744 \uCC3E\uC558\uC2B5\uB2C8\uB2E4! \uC544\uB798 \uC81C\uD488\uC774 \uAC00\uC7A5 \uC801\uD569\uD569\uB2C8\uB2E4.';
+  var recEn = 'We found the perfect product for you! Here is our recommendation.';
+
+  addKCMessage(recKo, recEn, function() {
+    var card = document.createElement('div');
+    card.className = 'result-card chat-msg mx-auto w-full max-w-lg mt-2';
+
+    var name = (lang === 'ko') ? p.name : p.nameEn;
+    var desc = (lang === 'ko') ? p.descKo : p.descEn;
+
+    // Outer container
+    var outer = document.createElement('div');
+    outer.className = 'rounded-2xl overflow-hidden';
+    outer.style.cssText = 'background:rgba(6,182,212,0.04);border:1px solid rgba(6,182,212,0.12);';
+
+    // Image section
+    var imgWrap = document.createElement('div');
+    imgWrap.className = 'flex justify-center p-6 pb-2';
+    imgWrap.style.background = 'rgba(255,255,255,0.02)';
+    var img = document.createElement('img');
+    img.src = p.img;
+    img.alt = name;
+    img.className = 'product-img';
+    img.onerror = function() {
+      this.style.display = 'none';
+      var fallback = document.createElement('div');
+      fallback.className = 'flex items-center justify-center text-white/20 text-sm';
+      fallback.style.height = '200px';
+      fallback.textContent = (lang === 'ko') ? '\uC774\uBBF8\uC9C0 \uC900\uBE44 \uC911' : 'Image coming soon';
+      this.parentElement.appendChild(fallback);
+    };
+    imgWrap.appendChild(img);
+    outer.appendChild(imgWrap);
+
+    // Info section
+    var info = document.createElement('div');
+    info.className = 'px-5 pb-5 pt-3';
+
+    // Badge
+    var badgeRow = document.createElement('div');
+    badgeRow.className = 'flex items-center gap-2 mb-1';
+    var badge = document.createElement('span');
+    badge.className = 'text-[10px] font-semibold uppercase tracking-wider px-2 py-0.5 rounded-full';
+    badge.style.cssText = 'background:rgba(6,182,212,0.1);color:#67e8f9;';
+    badge.textContent = 'IC Biomedical';
+    badgeRow.appendChild(badge);
+    info.appendChild(badgeRow);
+
+    // Product name
+    var h3 = document.createElement('h3');
+    h3.className = 'text-lg font-bold text-white mb-1';
+    h3.textContent = name;
+    info.appendChild(h3);
+
+    // Description
+    var descP = document.createElement('p');
+    descP.className = 'text-sm text-white/50 mb-4';
+    descP.setAttribute('data-ko', p.descKo);
+    descP.setAttribute('data-en', p.descEn);
+    descP.textContent = desc;
+    info.appendChild(descP);
+
+    // Specs
+    var specsDiv = document.createElement('div');
+    specsDiv.className = 'mb-5';
+    p.specs.forEach(function(s) {
+      var row = document.createElement('div');
+      row.className = 'flex justify-between items-center py-2';
+      row.style.borderBottom = '1px solid rgba(255,255,255,0.05)';
+      var label = document.createElement('span');
+      label.className = 'spec-label text-white/50 text-xs';
+      label.setAttribute('data-ko', s.ko);
+      label.setAttribute('data-en', s.en);
+      label.textContent = (lang === 'ko') ? s.ko : s.en;
+      var val = document.createElement('span');
+      val.className = 'text-sm font-medium text-white/90';
+      val.textContent = s.val;
+      row.appendChild(label);
+      row.appendChild(val);
+      specsDiv.appendChild(row);
+    });
+    info.appendChild(specsDiv);
+
+    // Action buttons
+    var actionsDiv = document.createElement('div');
+    actionsDiv.className = 'flex flex-col sm:flex-row gap-2';
+
+    // View details link
+    var detailLink = document.createElement('a');
+    detailLink.href = p.url;
+    detailLink.className = 'flex-1 text-center px-4 py-2.5 rounded-xl text-sm font-semibold transition-all pulse-ring';
+    detailLink.style.cssText = 'background:rgba(16,185,129,0.15);border:1px solid rgba(16,185,129,0.3);color:#6ee7b7;text-decoration:none;display:block;';
+    var detailSpan = document.createElement('span');
+    detailSpan.setAttribute('data-ko', '\uC0C1\uC138 \uBCF4\uAE30');
+    detailSpan.setAttribute('data-en', 'View Details');
+    detailSpan.textContent = (lang === 'ko') ? '\uC0C1\uC138 \uBCF4\uAE30' : 'View Details';
+    detailLink.appendChild(detailSpan);
+    detailLink.addEventListener('mouseenter', function() { this.style.background = 'rgba(16,185,129,0.25)'; });
+    detailLink.addEventListener('mouseleave', function() { this.style.background = 'rgba(16,185,129,0.15)'; });
+    actionsDiv.appendChild(detailLink);
+
+    // Start over button
+    var resetBtn = document.createElement('button');
+    resetBtn.className = 'flex-1 text-center px-4 py-2.5 rounded-xl text-sm font-medium transition-all';
+    resetBtn.style.cssText = 'background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);color:rgba(255,255,255,0.6);';
+    var resetSpan = document.createElement('span');
+    resetSpan.setAttribute('data-ko', '\uB2E4\uC2DC \uC2DC\uC791');
+    resetSpan.setAttribute('data-en', 'Start Over');
+    resetSpan.textContent = (lang === 'ko') ? '\uB2E4\uC2DC \uC2DC\uC791' : 'Start Over';
+    resetBtn.appendChild(resetSpan);
+    resetBtn.addEventListener('click', resetChat);
+    resetBtn.addEventListener('mouseenter', function() { this.style.background = 'rgba(255,255,255,0.08)'; });
+    resetBtn.addEventListener('mouseleave', function() { this.style.background = 'rgba(255,255,255,0.04)'; });
+    actionsDiv.appendChild(resetBtn);
+
+    info.appendChild(actionsDiv);
+
+    // Expert consultation link
+    var expertDiv = document.createElement('div');
+    expertDiv.className = 'mt-3 text-center';
+    var expertLink = document.createElement('a');
+    expertLink.href = 'tel:031-737-8171';
+    expertLink.className = 'text-xs text-white/35 hover:text-cyan-400/70 transition';
+    var expertSpan = document.createElement('span');
+    expertSpan.setAttribute('data-ko', '\uC804\uBB38\uAC00 \uC0C1\uB2F4 031-737-8171');
+    expertSpan.setAttribute('data-en', 'Expert consultation 031-737-8171');
+    expertSpan.textContent = (lang === 'ko') ? '\uC804\uBB38\uAC00 \uC0C1\uB2F4 031-737-8171' : 'Expert consultation 031-737-8171';
+    expertLink.appendChild(expertSpan);
+    expertDiv.appendChild(expertLink);
+    info.appendChild(expertDiv);
+
+    outer.appendChild(info);
+    card.appendChild(outer);
+    chatArea.appendChild(card);
+    scrollToBottom();
+  });
+}
+
+/* ============================================================
+   RESET
+   ============================================================ */
+function resetChat() {
+  while (chatArea.firstChild) chatArea.removeChild(chatArea.firstChild);
+  clearAnswers();
+  startChat();
+}
+
+/* ============================================================
+   INIT
+   ============================================================ */
+function startChat() {
+  addKCMessage(
+    '\uC548\uB155\uD558\uC138\uC694! \uD55C\uAD6D\uCD08\uC800\uC628\uC6A9\uAE30\uC785\uB2C8\uB2E4.<br>\uCD5C\uC801\uC758 \uADF9\uC800\uC628 \uC7A5\uBE44\uB97C \uCC3E\uC544\uB4DC\uB9B4\uAC8C\uC694.',
+    'Hello! This is Korea Cryo.<br>Let us help you find the perfect cryogenic equipment.'
+  , function() {
+    setTimeout(function() {
+      showQuestion('Q1');
+    }, 500);
+  });
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+  chatArea = document.getElementById('chat-area');
+  answerArea = document.getElementById('answer-area');
+  startChat();
+});
+</script>
+
+</body>
+</html>
