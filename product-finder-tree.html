@@ -115,7 +115,7 @@ body.dark-mode .lang-btn:hover,body.dark-mode .theme-btn:hover{background:rgba(2
 .root-vline{ display:none; /* SVG bezier curves replace vertical backbone */ }
 
 /* -- L1 node -- */
-.l1-col{display:flex;align-items:center;width:140px;min-width:140px;padding-left:0;}
+.l1-col{display:flex;align-items:center;width:140px;min-width:140px;padding-left:40px;}
 .l1-hline{ display:none; /* SVG bezier replaces */ }
 @keyframes linePulse{0%,100%{opacity:.7;box-shadow:0 0 4px var(--glow-color)}50%{opacity:1;box-shadow:0 0 12px var(--glow-color)}}
 @keyframes flowRight{0%{background-position:-200% 0}100%{background-position:200% 0}}
@@ -1212,8 +1212,8 @@ function drawSvgLines(){
       p.setAttribute('stroke-dasharray', realLen);
       p.classList.add('draw-anim');
     }
-    // Connection dots at endpoints for visible curves
-    if(opacity > 0.2){
+    // Connection dots only on active (animated) curves
+    if(animate && opacity > 0.3){
       var dot2 = document.createElementNS('http://www.w3.org/2000/svg','circle');
       dot2.setAttribute('cx', x2);
       dot2.setAttribute('cy', y2);
