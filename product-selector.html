@@ -14,6 +14,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="preconnect" href="https://cdn.tailwindcss.com">
 <script src="https://cdn.tailwindcss.com"></script>
+<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 <script>
 tailwind.config = {
   theme: {
@@ -152,6 +153,13 @@ body {
   100% { box-shadow: 0 0 0 0 rgba(16,185,129,0); }
 }
 .pulse-ring { animation: pulseRing 2s infinite; }
+.kc-bubble h1,.kc-bubble h2,.kc-bubble h3{font-size:15px;font-weight:700;color:#e2e8f0;margin:8px 0 4px;}
+.kc-bubble p{margin:4px 0;}
+.kc-bubble ul,.kc-bubble ol{margin:4px 0 4px 16px;padding:0;}
+.kc-bubble li{margin:2px 0;}
+.kc-bubble strong{color:#6ee7b7;}
+.kc-bubble code{background:rgba(6,182,212,0.1);padding:1px 4px;border-radius:3px;font-size:12px;}
+.kc-bubble a{color:#06b6d4;text-decoration:underline;}
 </style>
 </head>
 <body>
@@ -677,102 +685,317 @@ async function handleFreeChat(){
 }
 
 async function callGemini(userText){
-  var systemPrompt = `당신은 한국초저온용기(주)의 IC Biomedical 제품 전문 상담사입니다. 고객의 질문에 친절하고 정확하게 답변합니다.
+  var systemPrompt = `KC BIOBANKING AI KNOWLEDGE BASE
+=================================
+Company: 한국초저온용기(주) / Korea Cryogenics Co., Ltd.
+Official Partner: IC Biomedical (USA)
+CEO: 이희란 (Lee Hee-ran)
+Business Registration: 214-81-19072
+Founded: 1990 (30+ years of cryogenic expertise)
+Address: 경기도 성남시 중원구 둔촌대로 560 벽산테크노피아 201호
+Phone: 031-737-8171~4 | FAX: 031-737-8175
+Email: info@koreacryo.com
+Hours: Mon-Fri 09:00-18:00
+Key Stats: 100+ research/medical institution partners, 99.9% equipment uptime
 
-## 제품 라인업 (productKey로 참조)
+=====================================
+COMPANY SERVICES & ENGINEERING
+=====================================
 
-### 보관 장비
+ENGINEERING CAPABILITIES
+- Consulting & System Design: Engineers design optimal biobank layouts considering facility scale, traffic flow, and gas safety.
+- Automatic LN2 Filling System: 24/7 automated level maintenance via high-efficiency vacuum piping and auto-fill control — no human intervention.
+- Monitoring & Safety System: O2 concentration detection, emergency alarms, real-time remote monitoring to protect researchers and samples.
+- Stable Gas Supply: Uninterrupted LN2 supply through established logistics infrastructure, with regular preventive maintenance.
 
-1. **LD Series** (productKey: "ld")
-   - 소형 실험실용 LN₂ 듀어
-   - 용량: 4L~50L (LD4, LD5, LD10, LD25, LD35, LD50)
-   - 용도: LN₂ 저장, 분주, 일반 실험실
-   - 가벼운 경량 설계
+TURNKEY SYSTEM
+Complete biobank from design to operation: Bulk LN2 storage tank + overhead vacuum piping with valve control + cryogenic freezers (20+ units simultaneously). 24/7 real-time temperature and liquid level monitoring.
 
-2. **XT Series** (productKey: "xt")
-   - Extended Time 장기 Cane 보관
-   - 모델: XT3~XT34, TW20~TW47
-   - 업계 최저 증발률
-   - 용도: 정액, 배아, 세포 장기 보관
+GAS SUPPLY PARTNERS: Air Products, Praxair, Linde, Air Liquide
 
-3. **HC Series** (productKey: "hc")
-   - 고용량 Canister 보관
-   - 모델: HC12~HC35, VHC35/38
-   - 최대 1,260개 바이알
-   - 용도: 대용량 Cane/Canister 시료
+CLIENT SECTORS
+- Hospitals: Pathology, blood/tumor banks, clinical medicine, diagnostic labs, tissue banks, dermatology, dentistry
+- Pharma & Research: Animal cells, MCB/WCB, cord blood banks, stem cell banks, vaccine/cell therapy research
+- Government & Resource Banks: KRISS, KGSC, human resource banks, strain/seed/sperm banks
+- Universities & Education: University labs, R&D centers
 
-4. **LS Series** (productKey: "ls")
-   - 스테인리스 Box Rack 바이알 저장
-   - 용량: 750~6,000 바이알 (LS750, LS2000, LS3000, LS4800, LS6000)
-   - 온도: -190°C vapor phase
-   - 원격 모니터링 옵션
-   - 용도: 바이오뱅크, 병원, 연구소
+AFTER-SALES SERVICE (A/S)
+- 24h Emergency Response: On-site dispatch within 24 hours, 4-engineer dedicated team
+- 5yr Vacuum Warranty: Vacuum insulation 5-year warranty, controller 2-year warranty, backup equipment support
+- 14+ Spare Parts: Solenoid valves, sensors, controllers — 14+ critical parts always in stock
+- Manufacturer-certified engineers perform installation, calibration, and repair
 
-5. **LABS Series** (productKey: "labs")
-   - 대용량 자동화 스테인리스 바이오뱅크
-   - 모델: LABS-20K(19,500), LABS-38K(37,700), LABS-40K(41,600), LABS-80K(79,300), LABS-94K(93,000 바이알)
-   - CS 컨트롤러 ±0.1°C, 자동 디포깅, H-Type 턴테이블 4구역
-   - 용도: 대규모 바이오뱅크, 제약사
+VALIDATION & COMPLIANCE
+- Calibration: NIST-traceable standard equipment, Fluke Process Calibrator loop checks (temperature sensor + 4-20mA control signal), sensor adjustment per manufacturer manual
+- IQ (Installation Qualification): Environment, utilities, component specs, documentation verification
+- OQ (Operational Qualification): Function tests (controller, data logging), alarm tests, power failure tests
+- PQ (Performance Qualification): 72-hour continuous worst-case temperature mapping, door-open recovery verification, customer URS-based custom protocols
+- Manufacturer-certified engineers, FDA/KFDA audit-ready standardized protocols and reports
+- One-stop: Equipment procurement > Installation > Calibration > Validation > Maintenance
 
-6. **Revolution Series** (productKey: "revolution")
-   - cGMP 프리미엄 극저온 저장 시스템
-   - 모델: 300, 400, 600 Series (최대 98,625 바이알)
-   - 자동 LN₂ 충전, RFID 추적, 감사추적(Audit Trail)
-   - FDA 21 CFR Part 11 호환, EU MDR 대응
-   - 터치스크린 모니터링
-   - 용도: GMP 제약사, 대규모 세포치료, 규정 준수 필요 기관
+O2 MONITORING — PUREAIRE AIRCHECK
+- 10yr+ sensor life (no calibration needed), Zirconium Oxide O2 Cell
+- 90dB alarm (non-mutable), dual alarm at 19.5% and 18.0%
+- Operates at -40C, 4-20mA output for external system integration
+- LED 70m extension display, CE certified, 3-year warranty
 
-### 운송 장비
+STORAGE METHODS
+- Rack/Box Type: Vial > Box (5x5, 9x9, 10x10) > Rack > Freezer. LIMS-compatible. For GMP pharma, large biobanks. Products: LABS, LS Series.
+- Cane Type: Vial > Cane > Canister > Freezer. Quick access, economical for small-scale. For university labs, small labs. Products: XT, TW, HC Series.
 
-7. **CX/DX Series** (productKey: "cx")
-   - 드라이쉬퍼 (Dry Shipper)
-   - 모델: CX100, CX500, 4DX, 10DX
-   - Vapor Phase 운송, IATA 규정
-   - 용도: 국내 단거리 시료 운송
+=====================================
+PRODUCT LINE: REVOLUTION SERIES (FLAGSHIP)
+=====================================
+Premium auto-control cryogenic freezers for biobanks, pharma, cell therapy.
 
-8. **ICB Dual Series** (productKey: "icb-dual")
-   - IATA 승인 Vapor Shipper
-   - 유지시간: 10일 이상
-   - Store-Ship-Store 운용
-   - 항공 기내 반입 승인
-   - 용도: 국제 항공 운송, 장거리 시료 운송
+CERTIFICATIONS: ISO 13485 (manufactured in Cartersville, Georgia), cGMP, FDA 21 CFR Part 11, EU MDR
 
-### 축산/인공수정 장비
+KEY TECHNOLOGY — RADIANCE TEMPERATURE MANAGEMENT
+- Atomizing nozzles spray ultra-fine LN2 droplets uniformly throughout the chamber
+- Eliminates temperature stratification — consistent protection regardless of sample position
+- Temperature range: -20C to -190C (user-configurable)
+- AI algorithm learns usage patterns and auto-optimizes LN2 supply
+- 5 RTD temperature sensors for real-time mapping; SMS/email alerts, external BMS integration
+- Heat leakage: 0.008 KW vs mechanical compressor 1-3 KW (125-375x better)
+- Power failure: Maintains temperature for 72 hours (mechanical rises +20C/hour)
 
-9. **AI Shield** (productKey: "ai-shield")
-   - 소규모 목장 휴대용 (AIS 1.5L, AIS 3L)
-   - 열 보호 캐니스터 기술
-   - ICB 20/24 (20~24L)
-   - 용도: 소규모 목장, 현장 인공수정
+TWO CONFIGURATIONS
+- Revolution (Standard): Manual carousel, Radiance control, FDA 21 CFR Part 11/cGMP, audit trail, dual authentication. For university labs, small biobanks, clinical labs.
+- Revolution-SA (Premium): Motorized auto-carousel with rack learning, Radiance AI (adaptive temp control), multi-level user access per quadrant. For pharma GMP, hospital biobanks, large clinical storage.
 
-10. **ICB 34/35 + XT 21-AI** (productKey: "ai-mid")
-    - 중규모 번식장 전용
-    - ICB 34~35L + 정사각 AI 전용 XT
-    - 용도: 100~1,000두 번식장
+SECURITY: RFID badge + password dual authentication, unlimited user profiles, granular permissions, full audit trail (ID + timestamp), electronic lock with auto-lock timer.
 
-11. **LABS 80K AI** (productKey: "ai-large")
-    - 대규모 정액은행
-    - 80,000 스트로 보관
-    - CS 컨트롤러, 자동화
-    - 용도: 1,000두 이상 대규모
+CONTROL: Large touchscreen, industrial PLC platform, dual level sensing (RTD + differential pressure), web server remote access, Modbus interface, auto-defrost on lid open, built-in LED lighting.
 
-## 회사 정보
-- 한국초저온용기(주) = KC
-- IC Biomedical 한국 공식 수입/판매원
-- 전화: 031-737-8171~4
-- 이메일: info@koreacryo.com
-- 주소: 경기도 성남시 중원구 둔촌대로 560 벽산테크노피아 201호
+300 SERIES SPECS
+- 313-P: 16,900 vials, 12 large + 4 mini racks, 54.3L LN2, 759mm ID, 1465mm H, 209.6 kg
+- 315-P: 19,500 vials, 12 large + 4 mini racks, 67.0L LN2, 759mm ID, 1615mm H, 222.3 kg
+
+400 SERIES SPECS
+- 413-P: 36,400 vials, 24 large + 16 mini racks, 133L LN2, 1012mm ID, 1419mm H, 307 kg
+- 415-P: 42,000 vials, 24 large + 16 mini racks, 102L LN2, 1012mm ID, 1574mm H, 334.5 kg
+- 413-R: 39,000 vials, 26 large + 16 mini racks (enhanced layout)
+- 415-R: 45,000 vials, 26 large + 16 mini racks
+
+600 SERIES SPECS
+- 613-P: 85,475 vials, 54 large + 39 mini racks, 225L LN2, 1470mm ID, 1469mm H, 576.6 kg
+- 615-P: 98,625 vials (MAX), 56 large + 39 mini racks, 319L LN2, 1470mm ID, 1625mm H, 615.9 kg
+- 613-R: 83,200 vials, 60 large + 16 mini racks
+- 615-R: 96,000 vials, 60 large + 16 mini racks
+
+UPCOMING: Revolution-Q — Fully automated rack positioning, AI-based sample tracking, LIMS integration (in development).
+
+=====================================
+PRODUCT LINE: LABS SERIES
+=====================================
+Large-scale stainless steel LN2 storage systems. 371L-1,595L capacity, up to 93,000 vials.
+
+KEY FEATURES
+- H-Type Turntable: 4 independent storage zones, single-pivot aluminum (maintenance-free)
+- Hinged lockable lid with auto-defog on open
+- CS Controller: 0.1C resolution temperature monitoring, low-level alarm, remote alert
+- Quick Chill: Auto cooling correction after lid close
+- 100/81-cell rack system: Accommodates 2ml vials to 500ml bags
+- Stainless steel body, Made in USA
+
+MODELS
+- LABS-20K: 371L, 19,500 vials, 14 racks, 295 kg empty, 34" OD
+- LABS-38K: 623L, 37,700 vials, 26 racks, 422 kg empty, 42" OD
+- LABS-40K (most popular): 698L, 41,600 vials, 30 racks, 417 kg empty, 45" OD
+- LABS-80K: 1,269L, 79,300 vials, 58 racks, 703 kg empty, 59.5" OD
+- LABS-94K: 1,595L, 93,000 vials, 60 racks, 771 kg empty, 59.5" OD
+
+BAG CAPACITY (LABS-94K): Up to 6,856 x 25ml bags, 3,864 x 50ml bags, 2,304 x 250ml bags, 1,932 x 500ml bags
+
+=====================================
+PRODUCT LINE: LS SERIES
+=====================================
+Box-type rack vial storage systems. Up to 6,000 vials, vapor phase -190C.
+
+KEY FEATURES
+- Computer-compatible box racks with index position rings for accurate sample tracking
+- Vapor phase storage: -190C at rack top without direct LN2 contact (cross-contamination prevention)
+- Liquid or vapor phase dual operation
+- Protective aluminum exterior with impact-resistant bumper design
+- CS100 controller option on LS4800/LS6000 for remote monitoring
+
+MODELS
+- LS750: 35L, 750 vials, 130-day hold, 0.27 L/day evap, 17.7 kg, 457mm dia, 686mm H
+- LS3000: 81L, 3,000 vials, 106-day hold, 0.76 L/day evap, 31.8 kg, 683mm dia, 732mm H
+- LS4800: 130L, 4,800 vials, 130-day hold, 1.00 L/day evap, 40.8 kg, 683mm dia, 892mm H (CS100 option)
+- LS6000: 165L, 6,000 vials, 165-day hold, 1.00 L/day evap, 54.9 kg, 683mm dia, 991mm H (CS100 option)
+
+=====================================
+PRODUCT LINE: LD SERIES
+=====================================
+Liquid nitrogen dewars for storage and dispensing. 4L to 50L.
+
+KEY FEATURES
+- High-strength aluminum body with ribbed construction
+- Magnaforming neck tube (electromagnetic forming) minimizes heat loss
+- High-vacuum insulation, durable coating
+- LWD (Liquid Withdrawal Device) compatible on 25LD/35LD/50LD: Max 8 L/min flow, 0.5 bar, tool-free clamp
+
+USE CASES: LN2 dispensing, cryotherapy (dermatology), metal shrink fitting, lab supply
+
+MODELS
+- 4LD: 4L, 10-day hold, 0.40 L/day, 30.5mm neck, 3.0 kg
+- 5LD: 5L, 6-day hold, 0.77 L/day, 38.1mm neck, 3.5 kg
+- 10LD: 10L, 45-day hold, 0.22 L/day, 31.8mm neck, 5.4 kg
+- 25LD: 25L, 109-day hold, 0.23 L/day, 50.8mm neck, 9.5 kg (LWD compatible)
+- Classic-25: 25L, 119-day hold, 0.21 L/day (lowest evaporation), 50.8mm neck, 10.2 kg
+- 35LD: 35L, 120-day hold (longest), 0.29 L/day, 50.8mm neck, 12.7 kg (LWD compatible)
+- 50LD: 50L, 102-day hold, 0.49 L/day, 63.5mm neck, 17.6 kg (LWD compatible)
+
+=====================================
+PRODUCT LINE: XT SERIES
+=====================================
+Extended Time design for long-term cane storage. Up to 340-day hold, 0.09 L/day evaporation.
+
+KEY FEATURES
+- High-vacuum insulation extends LN2 retention 2-3x vs standard models
+- 6-canister configuration, compatible with straws and vials
+- Optimized for reproductive medicine, stem cells, gene banks
+
+MODELS (XTL — Straw-specialized)
+- 3XTL: 3L, 27-day hold, 0.11 L/day, 6 canisters, 750 straws, 3.2 kg
+- 8XTL: 8L, 80-day hold, 0.10 L/day, 6 canisters, 750 straws, 8.9 kg
+
+MODELS (XT — Vial/general)
+- 10XT: 10L, 100-day hold, 0.10 L/day, 6 canisters, 150 vials, 7.5 kg
+- 20XT (recommended): 20.7L, 230-day hold, 0.09 L/day, 6 canisters, 150 vials, 11.8 kg
+- 34XT: 34L, 340-day hold, 0.10 L/day, 6 canisters, 150 vials, 15.8 kg
+
+=====================================
+PRODUCT LINE: HC SERIES
+=====================================
+High-Capacity cane storage. Wide neck tubes for larger canisters. Up to 17,200 straws (0.25cc).
+
+NOTE: 35HC, 35VHC, 34HC have been replaced by ICB Series (ICB 35-10, ICB 35-6, ICB 34).
+
+MODELS
+- 12HCL: 12L, 60-day hold, 0.20 L/day, 6 canisters, 490 straws (0.5cc), 3.6" neck
+- 20HC: 20L, 87-day hold, 0.23 L/day, 6 canisters, 570 vials (5/cane), 3.6" neck
+- 38HC: 38L, 120-day hold, 0.32 L/day, 10 canisters, 17,200 straws (0.25cc) / 6,000 straws (0.5cc), 5.0" neck
+- 38VHC: 38L, 120-day hold, 0.32 L/day, 10 canisters, 1,512 vials (6/cane), 5.0" neck
+
+=====================================
+PRODUCT LINE: ICB SERIES
+=====================================
+Next-generation LN2 freezers. 21L-48L, 7 models, up to 218-day hold, up to 21,564 straws.
+
+KEY FEATURES
+- Industry-standard canister compatibility
+- Standard shipping container compatible (ICB 20/24: 368mm diameter)
+- Multiple storage configurations: straws (0.25cc/0.5cc), vials, bulk racks
+- High-strength stainless exterior, multi-layer vacuum insulation, IATA-compliant safety design
+
+MODELS — Compact (21-34L)
+- ICB 20: 21L, 210-day hold, 0.10 L/day, 6 canisters (1.65"), 1,872 straws (0.5cc), 252 vials, 11.8 kg
+- ICB 24: 24L, 218-day hold (longest), 0.11 L/day, 6 canisters (1.89"), 1,380 straws, 288 vials, 12.7 kg
+- ICB 34: 34L, 189-day hold, 0.18 L/day, 6 canisters (2.8"), 4,800 straws (0.5cc bulk), 684 vials, 16.8 kg
+
+MODELS — Large (35L)
+- ICB 35-6: 35L, 130-day hold, 6 large canisters (3.7"), 21,564 straws (0.25cc bulk), 1,260 vials, 16.8 kg
+- ICB 35-10: 35L, 130-day hold, 10 standard canisters (2.64"), 16,400 straws (0.25cc bulk), 1,020 vials, 16.8 kg
+
+MODELS — Maximum (48L)
+- ICB 47-6: 48L, 123-day hold, 6 large canisters (4.0"), 21,564 straws (0.25cc bulk), 1,260 vials, 20 kg
+- ICB 47-10: 48L, 123-day hold, 10 standard canisters (2.8"), 17,900 straws (0.25cc bulk), 1,140 vials, 20 kg
+
+=====================================
+PRODUCT LINE: ICB DUAL SERIES
+=====================================
+Store.Ship.Store. — One vessel for the entire sample lifecycle. LN2 storage > Vapor shipping > Re-storage without sample transfer.
+
+KEY FEATURES
+- Zero sample transfer: Same vessel throughout store-ship-store cycle
+- IATA-compliant vapor shipping mode
+- Cost savings: No separate shipping vessel needed
+- All models support 30-day vapor shipping hold
+
+MODELS — Compact
+- ICB20 Dual: 21L, 210-day store / 30-day ship, 0.10 L/day, 6 canisters (41.9mm), 660 straws (0.5cc), 15.4 kg filled
+- ICB22 Dual: 22L, 122-day store / 30-day ship, 0.18 L/day, 6 canisters (76.2mm), 2,400 straws, 15.9 kg filled
+- ICB34 Dual: 34L, 188-day store / 30-day ship, 0.18 L/day, 6 canisters (71.2mm), 2,100 straws, 20.4 kg filled
+
+MODELS — Large
+- ICB47-6 Dual: 48L, 123-day store / 30-day ship, 6 canisters (101.6mm), 3,900 straws, 26.8 kg filled
+- ICB47-10 Dual: 48L, 123-day store / 30-day ship, 10 canisters (71.1mm), 3,200 straws, 26.8 kg filled
+
+=====================================
+PRODUCT LINE: AI / LIVESTOCK (축산)
+=====================================
+Specialized cryogenic equipment for artificial insemination programs (cattle, horses, pigs, sheep).
+
+AI SHIELD TECHNOLOGY
+- Patented insulated canisters maintain internal temperature during ambient exposure
+- After 40 exposures: ~60% sperm viability (vs ~25% with standard canisters = 2.4x improvement)
+- Directly improves conception rates
+
+AI SHIELD MODELS
+- AIS 1.5: 1.5L LN2, 25-day hold, 1 canister, 50 straws, 3.2 kg
+- AIS 3: 3.0L LN2, 30-day hold, 2 canisters, 100 straws, 4.5 kg
+
+LIVESTOCK ICB MODELS (with AI-specific hold times)
+- ICB 20: 20L, 60-day hold, 6 canisters, 792 straws, 14.5 kg
+- ICB 24: 24L, 150-day hold, 6 canisters, 792 straws, 18.6 kg
+- ICB 34: 34L, 200-day hold, 6 canisters, 792 straws, 22.7 kg
+- ICB 35-6: 35L, 210-day hold, 6 canisters, 792 straws, 24.5 kg
+- ICB 35-10: 35L, 270-day hold, 10 canisters, 1,320 straws, 25.0 kg
+
+LIVESTOCK XT MODELS
+- XT 10: 10L, 66-day hold, 6 canisters, 792 straws, 9.8 kg
+- XT 20: 20L, 128-day hold, 6 canisters, 792 straws, 14.1 kg
+- XT 21-AI: 21L, 180-day hold, 6 canisters, 792 straws, 16.8 kg
+- XT 34: 34L, 238-day hold, 6 canisters, 792 straws, 22.2 kg
+
+BULK FREEZERS FOR SEMEN BANKS
+- LABS 80K AI: 475L, 150-day hold, 36 canisters, 80,000 straws, 172 kg
+- AI 91K: 680L, 210-day hold, 42 canisters, 91,000 straws, 220 kg
+
+TANK SELECTION GUIDE (LIVESTOCK)
+1. Calculate storage capacity: ~132 straws per canister (0.5ml basis)
+2. Assess usage: Farm field use vs semen bank storage vs shipping
+3. Check LN2 refill cycle: Remote areas need longer hold times (ICB 35, XT 34)
+4. Shipping needs: Frequent vehicle transport = lightweight model; air shipping = ICB Dual (IATA compliant)
+5. Tank lifespan: 10-15 years with proper care. Avoid direct concrete contact, minimize transport shock.
+
+COMPETITIVE ADVANTAGE (IC BIOMEDICAL)
+- Manufactured in Cartersville, Georgia, USA with US materials
+- Thicker neck tube design than competitors for superior durability
+- Reinforced structure withstands internal vessel movement during LN2-filled transport
+
+=====================================
+QUICK REFERENCE: PRODUCT SELECTION BY USE CASE
+=====================================
+
+SMALL LAB / DAILY LN2 USE: LD Series (4-50L dewars)
+LONG-TERM CANE STORAGE (small): XT Series (up to 340-day hold)
+HIGH-CAPACITY CANE STORAGE: HC Series / ICB Series
+BOX/RACK VIAL STORAGE (mid-scale): LS Series (up to 6,000 vials)
+LARGE-SCALE BIOBANK: LABS Series (up to 93,000 vials)
+PREMIUM AUTOMATED BIOBANK: Revolution Series (up to 98,625 vials, cGMP/FDA compliant)
+SAMPLE SHIPPING: ICB Dual Series (Store.Ship.Store, IATA compliant)
+LIVESTOCK AI: AI Shield + ICB/XT Series + LABS Bulk Freezers
+
+CONTACT FOR ALL INQUIRIES
+Phone: 031-737-8171
+Email: info@koreacryo.com
+Free consulting available for biobank construction and equipment selection.
 
 ## 응답 규칙
 1. 한국어로 답변 (고객이 영어면 영어로)
 2. 질문에 가장 적합한 1~2개 제품을 추천
 3. 추천 이유를 간결하게 설명 (2~3문장)
-4. 응답 마지막에 반드시 [PRODUCT:productKey] 형태로 추천 제품 키를 포함
-   예: [PRODUCT:revolution] 또는 [PRODUCT:labs]
-5. 여러 제품이 해당되면 가장 적합한 1개만 [PRODUCT:키]로 표시
-6. 제품과 무관한 질문이면 [PRODUCT:none]
-7. 과장하지 말고, 스펙 기반으로 정확하게 답변
-8. 친근하지만 전문적인 톤`;
+4. 응답에 마크다운 포맷 사용 (굵게, 목록 등)
+5. 응답 마지막에 반드시 [PRODUCT:productKey] 형태로 추천 제품 키를 포함
+   가능한 키: ld, xt, hc, ls, labs, revolution, cx, icb-dual, ai-shield, ai-mid, ai-large
+6. 여러 제품이 해당되면 가장 적합한 1개만 [PRODUCT:키]로 표시
+7. 제품과 무관한 질문이면 [PRODUCT:none]
+8. 과장하지 말고, 스펙 기반으로 정확하게 답변
+9. 친근하지만 전문적인 톤
+10. 모든 수치는 웹사이트 데이터 기준으로 정확하게`;
 
   chatHistory.push({role:'user', parts:[{text: userText}]});
 
@@ -836,9 +1059,13 @@ function addKcMsg(text){
   div.className = 'flex items-start gap-3 chat-msg';
   div.appendChild(createKCAvatar());
   var bubble = document.createElement('div');
-  bubble.className = 'max-w-[85%] sm:max-w-[75%] rounded-2xl rounded-tl-sm px-4 py-3 text-sm leading-relaxed';
-  bubble.style.cssText = 'background:rgba(6,182,212,0.06);border:1px solid rgba(6,182,212,0.12);white-space:pre-line;';
-  bubble.textContent = text;
+  bubble.className = 'kc-bubble max-w-[85%] sm:max-w-[75%] rounded-2xl rounded-tl-sm px-4 py-3 text-sm leading-relaxed';
+  bubble.style.cssText = 'background:rgba(6,182,212,0.06);border:1px solid rgba(6,182,212,0.12);';
+  if(typeof marked !== 'undefined'){
+    bubble.innerHTML = marked.parse(text);
+  } else {
+    bubble.textContent = text;
+  }
   div.appendChild(bubble);
   chatArea.appendChild(div);
   scrollToBottom();
