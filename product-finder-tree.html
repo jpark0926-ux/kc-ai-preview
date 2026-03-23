@@ -1083,6 +1083,18 @@ function showProducts(catId, subId){
   l3col.style.setProperty('--cat-color', cfg.color);
   l3col.style.setProperty('--cat-glow', cfg.glow);
 
+  // Align first L3 card with the active L2 pill
+  if(!isMobile){
+    var activePill = document.querySelector('#l2col-'+catId+' .l2-pill.active');
+    if(activePill){
+      var pillRect = activePill.getBoundingClientRect();
+      var l3Rect = l3col.getBoundingClientRect();
+      var offset = pillRect.top - l3Rect.top;
+      if(offset > 0) l3col.style.paddingTop = offset + 'px';
+      else l3col.style.paddingTop = '0';
+    }
+  }
+
   prods.forEach(function(p, i){
     var wrap = document.createElement('div');
     wrap.className = 'l3-card-wrap';
