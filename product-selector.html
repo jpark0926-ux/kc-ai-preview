@@ -657,8 +657,19 @@ document.getElementById('chatInput').addEventListener('keydown', function(e){
   if(e.key === 'Enter') handleFreeChat();
 });
 
-var GEMINI_KEY = 'AIzaSyArLoz8pxPsKy-B2XpdX2tHztuoxcKmAEg';
+var GEMINI_KEY = localStorage.getItem('kc-gemini-key') || '';
 var chatHistory = [];
+
+// API key setup - prompt if not set
+(function(){
+  if(!GEMINI_KEY){
+    var k = prompt('Gemini API Key를 입력하세요 (최초 1회):');
+    if(k && k.trim()){
+      GEMINI_KEY = k.trim();
+      localStorage.setItem('kc-gemini-key', GEMINI_KEY);
+    }
+  }
+})();
 
 async function handleFreeChat(){
   var input = document.getElementById('chatInput');
