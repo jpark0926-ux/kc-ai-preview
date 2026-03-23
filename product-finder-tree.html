@@ -133,6 +133,7 @@ body.dark-mode .l1-node:hover{border-color:rgba(255,255,255,0.2);background:rgba
   border-color:var(--cat-color);
   box-shadow:0 0 20px var(--cat-glow);
   background:radial-gradient(circle,var(--cat-bg),var(--bg));
+  animation:pulseRing 1.5s ease infinite;
 }
 .l1-node svg{transition:all 0.3s;}
 .l1-node.active svg{filter:drop-shadow(0 0 6px var(--cat-color));}
@@ -193,10 +194,10 @@ body.dark-mode .l1-node.active ~ .l1-label{color:#fff;}
   border:1px solid var(--node-border);
   font-size:11px;font-weight:400;color:var(--text-dim);
   cursor:pointer;transition:all 0.35s;white-space:nowrap;
-  opacity:0;transform:translateX(-8px);
+  opacity:0;transform:translateX(-12px) scale(0.95);
   display:flex;align-items:center;gap:6px;
 }
-.l2-pill.visible{opacity:1;transform:translateX(0);}
+.l2-pill.visible{opacity:1;transform:translateX(0) scale(1);}
 .l2-pill.dimmed-pill{opacity:0.2 !important;filter:grayscale(0.6);}
 .l2-pill:hover{border-color:rgba(0,0,0,0.18);color:var(--text);background:rgba(0,0,0,0.05);}
 body.dark-mode .l2-pill:hover{border-color:rgba(255,255,255,0.18);color:#fff;background:rgba(255,255,255,0.06);}
@@ -246,10 +247,10 @@ body.dark-mode .bio-tab.active{color:#6ee7b7;}
   border:1px solid var(--node-border);
   text-decoration:none;color:inherit;
   transition:all 0.35s;
-  opacity:0;transform:translateX(-10px);
+  opacity:0;transform:translateX(-15px) scale(0.95);
   cursor:pointer;min-width:220px;gap:10px;
 }
-.l3-card.visible{opacity:1;transform:translateX(0);}
+.l3-card.visible{opacity:1;transform:translateX(0) scale(1);}
 .l3-card:hover{
   background:rgba(0,0,0,0.06);
   border-color:rgba(0,0,0,0.18);
@@ -330,6 +331,32 @@ body.dark-mode .reset-pill{background:rgba(6,13,27,0.85);}
 .reset-pill.show{display:flex;}
 .reset-pill:hover{background:rgba(0,0,0,0.06);border-color:rgba(0,0,0,0.18);color:var(--text);}
 body.dark-mode .reset-pill:hover{background:rgba(255,255,255,0.08);border-color:rgba(255,255,255,0.2);color:#fff;}
+
+/* -- Intro animations -- */
+@keyframes fadeInUp{
+  from{opacity:0;transform:translateY(20px);}
+  to{opacity:1;transform:translateY(0);}
+}
+@keyframes scaleIn{
+  from{opacity:0;transform:scale(0.5);}
+  to{opacity:1;transform:scale(1);}
+}
+.intro-root{animation:scaleIn 0.6s ease backwards;}
+.intro-l1{animation:fadeInUp 0.5s ease backwards;}
+
+/* -- L1 pulse ring -- */
+@keyframes pulseRing{
+  0%{box-shadow:0 0 0 0 var(--cat-glow);}
+  70%{box-shadow:0 0 0 15px rgba(0,0,0,0);}
+  100%{box-shadow:0 0 0 0 rgba(0,0,0,0);}
+}
+
+/* -- Background particles -- */
+#bgParticles{
+  position:fixed;top:48px;left:0;right:0;bottom:0;
+  pointer-events:none;z-index:0;opacity:0.4;
+}
+body:not(.dark-mode) #bgParticles{display:none;}
 
 /* -- Reset zoom animation -- */
 .tree-reset-anim{animation:reset-zoom .6s ease;}
@@ -442,6 +469,8 @@ body.dark-mode .reset-pill:hover{background:rgba(255,255,255,0.08);border-color:
     <button class="lang-btn" id="langToggle" onclick="toggleLang()">EN</button>
   </div>
 </nav>
+
+<canvas id="bgParticles"></canvas>
 
 <!-- TREE -->
 <div class="tree-viewport" id="treeViewport">
@@ -687,6 +716,7 @@ function buildTree(){
       rootNode.className = 'root-node';
       rootNode.id = 'root-node';
       rootNode.innerHTML = '<img src="Logo/logo-kc.png" alt="KC">';
+      rootNode.classList.add('intro-root');
       rootCol.appendChild(rootNode);
       var guideText = document.createElement('div');
       guideText.style.cssText = 'font-size:10px;color:var(--text-dim);opacity:0.7;text-align:center;margin-top:6px;white-space:nowrap;';
@@ -713,6 +743,8 @@ function buildTree(){
     // L1 column
     var l1col = document.createElement('div');
     l1col.className = 'l1-col';
+    l1col.classList.add('intro-l1');
+    l1col.style.animationDelay = (ci * 0.15 + 0.3) + 's';
     l1col.style.marginTop = ci === 0 ? '4px' : '-9px';
 
     var l1node = document.createElement('div');
@@ -1009,7 +1041,7 @@ function applyState(){
         setTimeout(function(){
           p.classList.add('visible');
           if(!isMobile) requestAnimationFrame(function(){ drawSvgLines(); });
-        }, i * 50);
+        }, i * 80);
         if(activeSub && p.getAttribute('data-sub') !== activeSub){
           p.classList.add('dimmed-pill');
         } else {
@@ -1147,7 +1179,7 @@ function showProducts(catId, subId){
       card.classList.add('visible');
       // Redraw bezier curves after each card becomes visible
       if(!isMobile) requestAnimationFrame(function(){ drawSvgLines(); });
-    }, i * 60);
+    }, i * 100);
     wrap.appendChild(card);
     l3col.appendChild(wrap);
   });
@@ -1612,8 +1644,9 @@ window.toggleLang = toggleLang;
    INIT
    ================================================================ */
 buildTree();
-// Initial draw of bezier curves
-requestAnimationFrame(function(){ drawSvgLines(); });
+// Initial draw of bezier curves — delayed to sync with intro animations
+setTimeout(function(){ drawSvgLines(); }, 800);
+setTimeout(function(){ drawSvgLines(); }, 1200);
 
 /* Scroll/resize listeners — redraw bezier curves on layout change */
 var resizeTimer = null;
@@ -1625,6 +1658,52 @@ var viewport = document.getElementById('treeViewport');
 if(viewport) viewport.addEventListener('scroll', function(){
   if(!isMobile) requestAnimationFrame(function(){ drawSvgLines(); });
 });
+
+// Background particles (dark mode only)
+(function(){
+  var cv = document.getElementById('bgParticles');
+  if(!cv) return;
+  var ctx = cv.getContext('2d');
+  var particles = [];
+  var colors = ['rgba(6,182,212,0.3)','rgba(16,185,129,0.3)','rgba(245,158,11,0.2)','rgba(249,115,22,0.2)'];
+
+  function resize(){
+    cv.width = window.innerWidth;
+    cv.height = window.innerHeight - 48;
+  }
+  resize();
+  window.addEventListener('resize', resize);
+
+  for(var i=0;i<30;i++){
+    particles.push({
+      x: Math.random()*cv.width,
+      y: Math.random()*cv.height,
+      r: Math.random()*1.5+0.5,
+      dx: (Math.random()-0.5)*0.3,
+      dy: (Math.random()-0.5)*0.2,
+      color: colors[Math.floor(Math.random()*colors.length)]
+    });
+  }
+
+  function draw(){
+    if(!document.body.classList.contains('dark-mode')){requestAnimationFrame(draw);return;}
+    ctx.clearRect(0,0,cv.width,cv.height);
+    particles.forEach(function(p){
+      p.x += p.dx;
+      p.y += p.dy;
+      if(p.x<0)p.x=cv.width;
+      if(p.x>cv.width)p.x=0;
+      if(p.y<0)p.y=cv.height;
+      if(p.y>cv.height)p.y=0;
+      ctx.beginPath();
+      ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
+      ctx.fillStyle=p.color;
+      ctx.fill();
+    });
+    requestAnimationFrame(draw);
+  }
+  requestAnimationFrame(draw);
+})();
 
 })();
 </script>
