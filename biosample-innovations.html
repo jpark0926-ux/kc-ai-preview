@@ -1,0 +1,839 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>바이오샘플 관리 혁신 2025 | 한국초저온용기(주)</title>
+  <meta name="description" content="2025 바이오샘플 관리 혁신 트렌드와 IC Biomedical 제품의 연결. 극저온 보존, 자동화, LIMS, AI 예측, 품질보증, 블록체인 추적 — 한국초저온용기(주)">
+  <meta name="keywords" content="바이오샘플 관리, biosample management, 2025 혁신, cryopreservation, LIMS, 자동화, AI 예측분석, cGMP, FDA 21 CFR Part 11, IC Biomedical, Revolution, LABS, LS, ICB Dual, 한국초저온용기, 바이오뱅킹, 극저온 보관">
+  <meta name="robots" content="index, follow">
+  <meta property="og:title" content="KC · 바이오샘플 관리 혁신 2025">
+  <meta property="og:description" content="2025 바이오샘플 관리 혁신이 IC Biomedical 제품에 이미 구현되어 있습니다.">
+  <meta property="og:type" content="website">
+  <meta property="og:image" content="https://koreacryo.com/Logo/logo-kc.png">
+  <meta property="og:url" content="https://koreacryo.com/biosample-innovations.html">
+  <meta property="og:site_name" content="한국초저온용기(주)">
+  <meta property="og:locale" content="ko_KR">
+  <link rel="canonical" href="https://koreacryo.com/biosample-innovations.html">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+  <script>
+    tailwind.config = {
+      theme: { extend: { colors: {
+        cryo: {950:'#060d1b',900:'#0a1628',800:'#0f2240',700:'#143060',600:'#1a4080',500:'#10b981',400:'#34d399',300:'#6ee7b7',200:'#a7f3d0',100:'#d1fae5',50:'#ecfdf5'}
+      }}}
+    }
+  </script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+
+    :root {
+      --black:    #1d1d1f;
+      --g1:       #424245;
+      --g2:       #6e6e73;
+      --g3:       #86868b;
+      --g4:       #a1a1a6;
+      --gbg:      #f5f5f7;
+      --white:    #ffffff;
+      --blue:     #0369a1;
+      --blue-lt:  #0ea5e9;
+      --blue-50:  #f0f9ff;
+      --cyan:     #0891b2;
+      --em:       #059669;
+      --em-50:    #ecfdf5;
+      --bd:       rgba(0,0,0,0.08);
+      --bd-s:     rgba(0,0,0,0.05);
+    }
+
+    *, *::before, *::after { box-sizing: border-box; }
+    * { -webkit-font-smoothing: antialiased; }
+    body {
+      background: var(--white);
+      color: var(--black);
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      line-height: 1.6;
+      overflow-x: hidden;
+      margin: 0;
+    }
+    .scrollbar-hide::-webkit-scrollbar { display: none; }
+    .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
+
+    .display-xl {
+      font-size: clamp(2.6rem, 7vw, 5rem);
+      font-weight: 700;
+      letter-spacing: -0.04em;
+      line-height: 1.08;
+    }
+    .display-lg {
+      font-size: clamp(1.9rem, 4vw, 3.5rem);
+      font-weight: 700;
+      letter-spacing: -0.025em;
+      line-height: 1.1;
+    }
+    .display-md {
+      font-size: clamp(1.5rem, 3vw, 2.4rem);
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      line-height: 1.15;
+    }
+    .eyebrow {
+      display: block;
+      font-size: 12px; font-weight: 600;
+      letter-spacing: 0.1em; text-transform: uppercase;
+      color: var(--em); margin-bottom: 0.6rem;
+    }
+
+    #nav {
+      background: transparent;
+      border-bottom: 1px solid transparent;
+      transition: background 0.3s, border-color 0.3s;
+    }
+    #nav.scrolled {
+      background: rgba(255,255,255,0.92);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--bd);
+    }
+    #nav.on-dark .tab-inactive { color: rgba(255,255,255,0.6) !important; }
+    #nav.on-dark .nav-link-dim { color: rgba(255,255,255,0.5) !important; }
+    #nav.scrolled .tab-inactive { color: rgb(100,116,139) !important; }
+    #nav.scrolled .nav-link-dim { color: rgb(100,116,139) !important; }
+
+    .hero-dark {
+      background: var(--black);
+      position: relative;
+      overflow: hidden;
+    }
+    .hero-dark::before {
+      content: '';
+      position: absolute; inset: 0;
+      background:
+        radial-gradient(ellipse at 30% 70%, rgba(5,150,105,0.18) 0%, transparent 55%),
+        radial-gradient(ellipse at 75% 25%, rgba(8,145,178,0.12) 0%, transparent 50%);
+      pointer-events: none;
+    }
+
+    .s-dark {
+      background: var(--black);
+      position: relative;
+      overflow: hidden;
+    }
+    .s-dark::before {
+      content: '';
+      position: absolute; inset: 0;
+      background:
+        radial-gradient(ellipse at 20% 50%, rgba(5,150,105,0.12) 0%, transparent 50%),
+        radial-gradient(ellipse at 80% 50%, rgba(8,145,178,0.08) 0%, transparent 50%);
+      pointer-events: none;
+    }
+
+    .big-num {
+      font-family: 'Inter', ui-monospace, monospace;
+      font-variant-numeric: tabular-nums;
+      font-size: clamp(2.4rem, 5vw, 3.8rem);
+      font-weight: 800;
+      letter-spacing: -0.035em;
+      line-height: 1;
+      color: var(--black);
+    }
+    .big-num-unit { font-size: 1.1rem; font-weight: 500; color: var(--g3); margin-left: 2px; }
+    .big-num-label { font-size: 0.76rem; color: var(--g2); margin-top: 0.4rem; }
+
+    .s-white { background: var(--white); }
+    .s-gray  { background: var(--gbg); }
+
+    .model-card {
+      background: var(--white);
+      border-radius: 18px;
+      padding: 1.5rem;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.05);
+      transition: box-shadow 0.25s, transform 0.2s;
+      text-decoration: none;
+      color: inherit;
+      display: block;
+    }
+    .model-card:hover {
+      box-shadow: 0 10px 36px rgba(0,0,0,0.10);
+      transform: translateY(-2px);
+    }
+
+    .feat-card {
+      background: var(--white);
+      border: 1px solid var(--bd);
+      border-radius: 16px;
+      padding: 1.75rem;
+      transition: all 0.3s ease;
+    }
+    .feat-card:hover {
+      border-color: rgba(5,150,105,0.25);
+      box-shadow: 0 8px 30px rgba(0,0,0,0.06);
+      transform: translateY(-2px);
+    }
+    .feat-icon {
+      width: 48px; height: 48px;
+      border-radius: 14px;
+      display: flex; align-items: center; justify-content: center;
+      margin-bottom: 1rem;
+      flex-shrink: 0;
+    }
+
+    .stat-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 100px;
+      padding: 10px 20px;
+      color: rgba(255,255,255,0.9);
+      font-size: 0.85rem;
+      font-weight: 500;
+    }
+    .stat-pill-num {
+      font-size: 1.1rem;
+      font-weight: 800;
+      color: #34d399;
+    }
+
+    .product-chip {
+      display: inline-flex; align-items: center;
+      padding: 6px 14px; border-radius: 100px;
+      font-size: 12px; font-weight: 600;
+      background: var(--gbg); color: var(--g2);
+      border: 1px solid transparent;
+      cursor: pointer; transition: all 0.2s;
+      white-space: nowrap;
+    }
+    .product-chip:hover { background: var(--em-50); color: var(--em); }
+    .product-chip.selected {
+      background: var(--em-50); color: var(--em);
+      border-color: rgba(5,150,105,0.3);
+    }
+
+    #biosample-contact-form {
+      background: var(--white);
+      border-radius: 20px;
+      padding: 2rem;
+      box-shadow: 0 2px 24px rgba(0,0,0,0.06);
+    }
+    #biosample-contact-form input,
+    #biosample-contact-form textarea {
+      background: var(--gbg);
+      border: 1px solid transparent;
+      border-radius: 10px;
+      padding: 0.7rem 1rem;
+      font-size: 0.875rem;
+      color: var(--black);
+      width: 100%; outline: none;
+      transition: border-color 0.2s, background 0.2s;
+      font-family: inherit;
+    }
+    #biosample-contact-form input:focus,
+    #biosample-contact-form textarea:focus {
+      border-color: var(--em);
+      background: var(--white);
+      box-shadow: 0 0 0 3px rgba(5,150,105,0.1);
+    }
+
+    .reveal { opacity: 0; transform: translateY(24px); transition: opacity 0.7s ease, transform 0.7s ease; }
+    .reveal.visible { opacity: 1; transform: none; }
+
+    .rec-ring { border: 2px solid var(--em); }
+
+    .kc-logo-footer { height: 80px; width: auto; }
+    .footer-v2 {
+      position: relative;
+      background: linear-gradient(180deg, #0d1f35 0%, #060d1b 100%);
+      border-top: 1px solid rgba(0,212,255,0.08);
+    }
+    .footer-v2::before {
+      content: ''; position: absolute; top: 0; left: 50%;
+      transform: translateX(-50%); width: 200px; height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(0,212,255,0.4), transparent);
+    }
+    .footer-glow-line { height:1px; background:linear-gradient(90deg,transparent,rgba(0,212,255,0.12),transparent); margin:32px 0; }
+    .footer-col-title { font-size:11px; font-weight:700; letter-spacing:3px; text-transform:uppercase; color:rgba(0,212,255,0.5); margin-bottom:16px; }
+    .footer-link { display:flex; align-items:center; gap:8px; color:rgba(148,163,184,0.8); font-size:13px; text-decoration:none; transition:all 0.25s; padding:4px 0; }
+    .footer-link:hover { color:#80f0ff; transform:translateX(3px); }
+    .footer-link svg { width:14px; height:14px; opacity:0.5; flex-shrink:0; }
+    .footer-link:hover svg { opacity:1; }
+    .footer-contact-item { display:flex; align-items:flex-start; gap:10px; color:rgba(148,163,184,0.7); font-size:13px; padding:6px 0; }
+    .footer-contact-item svg { width:16px; height:16px; color:rgba(0,212,255,0.4); flex-shrink:0; margin-top:1px; }
+    .footer-contact-item a { color:inherit; text-decoration:none; transition:color 0.25s; }
+    .footer-contact-item a:hover { color:#80f0ff; }
+    .footer-biz-bar { border-top:1px solid rgba(0,212,255,0.06); padding-top:24px; display:flex; flex-wrap:wrap; justify-content:space-between; align-items:center; gap:12px; }
+    .footer-biz-info { font-size:11px; color:rgba(100,116,139,0.7); line-height:1.8; }
+    .footer-biz-info span { white-space:nowrap; }
+    .footer-biz-info .sep { display:inline-block; width:1px; height:10px; background:rgba(100,116,139,0.3); margin:0 8px; vertical-align:middle; }
+    .footer-copyright { font-size:11px; color:rgba(100,116,139,0.5); }
+    .ee-hint { cursor:pointer; opacity:0.4; transition:opacity 0.3s; margin-left:8px; }
+    .ee-hint:hover { opacity:0.8; }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav id="nav" class="fixed top-0 w-full z-50 on-dark">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6">
+    <div class="flex items-center h-14 sm:h-16 gap-4">
+      <a href="index.html" class="flex-shrink-0">
+        <img src="Logo/logo-kc.png" alt="KC" class="h-7 sm:h-10 w-auto">
+      </a>
+      <div class="flex-1 overflow-x-auto scrollbar-hide">
+        <div class="flex gap-1 justify-center min-w-max">
+          <a href="biosample-innovations.html" class="bg-emerald-500/15 text-emerald-400 border border-emerald-500/30 px-2.5 py-1 rounded-full text-[11px] font-medium transition whitespace-nowrap" data-ko="혁신 2025" data-en="Innovation 2025">혁신 2025</a>
+          <a href="bio-revolution-series.html" class="tab-inactive text-slate-500 hover:text-slate-800 hover:bg-slate-100 px-2.5 py-1 rounded-full text-[11px] font-medium transition whitespace-nowrap">Revolution</a>
+          <a href="bio-labs-series.html" class="tab-inactive text-slate-500 hover:text-slate-800 hover:bg-slate-100 px-2.5 py-1 rounded-full text-[11px] font-medium transition whitespace-nowrap">LABS</a>
+          <a href="bio-ls-series.html" class="tab-inactive text-slate-500 hover:text-slate-800 hover:bg-slate-100 px-2.5 py-1 rounded-full text-[11px] font-medium transition whitespace-nowrap">LS</a>
+          <a href="bio-icb-dual-series.html" class="tab-inactive text-slate-500 hover:text-slate-800 hover:bg-slate-100 px-2.5 py-1 rounded-full text-[11px] font-medium transition whitespace-nowrap">ICB Dual</a>
+          <a href="bio-ai.html" class="tab-inactive text-slate-500 hover:text-slate-800 hover:bg-slate-100 px-2.5 py-1 rounded-full text-[11px] font-medium transition whitespace-nowrap">AI</a>
+        </div>
+      </div>
+      <div class="flex items-center gap-2 flex-shrink-0">
+        <a href="biobanking.html" class="nav-link-dim hidden sm:inline text-[11px] text-slate-500 hover:text-slate-800 transition">BIO</a>
+        <a href="index.html" class="nav-link-dim hidden sm:inline text-[11px] text-slate-500 hover:text-slate-800 transition" data-ko="홈" data-en="Home">홈</a>
+        <div id="lang-toggle" onclick="toggleLang()" style="display:inline-flex;align-items:center;background:rgba(0,0,0,0.06);border-radius:9999px;padding:2px;cursor:pointer;border:1px solid rgba(0,0,0,0.08);gap:1px;">
+          <span id="lang-ko" style="padding:2px 7px;font-size:9px;font-weight:700;border-radius:9999px;background:#10b981;color:#ffffff;transition:all 0.3s;">KO</span>
+          <span id="lang-en" style="padding:2px 7px;font-size:9px;font-weight:700;border-radius:9999px;background:transparent;color:#94a3b8;transition:all 0.3s;">EN</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<!-- S1: HERO (DARK) -->
+<section class="hero-dark min-h-screen flex flex-col items-center justify-center text-center px-4 pt-20 pb-16 relative">
+  <div class="relative z-10 max-w-4xl mx-auto">
+    <p class="text-xs font-semibold tracking-[0.15em] uppercase text-emerald-400/70 mb-4 reveal" data-ko="BIOSAMPLE MANAGEMENT &times; IC BIOMEDICAL" data-en="BIOSAMPLE MANAGEMENT &times; IC BIOMEDICAL">BIOSAMPLE MANAGEMENT &times; IC BIOMEDICAL</p>
+    <h1 class="display-xl text-white mb-6 reveal" data-ko="2025 바이오샘플 관리 혁신,<br>이미 현실이 되었습니다" data-en="2025 Biosample Management<br>Innovation Is Already Here">2025 바이오샘플 관리 혁신,<br>이미 현실이 되었습니다</h1>
+    <p class="text-base sm:text-lg text-white/50 max-w-2xl mx-auto mb-10 reveal" data-ko="업계가 논의하는 6대 혁신 트렌드 — 자동화, 디지털화, AI 예측, 품질보증, 추적성.<br>IC Biomedical 제품은 이미 이를 구현하고 있습니다." data-en="Six innovation trends the industry is discussing — automation, digitalization, AI prediction, QA, traceability.<br>IC Biomedical products already implement them.">업계가 논의하는 6대 혁신 트렌드 — 자동화, 디지털화, AI 예측, 품질보증, 추적성.<br>IC Biomedical 제품은 이미 이를 구현하고 있습니다.</p>
+    <div class="flex flex-wrap justify-center gap-3 reveal">
+      <a href="#innovations" class="inline-flex items-center gap-2 bg-emerald-600 hover:bg-emerald-500 text-white font-semibold py-3 px-7 rounded-full text-sm transition">
+        <span data-ko="혁신 매핑 보기" data-en="View Innovation Map">혁신 매핑 보기</span>
+        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="m19 12-6 6m6-6-6-6m6 6H5"/></svg>
+      </a>
+      <a href="#products" class="inline-flex items-center gap-2 border border-white/20 hover:border-white/40 text-white/80 hover:text-white font-medium py-3 px-7 rounded-full text-sm transition">
+        <span data-ko="제품 라인업" data-en="Product Lineup">제품 라인업</span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- S2: STATS STRIP -->
+<section class="s-gray py-16 sm:py-20 reveal">
+  <div class="max-w-5xl mx-auto px-4 sm:px-6">
+    <div class="grid grid-cols-2 sm:grid-cols-4 gap-8 sm:gap-6 text-center">
+      <div>
+        <div class="big-num"><span class="counter" data-target="93000">0</span><span class="big-num-unit" data-ko="바이알" data-en="vials">바이알</span></div>
+        <div class="big-num-label" data-ko="LABS 최대 저장 용량" data-en="LABS Max Capacity">LABS 최대 저장 용량</div>
+      </div>
+      <div>
+        <div class="big-num" style="color:var(--cyan);">-190<span class="big-num-unit">&deg;C</span></div>
+        <div class="big-num-label" data-ko="증기상 극저온 보관" data-en="Vapor Phase Cryogenic">증기상 극저온 보관</div>
+      </div>
+      <div>
+        <div class="big-num" style="color:var(--em);">cGMP</div>
+        <div class="big-num-label" data-ko="Revolution 규정 준수" data-en="Revolution Compliance">Revolution 규정 준수</div>
+      </div>
+      <div>
+        <div class="big-num" style="color:#f59e0b;">0.1<span class="big-num-unit">&deg;C</span></div>
+        <div class="big-num-label" data-ko="CS 컨트롤러 정밀도" data-en="CS Controller Precision">CS 컨트롤러 정밀도</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- S3: INNOVATION MAPPING (6 feat-cards) -->
+<section id="innovations" class="s-white py-20 sm:py-28">
+  <div class="max-w-6xl mx-auto px-4 sm:px-6">
+    <div class="text-center mb-16 reveal">
+      <span class="eyebrow" data-ko="2025 혁신 트렌드 매핑" data-en="2025 Innovation Trend Mapping">2025 혁신 트렌드 매핑</span>
+      <h2 class="display-lg" data-ko="업계 트렌드, 이미 제품에 있습니다" data-en="Industry Trends, Already in Our Products">업계 트렌드, 이미 제품에 있습니다</h2>
+      <p class="text-sm text-[var(--g2)] mt-4 max-w-2xl mx-auto" data-ko="BMS K GROUP이 제시한 2025 바이오샘플 관리 혁신 트렌드 각각에 대응하는 IC Biomedical 기술." data-en="IC Biomedical technologies mapped to each 2025 biosample management innovation trend identified by BMS K GROUP.">BMS K GROUP이 제시한 2025 바이오샘플 관리 혁신 트렌드 각각에 대응하는 IC Biomedical 기술.</p>
+    </div>
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+
+      <!-- 1. Cryopreservation -->
+      <div class="feat-card reveal">
+        <div class="feat-icon" style="background:var(--em-50);">
+          <svg width="24" height="24" fill="none" stroke="var(--em)" stroke-width="1.5" viewBox="0 0 24 24"><path d="M12 2v20M2 12h20M4.93 4.93l14.14 14.14M19.07 4.93 4.93 19.07"/></svg>
+        </div>
+        <div class="text-[10px] font-bold tracking-widest uppercase text-[var(--em)] mb-2" data-ko="트렌드 01" data-en="TREND 01">트렌드 01</div>
+        <h3 class="text-base font-bold mb-2" data-ko="극저온 보존 기술" data-en="Cryopreservation Technology">극저온 보존 기술</h3>
+        <p class="text-sm text-[var(--g2)] mb-4" data-ko="시료 생존율과 보관 안정성을 높이기 위한 극저온 기술의 진화." data-en="Evolution of ultra-low temperature technology for improved sample viability and storage stability.">시료 생존율과 보관 안정성을 높이기 위한 극저온 기술의 진화.</p>
+        <div class="border-t border-[var(--bd)] pt-3">
+          <div class="text-[10px] font-semibold tracking-wider uppercase text-[var(--g3)] mb-1.5" data-ko="IC BIOMEDICAL 대응" data-en="IC BIOMEDICAL SOLUTION">IC BIOMEDICAL 대응</div>
+          <p class="text-sm font-medium text-[var(--black)]" data-ko="Revolution Series — -190&deg;C 증기상(vapor phase) 보관으로 교차오염 차단. 액체질소 직접 접촉 없이 극저온 유지." data-en="Revolution Series — -190&deg;C vapor phase storage eliminates cross-contamination. Maintains ultra-low temp without direct LN&#8322; contact.">Revolution Series — -190&deg;C 증기상(vapor phase) 보관으로 교차오염 차단. 액체질소 직접 접촉 없이 극저온 유지.</p>
+        </div>
+      </div>
+
+      <!-- 2. Automation & Robotics -->
+      <div class="feat-card reveal">
+        <div class="feat-icon" style="background:var(--blue-50);">
+          <svg width="24" height="24" fill="none" stroke="var(--blue)" stroke-width="1.5" viewBox="0 0 24 24"><path d="M12 8V4H8"/><rect x="4" y="8" width="16" height="12" rx="2"/><path d="M8 16h0M12 16h0M16 16h0"/></svg>
+        </div>
+        <div class="text-[10px] font-bold tracking-widest uppercase text-[var(--blue)] mb-2" data-ko="트렌드 02" data-en="TREND 02">트렌드 02</div>
+        <h3 class="text-base font-bold mb-2" data-ko="자동화 &amp; 로봇공학" data-en="Automation &amp; Robotics">자동화 &amp; 로봇공학</h3>
+        <p class="text-sm text-[var(--g2)] mb-4" data-ko="수동 작업을 줄이고, 시료 접근 시 온도 변동을 최소화하는 자동화 시스템." data-en="Automation systems that reduce manual handling and minimize temperature excursions during sample access.">수동 작업을 줄이고, 시료 접근 시 온도 변동을 최소화하는 자동화 시스템.</p>
+        <div class="border-t border-[var(--bd)] pt-3">
+          <div class="text-[10px] font-semibold tracking-wider uppercase text-[var(--g3)] mb-1.5" data-ko="IC BIOMEDICAL 대응" data-en="IC BIOMEDICAL SOLUTION">IC BIOMEDICAL 대응</div>
+          <p class="text-sm font-medium text-[var(--black)]" data-ko="Revolution 자동 LN&#8322; 충전 시스템 + LABS 턴테이블(turntable) 4구역 접근. 시료 노출 시간을 최소화하는 구조 설계." data-en="Revolution auto LN&#8322; fill system + LABS turntable 4-zone access. Structural design minimizes sample exposure time.">Revolution 자동 LN&#8322; 충전 시스템 + LABS 턴테이블(turntable) 4구역 접근. 시료 노출 시간을 최소화하는 구조 설계.</p>
+        </div>
+      </div>
+
+      <!-- 3. LIMS / Digitalization -->
+      <div class="feat-card reveal">
+        <div class="feat-icon" style="background:#f0f9ff;">
+          <svg width="24" height="24" fill="none" stroke="#0891b2" stroke-width="1.5" viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
+        </div>
+        <div class="text-[10px] font-bold tracking-widest uppercase text-[var(--cyan)] mb-2" data-ko="트렌드 03" data-en="TREND 03">트렌드 03</div>
+        <h3 class="text-base font-bold mb-2" data-ko="디지털화 &amp; LIMS" data-en="Digitalization &amp; LIMS">디지털화 &amp; LIMS</h3>
+        <p class="text-sm text-[var(--g2)] mb-4" data-ko="실험실 정보 관리 시스템(LIMS) 통합과 실시간 데이터 기록으로 완벽한 추적성 확보." data-en="LIMS integration and real-time data logging for complete traceability.">실험실 정보 관리 시스템(LIMS) 통합과 실시간 데이터 기록으로 완벽한 추적성 확보.</p>
+        <div class="border-t border-[var(--bd)] pt-3">
+          <div class="text-[10px] font-semibold tracking-wider uppercase text-[var(--g3)] mb-1.5" data-ko="IC BIOMEDICAL 대응" data-en="IC BIOMEDICAL SOLUTION">IC BIOMEDICAL 대응</div>
+          <p class="text-sm font-medium text-[var(--black)]" data-ko="Revolution 터치스크린 모니터링, RFID 트래킹, 완벽한 감사추적(audit trail). FDA 21 CFR Part 11 호환 데이터 기록." data-en="Revolution touchscreen monitoring, RFID tracking, complete audit trail. FDA 21 CFR Part 11 compatible data logging.">Revolution 터치스크린 모니터링, RFID 트래킹, 완벽한 감사추적(audit trail). FDA 21 CFR Part 11 호환 데이터 기록.</p>
+        </div>
+      </div>
+
+      <!-- 4. AI & Predictive Analytics -->
+      <div class="feat-card reveal">
+        <div class="feat-icon" style="background:#fef3c7;">
+          <svg width="24" height="24" fill="none" stroke="#d97706" stroke-width="1.5" viewBox="0 0 24 24"><path d="M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0z"/><path d="M9 12h6M12 9v6"/></svg>
+        </div>
+        <div class="text-[10px] font-bold tracking-widest uppercase text-amber-600 mb-2" data-ko="트렌드 04" data-en="TREND 04">트렌드 04</div>
+        <h3 class="text-base font-bold mb-2" data-ko="AI &amp; 예측 분석" data-en="AI &amp; Predictive Analytics">AI &amp; 예측 분석</h3>
+        <p class="text-sm text-[var(--g2)] mb-4" data-ko="데이터 기반 예측으로 장비 유지보수 시점 및 시료 상태를 사전에 파악." data-en="Data-driven prediction for equipment maintenance timing and sample condition forecasting.">데이터 기반 예측으로 장비 유지보수 시점 및 시료 상태를 사전에 파악.</p>
+        <div class="border-t border-[var(--bd)] pt-3">
+          <div class="text-[10px] font-semibold tracking-wider uppercase text-[var(--g3)] mb-1.5" data-ko="IC BIOMEDICAL 대응" data-en="IC BIOMEDICAL SOLUTION">IC BIOMEDICAL 대응</div>
+          <p class="text-sm font-medium text-[var(--black)]" data-ko="CS 컨트롤러 0.1&deg;C 정밀도 + 원격 모니터링 옵션. 연속 온도 데이터 수집으로 이상 징후 조기 감지 가능." data-en="CS controller with 0.1&deg;C precision + remote monitoring option. Continuous temperature data collection enables early anomaly detection.">CS 컨트롤러 0.1&deg;C 정밀도 + 원격 모니터링 옵션. 연속 온도 데이터 수집으로 이상 징후 조기 감지 가능.</p>
+        </div>
+      </div>
+
+      <!-- 5. QA & Standardized Protocols -->
+      <div class="feat-card reveal">
+        <div class="feat-icon" style="background:var(--em-50);">
+          <svg width="24" height="24" fill="none" stroke="var(--em)" stroke-width="1.5" viewBox="0 0 24 24"><path d="M9 12l2 2 4-4"/><path d="M12 2l3.09 6.26L22 9.27l-5 4.87L18.18 21 12 17.77 5.82 21 7 14.14l-5-4.87 6.91-1.01z"/></svg>
+        </div>
+        <div class="text-[10px] font-bold tracking-widest uppercase text-[var(--em)] mb-2" data-ko="트렌드 05" data-en="TREND 05">트렌드 05</div>
+        <h3 class="text-base font-bold mb-2" data-ko="품질보증 &amp; 표준화" data-en="Quality Assurance &amp; Standards">품질보증 &amp; 표준화</h3>
+        <p class="text-sm text-[var(--g2)] mb-4" data-ko="글로벌 규정 준수와 표준화된 프로토콜로 시료 품질 일관성 확보." data-en="Global compliance and standardized protocols for consistent sample quality.">글로벌 규정 준수와 표준화된 프로토콜로 시료 품질 일관성 확보.</p>
+        <div class="border-t border-[var(--bd)] pt-3">
+          <div class="text-[10px] font-semibold tracking-wider uppercase text-[var(--g3)] mb-1.5" data-ko="IC BIOMEDICAL 대응" data-en="IC BIOMEDICAL SOLUTION">IC BIOMEDICAL 대응</div>
+          <p class="text-sm font-medium text-[var(--black)]" data-ko="cGMP 준수 설계, FDA 21 CFR Part 11 호환, EU MDR 대응. 업계 최고 수준의 규정 적합성." data-en="cGMP compliant design, FDA 21 CFR Part 11 compatible, EU MDR ready. Industry-leading regulatory compliance.">cGMP 준수 설계, FDA 21 CFR Part 11 호환, EU MDR 대응. 업계 최고 수준의 규정 적합성.</p>
+        </div>
+      </div>
+
+      <!-- 6. Safe Transport / Traceability -->
+      <div class="feat-card reveal">
+        <div class="feat-icon" style="background:#f0f9ff;">
+          <svg width="24" height="24" fill="none" stroke="var(--blue)" stroke-width="1.5" viewBox="0 0 24 24"><rect x="1" y="6" width="22" height="12" rx="2"/><path d="M1 10h22"/><path d="M7 15h4"/></svg>
+        </div>
+        <div class="text-[10px] font-bold tracking-widest uppercase text-[var(--blue)] mb-2" data-ko="트렌드 06" data-en="TREND 06">트렌드 06</div>
+        <h3 class="text-base font-bold mb-2" data-ko="안전한 시료 운송" data-en="Secure Sample Transport">안전한 시료 운송</h3>
+        <p class="text-sm text-[var(--g2)] mb-4" data-ko="콜드체인 무결성과 추적 가능한 운송 시스템으로 시료 이동 중 안전성 보장." data-en="Cold chain integrity and traceable transport systems ensure sample safety during transit.">콜드체인 무결성과 추적 가능한 운송 시스템으로 시료 이동 중 안전성 보장.</p>
+        <div class="border-t border-[var(--bd)] pt-3">
+          <div class="text-[10px] font-semibold tracking-wider uppercase text-[var(--g3)] mb-1.5" data-ko="IC BIOMEDICAL 대응" data-en="IC BIOMEDICAL SOLUTION">IC BIOMEDICAL 대응</div>
+          <p class="text-sm font-medium text-[var(--black)]" data-ko="ICB Dual 시리즈 — IATA 승인 증기상 운송용기. 10일 이상 유지시간, Store-Ship-Store 운용, 항공 기내 반입 승인." data-en="ICB Dual Series — IATA approved vapor shipper. 10+ day hold time, Store-Ship-Store operation, airline cabin approved.">ICB Dual 시리즈 — IATA 승인 증기상 운송용기. 10일 이상 유지시간, Store-Ship-Store 운용, 항공 기내 반입 승인.</p>
+        </div>
+      </div>
+
+    </div>
+
+    <p class="text-xs text-[var(--g3)] text-center mt-10 reveal" data-ko="참고: BMS K GROUP, &lsquo;Biosample Management Best Practices &amp; Innovations 2025&rsquo;" data-en="Source: BMS K GROUP, &lsquo;Biosample Management Best Practices &amp; Innovations 2025&rsquo;">참고: BMS K GROUP, &lsquo;Biosample Management Best Practices &amp; Innovations 2025&rsquo;</p>
+  </div>
+</section>
+
+<!-- S4: PRODUCT LINEUP (4 model-cards) -->
+<section id="products" class="s-gray py-20 sm:py-28">
+  <div class="max-w-6xl mx-auto px-4 sm:px-6">
+    <div class="text-center mb-16 reveal">
+      <span class="eyebrow" data-ko="IC BIOMEDICAL 제품 라인업" data-en="IC BIOMEDICAL PRODUCT LINEUP">IC BIOMEDICAL 제품 라인업</span>
+      <h2 class="display-lg" data-ko="혁신을 구현하는 장비" data-en="The Equipment That Implements Innovation">혁신을 구현하는 장비</h2>
+    </div>
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+
+      <!-- Revolution (rec) -->
+      <a href="bio-revolution-series.html" class="model-card rec-ring reveal">
+        <div class="flex items-center justify-between mb-3">
+          <span class="text-[10px] font-bold tracking-widest uppercase text-[var(--em)]" data-ko="추천" data-en="REC">추천</span>
+          <span class="text-[10px] font-semibold text-[var(--g3)]">cGMP</span>
+        </div>
+        <div class="h-40 flex items-center justify-center mb-4">
+          <img src="bio-images/revolution-hero.webp" alt="Revolution Series" class="max-h-full max-w-full object-contain">
+        </div>
+        <h3 class="text-lg font-bold mb-1">Revolution</h3>
+        <p class="text-xs text-[var(--g2)] mb-4" data-ko="cGMP 바이오 저장 시스템" data-en="cGMP Bio Storage System">cGMP 바이오 저장 시스템</p>
+        <div class="space-y-1.5 text-xs text-[var(--g1)]">
+          <div class="flex justify-between"><span data-ko="온도" data-en="Temp">온도</span><span class="font-semibold">-190&deg;C vapor</span></div>
+          <div class="flex justify-between"><span data-ko="자동 LN&#8322; 충전" data-en="Auto LN&#8322; Fill">자동 LN&#8322; 충전</span><span class="font-semibold text-[var(--em)]">O</span></div>
+          <div class="flex justify-between"><span>RFID</span><span class="font-semibold text-[var(--em)]">O</span></div>
+          <div class="flex justify-between"><span data-ko="감사추적" data-en="Audit Trail">감사추적</span><span class="font-semibold text-[var(--em)]">O</span></div>
+          <div class="flex justify-between"><span>FDA 21 CFR Part 11</span><span class="font-semibold text-[var(--em)]">O</span></div>
+        </div>
+        <div class="mt-4 text-center">
+          <span class="text-xs font-semibold text-[var(--em)]" data-ko="상세 보기 &rarr;" data-en="View Details &rarr;">상세 보기 &rarr;</span>
+        </div>
+      </a>
+
+      <!-- LABS -->
+      <a href="bio-labs-series.html" class="model-card reveal">
+        <div class="flex items-center justify-between mb-3">
+          <span class="text-[10px] font-bold tracking-widest uppercase text-[var(--g3)]" data-ko="대용량" data-en="HIGH-CAP">대용량</span>
+          <span class="text-[10px] font-semibold text-amber-500">93K</span>
+        </div>
+        <div class="h-40 flex items-center justify-center mb-4">
+          <img src="TW_LABS-Family_Web-1-removebg-preview.webp" alt="LABS Series" class="max-h-full max-w-full object-contain">
+        </div>
+        <h3 class="text-lg font-bold mb-1">LABS</h3>
+        <p class="text-xs text-[var(--g2)] mb-4" data-ko="대용량 스테인리스 바이오 저장" data-en="Large-Scale Stainless Bio Storage">대용량 스테인리스 바이오 저장</p>
+        <div class="space-y-1.5 text-xs text-[var(--g1)]">
+          <div class="flex justify-between"><span data-ko="최대 용량" data-en="Max Capacity">최대 용량</span><span class="font-semibold" data-ko="93,000 바이알" data-en="93,000 vials">93,000 바이알</span></div>
+          <div class="flex justify-between"><span data-ko="컨트롤러" data-en="Controller">컨트롤러</span><span class="font-semibold">CS &plusmn;0.1&deg;C</span></div>
+          <div class="flex justify-between"><span data-ko="자동 디포깅" data-en="Auto Defogging">자동 디포깅</span><span class="font-semibold text-[var(--em)]">O</span></div>
+          <div class="flex justify-between"><span data-ko="턴테이블 4구역" data-en="Turntable 4-Zone">턴테이블 4구역</span><span class="font-semibold text-[var(--em)]">O</span></div>
+        </div>
+        <div class="mt-4 text-center">
+          <span class="text-xs font-semibold text-[var(--blue)]" data-ko="상세 보기 &rarr;" data-en="View Details &rarr;">상세 보기 &rarr;</span>
+        </div>
+      </a>
+
+      <!-- LS -->
+      <a href="bio-ls-series.html" class="model-card reveal">
+        <div class="flex items-center justify-between mb-3">
+          <span class="text-[10px] font-bold tracking-widest uppercase text-[var(--g3)]" data-ko="표준형" data-en="STANDARD">표준형</span>
+        </div>
+        <div class="h-40 flex items-center justify-center mb-4">
+          <img src="bio-images/ls-series.png" alt="LS Series" class="max-h-full max-w-full object-contain">
+        </div>
+        <h3 class="text-lg font-bold mb-1">LS</h3>
+        <p class="text-xs text-[var(--g2)] mb-4" data-ko="스테인리스 바이알 저장" data-en="Stainless Steel Vial Storage">스테인리스 바이알 저장</p>
+        <div class="space-y-1.5 text-xs text-[var(--g1)]">
+          <div class="flex justify-between"><span data-ko="용량" data-en="Capacity">용량</span><span class="font-semibold" data-ko="750~6,000 바이알" data-en="750-6,000 vials">750~6,000 바이알</span></div>
+          <div class="flex justify-between"><span data-ko="온도" data-en="Temp">온도</span><span class="font-semibold">-190&deg;C vapor</span></div>
+          <div class="flex justify-between"><span data-ko="원격 모니터링" data-en="Remote Mon.">원격 모니터링</span><span class="font-semibold" data-ko="옵션" data-en="Option">옵션</span></div>
+          <div class="flex justify-between"><span data-ko="재질" data-en="Material">재질</span><span class="font-semibold" data-ko="스테인리스" data-en="Stainless">스테인리스</span></div>
+        </div>
+        <div class="mt-4 text-center">
+          <span class="text-xs font-semibold text-[var(--blue)]" data-ko="상세 보기 &rarr;" data-en="View Details &rarr;">상세 보기 &rarr;</span>
+        </div>
+      </a>
+
+      <!-- ICB Dual -->
+      <a href="bio-icb-dual-series.html" class="model-card reveal">
+        <div class="flex items-center justify-between mb-3">
+          <span class="text-[10px] font-bold tracking-widest uppercase text-[var(--g3)]" data-ko="운송용" data-en="TRANSPORT">운송용</span>
+          <span class="text-[10px] font-semibold text-sky-500">IATA</span>
+        </div>
+        <div class="h-40 flex items-center justify-center mb-4">
+          <img src="bio-images/ICB-Dual-Series-ALL-600x400.png" alt="ICB Dual Series" class="max-h-full max-w-full object-contain">
+        </div>
+        <h3 class="text-lg font-bold mb-1">ICB Dual</h3>
+        <p class="text-xs text-[var(--g2)] mb-4" data-ko="IATA 승인 증기상 운송" data-en="IATA Approved Vapor Shipper">IATA 승인 증기상 운송</p>
+        <div class="space-y-1.5 text-xs text-[var(--g1)]">
+          <div class="flex justify-between"><span data-ko="유지시간" data-en="Hold Time">유지시간</span><span class="font-semibold" data-ko="10일 이상" data-en="10+ days">10일 이상</span></div>
+          <div class="flex justify-between"><span data-ko="운용 방식" data-en="Operation">운용 방식</span><span class="font-semibold">Store-Ship-Store</span></div>
+          <div class="flex justify-between"><span data-ko="IATA 승인" data-en="IATA Approved">IATA 승인</span><span class="font-semibold text-[var(--em)]">O</span></div>
+          <div class="flex justify-between"><span data-ko="기내 반입" data-en="Cabin Approved">기내 반입</span><span class="font-semibold text-[var(--em)]">O</span></div>
+        </div>
+        <div class="mt-4 text-center">
+          <span class="text-xs font-semibold text-[var(--blue)]" data-ko="상세 보기 &rarr;" data-en="View Details &rarr;">상세 보기 &rarr;</span>
+        </div>
+      </a>
+
+    </div>
+  </div>
+</section>
+
+<!-- S5: CTA + CONTACT -->
+<section id="contact" class="s-white py-20 sm:py-28">
+  <div class="max-w-5xl mx-auto px-4 sm:px-6">
+    <div class="text-center mb-14 reveal">
+      <span class="eyebrow" data-ko="문의하기" data-en="CONTACT US">문의하기</span>
+      <h2 class="display-lg mb-4" data-ko="혁신은 이미 준비되어 있습니다" data-en="The Innovation Is Already Ready">혁신은 이미 준비되어 있습니다</h2>
+      <p class="text-sm text-[var(--g2)] max-w-xl mx-auto" data-ko="시설에 맞는 최적의 바이오샘플 관리 솔루션을 안내해 드립니다." data-en="We will guide you to the optimal biosample management solution for your facility.">시설에 맞는 최적의 바이오샘플 관리 솔루션을 안내해 드립니다.</p>
+      <a href="product-finder-tree.html" class="inline-flex items-center gap-2 mt-6 bg-[var(--gbg)] hover:bg-emerald-50 text-[var(--g1)] hover:text-[var(--em)] font-medium py-2.5 px-6 rounded-full text-sm transition border border-[var(--bd)]">
+        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+        <span data-ko="제품 찾기로 바로가기" data-en="Go to Product Finder">제품 찾기로 바로가기</span>
+      </a>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-5 gap-10 reveal">
+      <div class="lg:col-span-3">
+        <form id="biosample-contact-form" onsubmit="submitBiosample(event)">
+          <div class="mb-5">
+            <div class="text-xs font-semibold text-[var(--g2)] mb-2" data-ko="관심 제품 (선택)" data-en="Products of Interest (optional)">관심 제품 (선택)</div>
+            <div class="flex flex-wrap gap-2" id="product-chips">
+              <span class="product-chip" onclick="toggleChip(this)" data-value="Revolution">Revolution</span>
+              <span class="product-chip" onclick="toggleChip(this)" data-value="LABS">LABS</span>
+              <span class="product-chip" onclick="toggleChip(this)" data-value="LS Series">LS Series</span>
+              <span class="product-chip" onclick="toggleChip(this)" data-value="ICB Dual">ICB Dual</span>
+              <span class="product-chip" onclick="toggleChip(this)" data-value="AI Shield">AI Shield</span>
+              <span class="product-chip" onclick="toggleChip(this)" data-value="Other" data-ko="기타" data-en="Other">기타</span>
+            </div>
+          </div>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
+            <div>
+              <label class="block text-xs font-medium text-[var(--g2)] mb-1.5" data-ko="성함" data-en="Name">성함</label>
+              <input type="text" name="from_name" required data-ko="홍길동" data-en="Name" placeholder="홍길동">
+            </div>
+            <div>
+              <label class="block text-xs font-medium text-[var(--g2)] mb-1.5" data-ko="이메일" data-en="Email">이메일</label>
+              <input type="email" name="from_email" required placeholder="name@company.com">
+            </div>
+          </div>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
+            <div>
+              <label class="block text-xs font-medium text-[var(--g2)] mb-1.5" data-ko="연락처" data-en="Phone">연락처</label>
+              <input type="tel" name="phone" placeholder="010-0000-0000">
+            </div>
+            <div>
+              <label class="block text-xs font-medium text-[var(--g2)] mb-1.5" data-ko="소속 기관" data-en="Organization">소속 기관</label>
+              <input type="text" name="company" data-ko="OO 병원 / 연구소" data-en="Hospital / Lab" placeholder="OO 병원 / 연구소">
+            </div>
+          </div>
+          <div class="mb-6">
+            <label class="block text-xs font-medium text-[var(--g2)] mb-1.5" data-ko="문의 내용" data-en="Message">문의 내용</label>
+            <textarea name="message" rows="4" data-ko="보관 시료 종류, 수량, 현재 사용 장비 등을 적어주세요." data-en="Please describe sample types, quantity, and current equipment." placeholder="보관 시료 종류, 수량, 현재 사용 장비 등을 적어주세요."></textarea>
+          </div>
+          <button type="submit" id="biosample-submit-btn" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-semibold py-3 rounded-xl transition text-sm">
+            <span data-ko="상담 신청하기" data-en="Submit Inquiry">상담 신청하기</span>
+          </button>
+          <div id="biosample-form-msg" class="mt-3 text-center text-sm hidden"></div>
+        </form>
+      </div>
+
+      <div class="lg:col-span-2 space-y-6">
+        <div>
+          <div class="text-xs font-semibold text-[var(--g3)] uppercase tracking-wider mb-2" data-ko="전화 상담" data-en="Phone">전화 상담</div>
+          <a href="tel:031-737-8171" class="text-lg font-bold text-[var(--black)] hover:text-[var(--em)] transition">031-737-8171~4</a>
+          <p class="text-xs text-[var(--g3)] mt-1" data-ko="평일 09:00 &ndash; 18:00" data-en="Weekdays 09:00 &ndash; 18:00">평일 09:00 &ndash; 18:00</p>
+        </div>
+        <div>
+          <div class="text-xs font-semibold text-[var(--g3)] uppercase tracking-wider mb-2" data-ko="이메일" data-en="Email">이메일</div>
+          <a href="mailto:info@koreacryo.com" class="text-sm font-medium text-[var(--blue)] hover:underline">info@koreacryo.com</a>
+        </div>
+        <div>
+          <div class="text-xs font-semibold text-[var(--g3)] uppercase tracking-wider mb-2" data-ko="주소" data-en="Address">주소</div>
+          <p class="text-sm text-[var(--g2)]" data-ko="경기도 성남시 중원구<br>둔촌대로 560<br>벽산테크노피아 201호" data-en="201, Byeoksan Technopia<br>560 Dunchon-daero<br>Jungwon-gu, Seongnam-si">경기도 성남시 중원구<br>둔촌대로 560<br>벽산테크노피아 201호</p>
+        </div>
+        <div class="bg-[var(--em-50)] rounded-2xl p-5 border border-emerald-100">
+          <p class="text-sm font-semibold text-[var(--em)] mb-1" data-ko="IC Biomedical 공식 수입원" data-en="Authorized IC Biomedical Distributor">IC Biomedical 공식 수입원</p>
+          <p class="text-xs text-[var(--g2)]" data-ko="한국초저온용기(주)는 IC Biomedical의 한국 공식 수입/판매원입니다." data-en="Korea Cryogenics Co., Ltd. is the authorized importer and distributor of IC Biomedical in Korea.">한국초저온용기(주)는 IC Biomedical의 한국 공식 수입/판매원입니다.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="footer-v2 py-16">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10 lg:gap-8">
+      <div class="sm:col-span-2 lg:col-span-1">
+        <img src="Logo/logo-kc.png" alt="KC" class="kc-logo-footer mb-4" style="filter:brightness(1.1);">
+        <p class="text-sm leading-relaxed" style="color:rgba(148,163,184,0.7);" data-ko="극저온 장비에서 가스 엔지니어링까지,<br>신뢰할 수 있는 파트너" data-en="Your trusted partner,<br>from cryogenic equipment to gas engineering">극저온 장비에서 가스 엔지니어링까지,<br>신뢰할 수 있는 파트너</p>
+        <div style="margin-top:16px;display:flex;gap:10px;">
+          <a href="tel:031-737-8171" style="display:inline-flex;align-items:center;justify-content:center;width:36px;height:36px;border-radius:10px;border:1px solid rgba(0,212,255,0.12);background:rgba(0,212,255,0.04);transition:all 0.25s;" onmouseover="this.style.borderColor='rgba(0,212,255,0.3)';this.style.background='rgba(0,212,255,0.08)'" onmouseout="this.style.borderColor='rgba(0,212,255,0.12)';this.style.background='rgba(0,212,255,0.04)'">
+            <svg width="16" height="16" fill="none" stroke="rgba(0,212,255,0.5)" stroke-width="1.5" viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6A19.79 19.79 0 0 1 2.12 4.18 2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+          </a>
+          <a href="mailto:info@koreacryo.com" style="display:inline-flex;align-items:center;justify-content:center;width:36px;height:36px;border-radius:10px;border:1px solid rgba(0,212,255,0.12);background:rgba(0,212,255,0.04);transition:all 0.25s;" onmouseover="this.style.borderColor='rgba(0,212,255,0.3)';this.style.background='rgba(0,212,255,0.08)'" onmouseout="this.style.borderColor='rgba(0,212,255,0.12)';this.style.background='rgba(0,212,255,0.04)'">
+            <svg width="16" height="16" fill="none" stroke="rgba(0,212,255,0.5)" stroke-width="1.5" viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
+          </a>
+        </div>
+      </div>
+      <div class="sm:col-span-2 lg:col-span-1">
+        <div class="footer-col-title" data-ko="바이오뱅킹 제품" data-en="Biobanking Products">바이오뱅킹 제품</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:3px 16px;">
+          <a href="bio-revolution-series.html" class="footer-link"><svg fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="m9 18 6-6-6-6"/></svg><span>Revolution</span></a>
+          <a href="bio-labs-series.html" class="footer-link"><svg fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="m9 18 6-6-6-6"/></svg><span>LABS</span></a>
+          <a href="bio-ls-series.html" class="footer-link"><svg fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="m9 18 6-6-6-6"/></svg><span>LS Series</span></a>
+          <a href="bio-icb-dual-series.html" class="footer-link"><svg fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="m9 18 6-6-6-6"/></svg><span>ICB Dual</span></a>
+          <a href="bio-ai.html" class="footer-link"><svg fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="m9 18 6-6-6-6"/></svg><span>AI / Livestock</span></a>
+          <a href="biobanking.html" class="footer-link"><svg fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="m9 18 6-6-6-6"/></svg><span>Biobanking</span></a>
+        </div>
+      </div>
+      <div>
+        <div class="footer-col-title" data-ko="회사" data-en="Company">회사</div>
+        <div style="display:flex;flex-direction:column;gap:4px;">
+          <a href="index.html" class="footer-link"><svg fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="m9 18 6-6-6-6"/></svg><span data-ko="홈" data-en="Home">홈</span></a>
+          <a href="about.html" class="footer-link"><svg fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="m9 18 6-6-6-6"/></svg><span data-ko="회사소개" data-en="About Us">회사소개</span></a>
+          <a href="product-finder-tree.html" class="footer-link"><svg fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="m9 18 6-6-6-6"/></svg><span data-ko="제품 찾기" data-en="Product Finder">제품 찾기</span></a>
+          <a href="#contact" class="footer-link"><svg fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="m9 18 6-6-6-6"/></svg><span data-ko="문의하기" data-en="Contact">문의하기</span></a>
+        </div>
+      </div>
+      <div>
+        <div class="footer-col-title" data-ko="연락처" data-en="Contact">연락처</div>
+        <div style="display:flex;flex-direction:column;gap:6px;">
+          <div class="footer-contact-item"><svg fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6A19.79 19.79 0 0 1 2.12 4.18 2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg><div><a href="tel:031-737-8171">031-737-8171~4</a></div></div>
+          <div class="footer-contact-item"><svg fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg><div><a href="mailto:info@koreacryo.com">info@koreacryo.com</a></div></div>
+          <div class="footer-contact-item"><svg fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0z"/><circle cx="12" cy="10" r="3"/></svg><div data-ko="경기도 성남시 중원구<br>둔촌대로 560 벽산테크노피아 201호" data-en="201, Byeoksan Technopia<br>560 Dunchon-daero, Seongnam">경기도 성남시 중원구<br>둔촌대로 560 벽산테크노피아 201호</div></div>
+        </div>
+      </div>
+    </div>
+    <div class="footer-glow-line"></div>
+    <div class="footer-biz-bar">
+      <div class="footer-biz-info">
+        <span data-ko="한국초저온용기(주)" data-en="Korea Cryogenics Co., Ltd.">한국초저온용기(주)</span>
+        <span class="sep"></span>
+        <span data-ko="대표이사: 이희란" data-en="CEO: Hee-ran Lee">대표이사: 이희란</span>
+        <span class="sep"></span>
+        <span data-ko="사업자등록번호: 214-81-19072" data-en="Biz Reg No: 214-81-19072">사업자등록번호: 214-81-19072</span>
+      </div>
+      <div class="footer-copyright">
+        &copy; <span id="footer-year">2026</span> Korea Cryogenics. All rights reserved.
+        <span class="ee-hint" onclick="if(typeof launchEasterEgg==='function')launchEasterEgg()">Est. by HJP</span>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<!-- SCRIPTS -->
+<script>
+(function(){
+  /* Language Toggle */
+  var currentLang = 'ko';
+  window.toggleLang = function() {
+    currentLang = currentLang === 'ko' ? 'en' : 'ko';
+    var els = document.querySelectorAll('[data-ko][data-en]');
+    for (var i = 0; i < els.length; i++) {
+      var el = els[i];
+      var val = el.getAttribute('data-' + currentLang);
+      if (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA') {
+        el.placeholder = val;
+      } else {
+        el.textContent = val;
+      }
+    }
+    var ko = document.getElementById('lang-ko');
+    var en = document.getElementById('lang-en');
+    if (currentLang === 'ko') {
+      ko.style.background = '#10b981'; ko.style.color = '#fff';
+      en.style.background = 'transparent'; en.style.color = '#94a3b8';
+    } else {
+      en.style.background = '#10b981'; en.style.color = '#fff';
+      ko.style.background = 'transparent'; ko.style.color = '#94a3b8';
+    }
+  };
+
+  /* Nav scroll effect */
+  var nav = document.getElementById('nav');
+  var hero = document.querySelector('.hero-dark');
+  function updateNav() {
+    var scrolled = window.scrollY > 60;
+    var inHero = window.scrollY < (hero ? hero.offsetHeight - 80 : 300);
+    if (scrolled) { nav.classList.add('scrolled'); } else { nav.classList.remove('scrolled'); }
+    if (inHero && !scrolled) { nav.classList.add('on-dark'); } else { nav.classList.remove('on-dark'); }
+  }
+  window.addEventListener('scroll', updateNav, { passive: true });
+  updateNav();
+
+  /* Scroll reveal */
+  var revealObserver = new IntersectionObserver(function(entries) {
+    for (var i = 0; i < entries.length; i++) {
+      if (entries[i].isIntersecting) {
+        entries[i].target.classList.add('visible');
+        revealObserver.unobserve(entries[i].target);
+      }
+    }
+  }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+  var revealEls = document.querySelectorAll('.reveal');
+  for (var i = 0; i < revealEls.length; i++) { revealObserver.observe(revealEls[i]); }
+
+  /* Counter animation */
+  function animateCounter(el) {
+    var target = parseInt(el.dataset.target);
+    var duration = 1800;
+    var start = performance.now();
+    function update(now) {
+      var progress = Math.min((now - start) / duration, 1);
+      var eased = 1 - Math.pow(1 - progress, 3);
+      var val = Math.round(eased * target);
+      el.textContent = val.toLocaleString();
+      if (progress < 1) requestAnimationFrame(update);
+    }
+    requestAnimationFrame(update);
+  }
+  var counterObserver = new IntersectionObserver(function(entries) {
+    for (var i = 0; i < entries.length; i++) {
+      if (entries[i].isIntersecting) {
+        animateCounter(entries[i].target);
+        counterObserver.unobserve(entries[i].target);
+      }
+    }
+  }, { threshold: 0.5 });
+  var counters = document.querySelectorAll('.counter');
+  for (var i = 0; i < counters.length; i++) { counterObserver.observe(counters[i]); }
+
+  /* Product chips */
+  window.toggleChip = function(el) {
+    if (el.classList.contains('selected')) { el.classList.remove('selected'); }
+    else { el.classList.add('selected'); }
+  };
+
+  function getSelectedProducts() {
+    var chips = document.querySelectorAll('.product-chip.selected');
+    var vals = [];
+    for (var i = 0; i < chips.length; i++) { vals.push(chips[i].dataset.value); }
+    return vals.join(', ');
+  }
+
+  /* EmailJS */
+  try { emailjs.init('sQsYCTrE1oUQdNLYN'); } catch(e) { console.warn('EmailJS init failed:', e); }
+
+  window.submitBiosample = function(e) {
+    e.preventDefault();
+    var form = document.getElementById('biosample-contact-form');
+    var btn = document.getElementById('biosample-submit-btn');
+    var msg = document.getElementById('biosample-form-msg');
+    var products = getSelectedProducts();
+
+    btn.disabled = true;
+    btn.textContent = '전송 중...';
+
+    var params = {
+      from_name: form.from_name.value,
+      from_email: form.from_email.value,
+      phone: form.phone.value,
+      company: form.company.value,
+      message: '[바이오샘플 혁신 페이지]\n관심 제품: ' + (products || '미선택') + '\n\n' + form.message.value,
+      page: 'biosample-innovations.html'
+    };
+
+    try {
+      emailjs.send('service_v89smv9', 'template_xweueym', params)
+        .then(function() {
+          msg.className = 'mt-3 text-center text-sm text-emerald-600';
+          msg.textContent = '문의가 접수되었습니다. 빠른 시일 내에 연락드리겠습니다.';
+          msg.classList.remove('hidden');
+          form.reset();
+          var selected = document.querySelectorAll('.product-chip.selected');
+          for (var i = 0; i < selected.length; i++) { selected[i].classList.remove('selected'); }
+          btn.disabled = false;
+          btn.textContent = '상담 신청하기';
+        })
+        .catch(function(err) {
+          msg.className = 'mt-3 text-center text-sm text-red-500';
+          msg.textContent = '전송에 실패했습니다. 전화(031-737-8171)로 문의해 주세요.';
+          msg.classList.remove('hidden');
+          btn.disabled = false;
+          btn.textContent = '상담 신청하기';
+          console.error('EmailJS error:', err);
+        });
+    } catch(err) {
+      msg.className = 'mt-3 text-center text-sm text-red-500';
+      msg.textContent = '전송에 실패했습니다. 전화(031-737-8171)로 문의해 주세요.';
+      msg.classList.remove('hidden');
+      btn.disabled = false;
+      btn.textContent = '상담 신청하기';
+      console.error('EmailJS error:', err);
+    }
+  };
+
+  /* Footer year */
+  document.getElementById('footer-year').textContent = new Date().getFullYear();
+})();
+</script>
+</body>
+</html>
