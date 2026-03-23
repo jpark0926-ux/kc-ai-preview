@@ -83,11 +83,12 @@ body.dark-mode .lang-btn:hover,body.dark-mode .theme-btn:hover{background:rgba(2
 /* -- Branch row -- */
 .branch{
   display:flex;align-items:flex-start;position:relative;
-  padding:10px 0;transition:opacity 0.4s;
-  margin-bottom:180px;
+  padding:10px 0;transition:opacity 0.4s, margin-bottom 0.5s ease;
+  margin-bottom:20px;
 }
 .branch:last-child{margin-bottom:0;}
-.branch.dimmed{opacity:0.15;filter:grayscale(0.7);}
+.branch.expanded{margin-bottom:120px;}
+.branch.dimmed{opacity:0.15;filter:grayscale(0.7);margin-bottom:40px;}
 .branch.dimmed .l1-node,.branch.dimmed .l2-pill,.branch.dimmed .l3-card{pointer-events:none;}
 
 /* -- Root column -- */
@@ -972,8 +973,15 @@ function applyState(){
 
     if(activeCat && activeCat !== catId){
       branch.classList.add('dimmed');
+      branch.classList.remove('expanded');
     } else {
       branch.classList.remove('dimmed');
+    }
+
+    if(activeCat === catId){
+      branch.classList.add('expanded');
+    } else {
+      branch.classList.remove('expanded');
     }
 
     if(activeCat === catId){
