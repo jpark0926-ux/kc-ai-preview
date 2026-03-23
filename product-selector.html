@@ -649,117 +649,172 @@ document.getElementById('chatInput').addEventListener('keydown', function(e){
   if(e.key === 'Enter') handleFreeChat();
 });
 
-function handleFreeChat(){
+var GEMINI_KEY = 'AIzaSyArLoz8pxPsKy-B2XpdX2tHztuoxcKmAEg';
+var chatHistory = [];
+
+async function handleFreeChat(){
   var input = document.getElementById('chatInput');
   var text = input.value.trim();
   if(!text) return;
   input.value = '';
 
-  // Show user message
   addUserMsg(text);
-
-  // Analyze keywords and find matching products
-  var result = analyzeQuery(text);
-
-  // Show typing then result
   showTypingIndicator();
-  setTimeout(function(){
+
+  try {
+    var response = await callGemini(text);
     hideTypingIndicator();
-    if(result.products.length > 0){
-      addKcMsg(result.message);
-      // Show first recommended product
-      setTimeout(function(){
-        showResult(result.products[0]);
-      }, 300);
-    } else {
-      addKcMsg(lang === 'ko' ?
-        '죄송합니다, 정확한 제품을 찾기 어렵습니다. 전문가 상담을 추천드립니다!\n📞 031-737-8171' :
-        'Sorry, I couldn\'t find an exact match. I recommend expert consultation!\n📞 031-737-8171');
+    addKcMsg(response.message);
+    if(response.productKey && products[response.productKey]){
+      setTimeout(function(){ showResult(response.productKey); }, 400);
     }
-  }, 600);
+  } catch(e){
+    hideTypingIndicator();
+    addKcMsg(lang === 'ko' ?
+      '죄송합니다, 일시적인 오류가 발생했습니다. 다시 시도해주세요.\n📞 031-737-8171' :
+      'Sorry, a temporary error occurred. Please try again.\n📞 031-737-8171');
+  }
 }
 
-function analyzeQuery(text){
-  var t = text.toLowerCase();
-  var result = {products:[], message:''};
+async function callGemini(userText){
+  var systemPrompt = `당신은 한국초저온용기(주)의 IC Biomedical 제품 전문 상담사입니다. 고객의 질문에 친절하고 정확하게 답변합니다.
 
-  // Keyword maps
-  var keywords = {
-    // Revolution / cGMP
-    cgmp: {prod:'revolution', msgKo:'cGMP 규정 준수가 필요하시군요. Revolution Series를 추천합니다!', msgEn:'You need cGMP compliance. I recommend the Revolution Series!'},
-    revolution: {prod:'revolution', msgKo:'Revolution Series — 업계 최고 수준의 자동화 극저온 저장 시스템입니다.', msgEn:'Revolution Series — the industry\'s top automated cryogenic storage.'},
-    rfid: {prod:'revolution', msgKo:'RFID 추적이 필요하시면 Revolution Series가 적합합니다!', msgEn:'For RFID tracking, Revolution Series is the right choice!'},
-    '감사추적': {prod:'revolution', msgKo:'감사추적(Audit Trail) 기능은 Revolution Series에서 지원합니다!', msgEn:'Audit trail is supported by Revolution Series!'},
-    'audit': {prod:'revolution', msgKo:'감사추적(Audit Trail) 기능은 Revolution Series에서 지원합니다!', msgEn:'Audit trail is supported by Revolution Series!'},
-    fda: {prod:'revolution', msgKo:'FDA 21 CFR Part 11 호환이 필요하시면 Revolution Series입니다!', msgEn:'For FDA 21 CFR Part 11 compliance, it\'s Revolution Series!'},
+## 제품 라인업 (productKey로 참조)
 
-    // LABS
-    '93000': {prod:'labs', msgKo:'대용량 저장이 필요하시군요! LABS Series는 최대 93,000 바이알을 보관합니다.', msgEn:'You need large-scale storage! LABS holds up to 93,000 vials.'},
-    '대용량': {prod:'labs', msgKo:'대용량 보관에는 LABS Series를 추천합니다!', msgEn:'For large-scale storage, I recommend LABS Series!'},
-    '바이오뱅크': {prod:'labs', msgKo:'바이오뱅크 구축에는 LABS Series가 최적입니다!', msgEn:'LABS Series is optimal for biobank construction!'},
-    'labs': {prod:'labs', msgKo:'LABS Series — 대용량 스테인리스 자동화 바이오 저장 시스템입니다.', msgEn:'LABS Series — large-scale stainless automated bio storage.'},
-    '턴테이블': {prod:'labs', msgKo:'H-Type 턴테이블 4구역 접근은 LABS Series의 핵심 기능입니다!', msgEn:'H-Type turntable 4-zone access is a key LABS feature!'},
+### 보관 장비
 
-    // LS
-    '바이알': {prod:'ls', msgKo:'바이알 보관에는 LS Series (750~6,000개)를 추천합니다!', msgEn:'For vial storage, I recommend LS Series (750-6,000 vials)!'},
-    'ls': {prod:'ls', msgKo:'LS Series — Box Rack 타입 스테인리스 바이알 저장 시스템입니다.', msgEn:'LS Series — Box Rack type stainless vial storage system.'},
+1. **LD Series** (productKey: "ld")
+   - 소형 실험실용 LN₂ 듀어
+   - 용량: 4L~50L (LD4, LD5, LD10, LD25, LD35, LD50)
+   - 용도: LN₂ 저장, 분주, 일반 실험실
+   - 가벼운 경량 설계
 
-    // LD
-    '실험실': {prod:'ld', msgKo:'실험실용으로는 LD Series가 가장 적합합니다!', msgEn:'For lab use, LD Series is the best fit!'},
-    '듀어': {prod:'ld', msgKo:'LN₂ 듀어는 LD Series — 4L부터 50L까지 다양합니다.', msgEn:'LN₂ dewars: LD Series — from 4L to 50L.'},
-    'dewar': {prod:'ld', msgKo:'LN₂ 듀어는 LD Series — 4L부터 50L까지 다양합니다.', msgEn:'LN₂ dewars: LD Series — from 4L to 50L.'},
-    '분주': {prod:'ld', msgKo:'LN₂ 분주용으로는 LD Series를 추천합니다!', msgEn:'For LN₂ dispensing, I recommend LD Series!'},
+2. **XT Series** (productKey: "xt")
+   - Extended Time 장기 Cane 보관
+   - 모델: XT3~XT34, TW20~TW47
+   - 업계 최저 증발률
+   - 용도: 정액, 배아, 세포 장기 보관
 
-    // XT
-    '장기보관': {prod:'xt', msgKo:'장기 보관에는 XT Series가 적합합니다. 업계 최저 증발률!', msgEn:'For long-term storage, XT Series is ideal. Industry-lowest evaporation!'},
-    'extended': {prod:'xt', msgKo:'XT Series — Extended Time, 장기 Cane 보관 전용입니다.', msgEn:'XT Series — Extended Time, dedicated long-term Cane storage.'},
+3. **HC Series** (productKey: "hc")
+   - 고용량 Canister 보관
+   - 모델: HC12~HC35, VHC35/38
+   - 최대 1,260개 바이알
+   - 용도: 대용량 Cane/Canister 시료
 
-    // HC
-    '캐니스터': {prod:'hc', msgKo:'고용량 Canister 보관에는 HC Series를 추천합니다!', msgEn:'For high-capacity canister storage, I recommend HC Series!'},
-    'canister': {prod:'hc', msgKo:'고용량 Canister 보관에는 HC Series를 추천합니다!', msgEn:'For high-capacity canister storage, I recommend HC Series!'},
+4. **LS Series** (productKey: "ls")
+   - 스테인리스 Box Rack 바이알 저장
+   - 용량: 750~6,000 바이알 (LS750, LS2000, LS3000, LS4800, LS6000)
+   - 온도: -190°C vapor phase
+   - 원격 모니터링 옵션
+   - 용도: 바이오뱅크, 병원, 연구소
 
-    // Transport
-    '운송': {prod:'icb-dual', msgKo:'시료 운송에는 ICB Dual Series (IATA 승인 Vapor Shipper)를 추천합니다!', msgEn:'For sample transport, I recommend ICB Dual (IATA approved Vapor Shipper)!'},
-    '항공': {prod:'icb-dual', msgKo:'국제 항공 운송에는 IATA 승인 ICB Dual Series입니다!', msgEn:'For international air transport, it\'s IATA approved ICB Dual!'},
-    'iata': {prod:'icb-dual', msgKo:'IATA 승인 운송 용기는 ICB Dual Series입니다!', msgEn:'The IATA approved transport vessel is ICB Dual!'},
-    'shipping': {prod:'icb-dual', msgKo:'시료 운송에는 ICB Dual — Store-Ship-Store 운용 가능!', msgEn:'For sample shipping, ICB Dual — Store-Ship-Store operation!'},
-    'transport': {prod:'icb-dual', msgKo:'시료 운송에는 ICB Dual — Store-Ship-Store 운용 가능!', msgEn:'For sample transport, ICB Dual — Store-Ship-Store operation!'},
-    '드라이쉬퍼': {prod:'cx', msgKo:'드라이쉬퍼는 CX/DX Series입니다. 국내 단거리 운송에 적합!', msgEn:'Dry shippers: CX/DX Series. Ideal for short-range domestic transport!'},
+5. **LABS Series** (productKey: "labs")
+   - 대용량 자동화 스테인리스 바이오뱅크
+   - 모델: LABS-20K(19,500), LABS-38K(37,700), LABS-40K(41,600), LABS-80K(79,300), LABS-94K(93,000 바이알)
+   - CS 컨트롤러 ±0.1°C, 자동 디포깅, H-Type 턴테이블 4구역
+   - 용도: 대규모 바이오뱅크, 제약사
 
-    // AI/Livestock
-    '정액': {prod:'ai-shield', msgKo:'정액 보관에는 AI Shield 또는 XT Series를 추천합니다!', msgEn:'For semen storage, I recommend AI Shield or XT Series!'},
-    'semen': {prod:'ai-shield', msgKo:'정액 보관에는 AI Shield 또는 XT Series를 추천합니다!', msgEn:'For semen storage, I recommend AI Shield or XT Series!'},
-    '축산': {prod:'ai-shield', msgKo:'축산/인공수정용으로는 AI Shield 시리즈를 추천합니다!', msgEn:'For livestock/AI, I recommend AI Shield series!'},
-    '인공수정': {prod:'ai-shield', msgKo:'인공수정용 장비는 AI Shield — 열 보호 기술 적용!', msgEn:'For AI equipment: AI Shield — with thermal protection!'},
-    '목장': {prod:'ai-shield', msgKo:'목장 규모에 따라 AI Shield (소규모) 또는 LABS 80K AI (대규모)를 추천합니다!', msgEn:'Based on farm size: AI Shield (small) or LABS 80K AI (large)!'},
-    '배아': {prod:'xt', msgKo:'배아 보관에는 XT Series 또는 HC Series가 적합합니다!', msgEn:'For embryo storage, XT Series or HC Series are suitable!'},
+6. **Revolution Series** (productKey: "revolution")
+   - cGMP 프리미엄 극저온 저장 시스템
+   - 모델: 300, 400, 600 Series (최대 98,625 바이알)
+   - 자동 LN₂ 충전, RFID 추적, 감사추적(Audit Trail)
+   - FDA 21 CFR Part 11 호환, EU MDR 대응
+   - 터치스크린 모니터링
+   - 용도: GMP 제약사, 대규모 세포치료, 규정 준수 필요 기관
 
-    // Vapor/temperature
-    '증기상': {prod:'ls', msgKo:'증기상(-190\u00B0C) 보관에는 LS, LABS, Revolution Series가 있습니다. 수량에 따라 추천이 달라요!', msgEn:'For vapor phase (-190\u00B0C): LS, LABS, or Revolution. Depends on quantity!'},
-    'vapor': {prod:'ls', msgKo:'Vapor phase 보관에는 LS, LABS, Revolution Series가 있습니다!', msgEn:'For vapor phase: LS, LABS, or Revolution Series!'},
+### 운송 장비
 
-    // Quantity-based
-    '만개': {prod:'labs', msgKo:'만 개 이상의 시료 보관에는 LABS Series를 추천합니다!', msgEn:'For 10,000+ sample storage, I recommend LABS Series!'},
-    '5만': {prod:'revolution', msgKo:'5만 개 이상이면 Revolution Series (최대 98,625 바이알)가 최적입니다!', msgEn:'For 50,000+, Revolution Series (up to 98,625 vials) is optimal!'},
-    '10만': {prod:'revolution', msgKo:'10만 개에 가까운 저장은 Revolution 600 Series를 추천합니다!', msgEn:'For near 100K storage, I recommend Revolution 600 Series!'}
+7. **CX/DX Series** (productKey: "cx")
+   - 드라이쉬퍼 (Dry Shipper)
+   - 모델: CX100, CX500, 4DX, 10DX
+   - Vapor Phase 운송, IATA 규정
+   - 용도: 국내 단거리 시료 운송
+
+8. **ICB Dual Series** (productKey: "icb-dual")
+   - IATA 승인 Vapor Shipper
+   - 유지시간: 10일 이상
+   - Store-Ship-Store 운용
+   - 항공 기내 반입 승인
+   - 용도: 국제 항공 운송, 장거리 시료 운송
+
+### 축산/인공수정 장비
+
+9. **AI Shield** (productKey: "ai-shield")
+   - 소규모 목장 휴대용 (AIS 1.5L, AIS 3L)
+   - 열 보호 캐니스터 기술
+   - ICB 20/24 (20~24L)
+   - 용도: 소규모 목장, 현장 인공수정
+
+10. **ICB 34/35 + XT 21-AI** (productKey: "ai-mid")
+    - 중규모 번식장 전용
+    - ICB 34~35L + 정사각 AI 전용 XT
+    - 용도: 100~1,000두 번식장
+
+11. **LABS 80K AI** (productKey: "ai-large")
+    - 대규모 정액은행
+    - 80,000 스트로 보관
+    - CS 컨트롤러, 자동화
+    - 용도: 1,000두 이상 대규모
+
+## 회사 정보
+- 한국초저온용기(주) = KC
+- IC Biomedical 한국 공식 수입/판매원
+- 전화: 031-737-8171~4
+- 이메일: info@koreacryo.com
+- 주소: 경기도 성남시 중원구 둔촌대로 560 벽산테크노피아 201호
+
+## 응답 규칙
+1. 한국어로 답변 (고객이 영어면 영어로)
+2. 질문에 가장 적합한 1~2개 제품을 추천
+3. 추천 이유를 간결하게 설명 (2~3문장)
+4. 응답 마지막에 반드시 [PRODUCT:productKey] 형태로 추천 제품 키를 포함
+   예: [PRODUCT:revolution] 또는 [PRODUCT:labs]
+5. 여러 제품이 해당되면 가장 적합한 1개만 [PRODUCT:키]로 표시
+6. 제품과 무관한 질문이면 [PRODUCT:none]
+7. 과장하지 말고, 스펙 기반으로 정확하게 답변
+8. 친근하지만 전문적인 톤`;
+
+  chatHistory.push({role:'user', parts:[{text: userText}]});
+
+  var body = {
+    system_instruction: {parts:[{text: systemPrompt}]},
+    contents: chatHistory,
+    generationConfig: {
+      temperature: 0.7,
+      maxOutputTokens: 500,
+      thinkingConfig: {thinkingBudget: 0}
+    }
   };
 
-  // Check each keyword
-  var matched = null;
-  var keys = Object.keys(keywords);
-  for(var i=0; i<keys.length; i++){
-    if(t.indexOf(keys[i]) !== -1){
-      matched = keywords[keys[i]];
-      break;
-    }
+  var res = await fetch('https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=' + GEMINI_KEY, {
+    method: 'POST',
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify(body)
+  });
+
+  var data = await res.json();
+  var aiText = '';
+
+  if(data.candidates && data.candidates[0] && data.candidates[0].content){
+    var parts = data.candidates[0].content.parts;
+    aiText = parts[parts.length - 1].text;
+  } else {
+    throw new Error('No response');
   }
 
-  if(matched){
-    result.products = [matched.prod];
-    result.message = lang === 'ko' ? matched.msgKo : matched.msgEn;
+  chatHistory.push({role:'model', parts:[{text: aiText}]});
+
+  // Extract product key
+  var productKey = null;
+  var match = aiText.match(/\[PRODUCT:([a-z\-]+)\]/);
+  if(match && match[1] !== 'none'){
+    productKey = match[1];
   }
 
-  return result;
+  // Clean the display text (remove [PRODUCT:xxx] tag)
+  var displayText = aiText.replace(/\[PRODUCT:[a-z\-]+\]/g, '').trim();
+
+  return {message: displayText, productKey: productKey};
 }
 
 // Helper to add user message to chat (free chat version)
