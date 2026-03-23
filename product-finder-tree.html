@@ -392,20 +392,26 @@ body:not(.dark-mode) #bgParticles{display:none;}
     padding:14px 20px;cursor:pointer;
   }
   .l1-col::before{
-    content:'';display:block;width:4px;height:32px;border-radius:2px;
+    content:'';display:block;width:5px;height:36px;border-radius:3px;
     background:var(--cat-color);flex-shrink:0;
+    box-shadow:0 0 8px var(--cat-color);
   }
   .l1-node{width:36px;height:36px;flex-shrink:0;}
   .l1-label{font-size:14px;margin-left:8px;flex:1;}
   .l1-col::after{
     content:'';display:block;width:8px;height:8px;
     border-right:2px solid var(--text-dim);border-bottom:2px solid var(--text-dim);
-    transform:rotate(45deg);transition:transform .3s;flex-shrink:0;
+    transform:rotate(45deg);transition:transform 0.4s cubic-bezier(0.16,1,0.3,1);flex-shrink:0;
   }
   .branch[data-expanded="true"] .l1-col::after{transform:rotate(-135deg);}
+  .branch[data-expanded="true"] .l1-col{
+    background:linear-gradient(135deg, rgba(var(--cat-rgb),0.1), transparent);
+    border-radius:16px;
+    margin-bottom:4px;
+  }
 
   .l2-col{
-    max-height:0;overflow:hidden;transition:max-height .4s ease;
+    max-height:0;overflow:hidden;transition:max-height 0.5s cubic-bezier(0.16,1,0.3,1);
     padding:0 20px;width:100%;
     border-left:none !important;
   }
@@ -413,18 +419,30 @@ body:not(.dark-mode) #bgParticles{display:none;}
   .l2-pill-wrap::before,.l2-pill-wrap::after{display:none;}
   .l2-pill-wrap .l2-pill{margin-left:0;}
   .branch[data-expanded="true"] .l2-col{
-    max-height:800px;padding:8px 20px 12px;
+    max-height:1000px;padding:8px 20px 16px;
   }
   .l2-pill{
     opacity:1;transform:none;
-    padding:10px 16px;border-radius:10px;font-size:13px;
-    margin-bottom:4px;
+    padding:14px 18px;border-radius:14px;font-size:14px;
+    margin-bottom:8px;
+    background:rgba(255,255,255,0.04);
+    backdrop-filter:blur(12px);
+    border:1px solid rgba(255,255,255,0.08);
+    border-left:3px solid var(--cat-color, rgba(255,255,255,0.1));
+  }
+  body.dark-mode .l2-pill{
+    background:rgba(255,255,255,0.04);
+  }
+  .l2-pill.active{
+    background:rgba(var(--cat-rgb),0.08) !important;
+    border-left-color:var(--cat-color) !important;
+    border-color:rgba(var(--cat-rgb),0.2);
   }
   .l2-pill::before,.l2-pill::after{display:none;}
   .l2-pill.visible{opacity:1;transform:none;}
 
   .l3-col{
-    max-height:0;overflow:hidden;transition:max-height .4s ease;
+    max-height:0;overflow:hidden;transition:max-height 0.5s cubic-bezier(0.16,1,0.3,1);
     padding:0 20px;width:100%;
     border-left:none !important;margin-left:0;
   }
@@ -432,12 +450,22 @@ body:not(.dark-mode) #bgParticles{display:none;}
   .l3-card-wrap::before,.l3-card-wrap::after{display:none;}
   .l3-card-wrap .l3-card{margin-left:0;}
   .branch[data-l3-expanded="true"] .l3-col{
-    max-height:1200px;padding:4px 20px 12px;
+    max-height:1500px;padding:4px 20px 16px;
   }
   .l3-card{
     opacity:1;transform:none;min-width:unset;width:100%;
-    margin-bottom:4px;
+    margin-bottom:8px;
+    padding:14px 16px;border-radius:14px;
+    background:rgba(255,255,255,0.04);
+    backdrop-filter:blur(12px);
+    border:1px solid rgba(255,255,255,0.08);
   }
+  .l3-card:hover{
+    background:rgba(255,255,255,0.08);
+  }
+  .l3-thumb{height:48px;max-width:60px;}
+  .l3-name{font-size:14px;}
+  .l3-spec{font-size:12px;}
   .l3-card.visible{opacity:1;transform:none;}
 
   .l2-pill-wrap { padding-top:4px; padding-bottom:4px; }
@@ -783,7 +811,7 @@ function buildTree(){
     var l2col = document.createElement('div');
     l2col.className = 'l2-col';
     l2col.id = 'l2col-'+catId;
-    l2col.style.cssText = '--cat-color:'+cfg.color+';--cat-glow:'+cfg.glow+';';
+    l2col.style.cssText = '--cat-color:'+cfg.color+';--cat-glow:'+cfg.glow+';--cat-rgb:'+cfg.rgb+';';
 
     // Bio tabs
     if(catId === 'biobanking' && data.tabs){
@@ -875,7 +903,7 @@ function buildMobileTree(ct){
     // L1 row
     var l1col = document.createElement('div');
     l1col.className = 'l1-col';
-    l1col.style.cssText = '--cat-color:'+cfg.color+';';
+    l1col.style.cssText = '--cat-color:'+cfg.color+';--cat-rgb:'+cfg.rgb+';';
 
     var l1node = document.createElement('div');
     l1node.className = 'l1-node' + (activeCat===catId?' active':'');
@@ -898,7 +926,7 @@ function buildMobileTree(ct){
     var l2col = document.createElement('div');
     l2col.className = 'l2-col';
     l2col.id = 'l2col-'+catId;
-    l2col.style.cssText = '--cat-color:'+cfg.color+';--cat-glow:'+cfg.glow+';';
+    l2col.style.cssText = '--cat-color:'+cfg.color+';--cat-glow:'+cfg.glow+';--cat-rgb:'+cfg.rgb+';';
 
     // Bio tabs (mobile)
     if(catId === 'biobanking' && data.tabs){
