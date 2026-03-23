@@ -127,7 +127,7 @@ body.dark-mode .lang-btn:hover,body.dark-mode .theme-btn:hover{background:rgba(2
   display:flex;align-items:center;justify-content:center;
   cursor:pointer;transition:all 0.4s;position:relative;
 }
-.l1-node:hover{border-color:rgba(0,0,0,0.15);background:rgba(0,0,0,0.05);}
+.l1-node:hover{border-color:rgba(0,0,0,0.15);background:rgba(0,0,0,0.05);transform:scale(1.12);box-shadow:0 0 24px var(--cat-glow, rgba(255,255,255,0.1));}
 body.dark-mode .l1-node:hover{border-color:rgba(255,255,255,0.2);background:rgba(255,255,255,0.06);}
 .l1-node.active{
   border-color:var(--cat-color);
@@ -203,7 +203,7 @@ body.dark-mode .l2-pill:hover{border-color:rgba(255,255,255,0.18);color:#fff;bac
 .l2-pill.active{
   border-color:var(--cat-color);color:var(--text);font-weight:500;
   background:rgba(0,0,0,0.04);
-  box-shadow:0 0 12px var(--cat-glow);
+  box-shadow:0 0 16px var(--cat-glow), 0 0 32px var(--cat-glow);
 }
 body.dark-mode .l2-pill.active{color:#fff;background:rgba(255,255,255,0.06);}
 .l2-desc{font-size:9px;color:var(--text-dim);opacity:0.6;}
@@ -254,6 +254,7 @@ body.dark-mode .bio-tab.active{color:#6ee7b7;}
   background:rgba(0,0,0,0.06);
   border-color:rgba(0,0,0,0.18);
   transform:translateX(2px);
+  box-shadow:0 0 12px var(--cat-glow, rgba(6,182,212,0.2)), 0 2px 8px rgba(0,0,0,0.15);
 }
 body.dark-mode .l3-card:hover{
   background:rgba(255,255,255,0.07);
@@ -331,11 +332,12 @@ body.dark-mode .reset-pill{background:rgba(6,13,27,0.85);}
 body.dark-mode .reset-pill:hover{background:rgba(255,255,255,0.08);border-color:rgba(255,255,255,0.2);color:#fff;}
 
 /* -- Reset zoom animation -- */
-.tree-reset-anim{animation:reset-zoom .4s ease;}
+.tree-reset-anim{animation:reset-zoom .6s ease;}
 @keyframes reset-zoom{
-  0%{transform:scale(1);}
-  40%{transform:scale(0.95);}
-  100%{transform:scale(1);}
+  0%{transform:scale(1);opacity:1;}
+  30%{transform:scale(0.97);opacity:0.8;}
+  60%{transform:scale(1.01);opacity:0.95;}
+  100%{transform:scale(1);opacity:1;}
 }
 
 /* ============================================
@@ -1123,6 +1125,8 @@ function showProducts(catId, subId){
     var imgHtml = '';
     if(p.img){
       imgHtml = '<img class="l3-thumb" src="'+p.img+'" alt="" loading="lazy" onerror="this.style.display=\'none\'">';
+    } else {
+      imgHtml = '<div class="l3-thumb l3-thumb-icon" style="width:40px;height:40px;border-radius:8px;background:rgba('+cfg.rgb+',0.1);display:flex;align-items:center;justify-content:center;flex-shrink:0;"><svg width="20" height="20" fill="none" stroke="'+cfg.color+'" stroke-width="1.5" viewBox="0 0 24 24">'+cfg.icon+'</svg></div>';
     }
 
     card.innerHTML =
@@ -1135,6 +1139,7 @@ function showProducts(catId, subId){
         '<svg width="14" height="14" fill="none" stroke="'+cfg.color+'" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3"/></svg>' +
       '</span>';
     card.style.borderColor = 'rgba('+cfg.rgb+',0.15)';
+    card.style.setProperty('--cat-glow', cfg.glow);
     setTimeout(function(){
       card.classList.add('visible');
       // Redraw bezier curves after each card becomes visible
