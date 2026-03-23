@@ -152,7 +152,7 @@ body.dark-mode .l1-node.active ~ .l1-label{color:#fff;}
 .l2-pill{position:relative;}
 .l2-pill::before{
   content:attr(data-tooltip);
-  position:absolute;bottom:calc(100% + 8px);left:50%;
+  position:absolute;top:calc(100% + 8px);left:50%;
   transform:translateX(-50%) scale(0.9);
   background:var(--text);color:var(--bg);
   padding:4px 10px;border-radius:6px;font-size:10px;
@@ -160,9 +160,9 @@ body.dark-mode .l1-node.active ~ .l1-label{color:#fff;}
   opacity:0;transition:all .2s;z-index:100;
 }
 .l2-pill::after{
-  content:'';position:absolute;bottom:calc(100% + 4px);left:50%;
+  content:'';position:absolute;top:calc(100% + 4px);left:50%;
   transform:translateX(-50%) scale(0);
-  border:4px solid transparent;border-top-color:var(--text);
+  border:4px solid transparent;border-bottom-color:var(--text);
   pointer-events:none;opacity:0;transition:all .2s;z-index:100;
 }
 .l2-pill:hover::before{opacity:1;transform:translateX(-50%) scale(1);}
@@ -206,6 +206,10 @@ body.dark-mode .l2-pill:hover{border-color:rgba(255,255,255,0.18);color:#fff;bac
 }
 body.dark-mode .l2-pill.active{color:#fff;background:rgba(255,255,255,0.06);}
 .l2-desc{font-size:9px;color:var(--text-dim);opacity:0.6;}
+
+/* -- L2 column collapse when not selected (desktop) -- */
+.l2-col:not(.active) { max-height:0; overflow:hidden; transition:max-height 0.4s ease; }
+.l2-col.active { max-height:1200px; }
 
 /* -- Bio tabs -- */
 .bio-tabs{display:flex;gap:4px;margin-bottom:6px;}
@@ -406,6 +410,9 @@ body.dark-mode .reset-pill:hover{background:rgba(255,255,255,0.08);border-color:
   }
   .l3-card.visible{opacity:1;transform:none;}
 
+  .l2-pill-wrap { padding-top:4px; padding-bottom:4px; }
+  .l3-card-wrap { padding-top:4px; padding-bottom:4px; }
+  .branch { margin-bottom:0; }
   .bio-tabs{flex-wrap:wrap;padding:0 0 8px;}
   .breadcrumb{display:none;}
   .energy-dot,.energy-trail{display:none;}
@@ -1090,6 +1097,7 @@ function showProducts(catId, subId){
       var pillRect = activePill.getBoundingClientRect();
       var l3Rect = l3col.getBoundingClientRect();
       var offset = pillRect.top - l3Rect.top;
+      if(offset > 300) offset = 300;
       if(offset > 0) l3col.style.paddingTop = offset + 'px';
       else l3col.style.paddingTop = '0';
     }
@@ -1256,25 +1264,28 @@ function fireEnergyDot(){
     dot.style.top = sy + 'px';
     ct.appendChild(dot);
 
-    var midY = ey;
     var dur = 600;
     var start = null;
     var trails = [];
+
+    // Bezier curve control points (same as SVG curves: midpoint-X)
+    var mx = (sx + ex) / 2;
+    var cx1 = mx, cy1 = sy, cx2 = mx, cy2 = ey;
+
+    function bzPt(t, x1,y1, bx1,by1, bx2,by2, x2,y2){
+      var u=1-t;
+      return {
+        x: u*u*u*x1 + 3*u*u*t*bx1 + 3*u*t*t*bx2 + t*t*t*x2,
+        y: u*u*u*y1 + 3*u*u*t*by1 + 3*u*t*t*by2 + t*t*t*y2
+      };
+    }
 
     function step(ts){
       if(!start) start = ts;
       var p = Math.min((ts - start) / dur, 1);
       var ease = p < 0.5 ? 2*p*p : -1+(4-2*p)*p;
-      var cx, cy;
-      if(ease < 0.4){
-        var t = ease / 0.4;
-        cx = sx;
-        cy = sy + (midY - sy) * t;
-      } else {
-        var t = (ease - 0.4) / 0.6;
-        cx = sx + (ex - sx) * t;
-        cy = midY;
-      }
+      var pt = bzPt(ease, sx,sy, cx1,cy1, cx2,cy2, ex,ey);
+      var cx = pt.x, cy = pt.y;
       dot.style.left = cx + 'px';
       dot.style.top = cy + 'px';
       dot.style.opacity = p < 0.1 ? p/0.1 : (p > 0.85 ? (1-p)/0.15 : 1);
