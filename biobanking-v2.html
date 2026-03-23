@@ -1,0 +1,968 @@
+<!DOCTYPE html>
+<html lang="ko" class="scroll-smooth">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="canonical" href="https://koreacryo.com/biobanking.html">
+<title>바이오뱅킹 | 한국초저온용기(주)</title>
+<meta name="description" content="한국초저온용기(주) - IC Biomedical 바이오뱅킹 시스템. 줄기세포, 바이오시료 초저온 보관 솔루션. Revolution, LABS, LD, XT/TW, CX Series 등 Full Lineup.">
+<meta name="keywords" content="바이오뱅킹,바이오시료 보관,초저온 보관,줄기세포 보관,IC Biomedical,LN2 저장,액체질소 보관,biobanking,cryogenic storage,한국초저온용기,LABS,Revolution">
+<meta name="robots" content="index, follow">
+<meta property="og:title" content="KC · 바이오뱅킹 | Biobanking Solutions">
+<meta property="og:description" content="IC Biomedical 바이오뱅킹 시스템으로 소중한 바이오시료를 안전하게 보관.">
+<meta property="og:type" content="website">
+<meta property="og:image" content="https://koreacryo.com/Logo/logo-kc.png">
+<meta property="og:url" content="https://koreacryo.com/biobanking.html">
+<link rel="icon" type="image/x-icon" href="favicon.ico">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Noto+Sans+KR:wght@300;400;500;600;700;900&display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+tailwind.config = {
+  theme: {
+    extend: {
+      colors: {
+        cryo: {
+          950:'#060d1b',900:'#0a1628',800:'#0f2240',700:'#143060',
+          600:'#1a4080',500:'#10b981',400:'#34d399',300:'#6ee7b7',
+        }
+      }
+    }
+  }
+}
+</script>
+<style>
+:root {
+  --black:#1d1d1f;--g1:#424245;--g2:#6e6e73;--g3:#86868b;
+  --gbg:#f5f5f7;--white:#fff;
+  --cyan:#06b6d4;--em:#10b981;
+  --bg:#060d1b;--surface:#0a1628;
+  --border:rgba(6,182,212,0.1);
+  --text-primary:#e2e8f0;--text-secondary:#94a3b8;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'Inter','Noto Sans KR',sans-serif;background:var(--bg);color:var(--text-primary);overflow-x:hidden;}
+
+/* ===== TYPOGRAPHY ===== */
+.display-xl{font-size:clamp(2.8rem,7vw,5.5rem);font-weight:800;letter-spacing:-0.03em;line-height:1.05;}
+.display-lg{font-size:clamp(1.8rem,4vw,3.2rem);font-weight:700;letter-spacing:-0.02em;line-height:1.1;}
+.eyebrow{font-size:0.8rem;font-weight:600;letter-spacing:0.15em;text-transform:uppercase;color:var(--cyan);}
+
+/* ===== HERO ===== */
+.hero-section{min-height:100vh;position:relative;overflow:hidden;display:flex;align-items:center;}
+.hero-section::before{content:'';position:absolute;inset:0;background:
+  radial-gradient(ellipse at 30% 60%,rgba(6,182,212,0.12) 0%,transparent 50%),
+  radial-gradient(ellipse at 70% 20%,rgba(16,185,129,0.08) 0%,transparent 50%);z-index:1;}
+#hero-canvas{position:absolute;top:0;left:0;width:100%;height:100%;z-index:0;}
+@keyframes hero-in{0%{opacity:0;transform:translateY(30px);filter:blur(8px);}100%{opacity:1;transform:translateY(0);filter:blur(0);}}
+.hero-anim{animation:hero-in 1s cubic-bezier(0.16,1,0.3,1) forwards;opacity:0;}
+.hero-anim-d1{animation-delay:0.1s;}.hero-anim-d2{animation-delay:0.25s;}.hero-anim-d3{animation-delay:0.4s;}.hero-anim-d4{animation-delay:0.55s;}.hero-anim-d5{animation-delay:0.7s;}
+
+/* ===== SCROLL INDICATOR ===== */
+@keyframes scrollBounce{0%,100%{transform:translateY(0)}50%{transform:translateY(8px)}}
+.scroll-indicator{animation:scrollBounce 2s ease infinite;}
+
+/* ===== GLASS CARD ===== */
+.glass-card{background:rgba(255,255,255,0.03);backdrop-filter:blur(12px);border:1px solid rgba(255,255,255,0.06);border-radius:20px;transition:all 0.35s;}
+.glass-card:hover{border-color:rgba(6,182,212,0.15);transform:translateY(-3px);box-shadow:0 20px 40px rgba(0,0,0,0.3);}
+
+/* ===== PRODUCT CARD V2 ===== */
+.product-card-v2{background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.06);border-radius:20px;padding:24px;transition:all 0.35s;cursor:pointer;position:relative;overflow:hidden;display:block;text-decoration:none;color:inherit;}
+.product-card-v2:hover{border-color:rgba(6,182,212,0.2);transform:translateY(-4px);box-shadow:0 20px 40px rgba(0,0,0,0.3);}
+.product-card-v2 img{transition:transform 0.4s;}
+.product-card-v2:hover img{transform:translateY(-6px) scale(1.02);}
+.product-card-v2.featured{border-color:rgba(16,185,129,0.2);box-shadow:0 0 30px rgba(16,185,129,0.05);}
+.product-card-v2.featured:hover{border-color:rgba(16,185,129,0.35);box-shadow:0 0 50px rgba(16,185,129,0.1);}
+
+/* ===== SCROLL REVEAL ===== */
+.reveal{opacity:0;transform:translateY(24px);transition:opacity 0.7s ease,transform 0.7s ease;}
+.reveal.visible{opacity:1;transform:none;}
+.reveal-d1{transition-delay:0.1s;}.reveal-d2{transition-delay:0.2s;}.reveal-d3{transition-delay:0.3s;}.reveal-d4{transition-delay:0.4s;}
+
+/* ===== TRUST BAR ===== */
+.trust-bar{background:rgba(255,255,255,0.02);backdrop-filter:blur(16px);border-top:1px solid rgba(6,182,212,0.08);border-bottom:1px solid rgba(6,182,212,0.08);}
+
+/* ===== GRADIENT TEXT ===== */
+.gradient-text{background:linear-gradient(135deg,#67e8f9,#06b6d4,#10b981);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+
+/* ===== TABS ===== */
+.filter-tab{padding:0.5rem 1.25rem;border-radius:9999px;font-size:0.85rem;font-weight:500;border:1px solid rgba(255,255,255,0.08);color:var(--text-secondary);cursor:pointer;transition:all 0.3s;background:transparent;}
+.filter-tab:hover{border-color:rgba(6,182,212,0.25);color:#a5f3fc;}
+.filter-tab.active{background:rgba(6,182,212,0.12);border-color:rgba(6,182,212,0.35);color:#67e8f9;}
+
+/* ===== DIVIDER ===== */
+.section-divider{height:1px;background:linear-gradient(90deg,transparent,rgba(6,182,212,0.15),transparent);margin:0 auto;max-width:80%;}
+
+/* ===== NAV ===== */
+.nav-blur{backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);}
+
+/* ===== FORM ===== */
+.form-input{background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:12px;padding:0.75rem 1rem;color:var(--text-primary);font-size:0.9rem;width:100%;transition:border-color 0.3s;}
+.form-input:focus{outline:none;border-color:rgba(6,182,212,0.4);box-shadow:0 0 0 2px rgba(6,182,212,0.08);}
+.form-input::placeholder{color:rgba(148,163,184,0.5);}
+
+/* ===== CHIP ===== */
+.product-chip input:checked+span{border-color:rgba(6,182,212,0.5);background:rgba(6,182,212,0.1);color:#e2e8f0;}
+
+/* ===== FOOTER ===== */
+.footer-v2{position:relative;background:linear-gradient(180deg,transparent 0%,rgba(0,20,35,0.6) 100%);border-top:1px solid rgba(0,212,255,0.08);}
+.footer-v2::before{content:'';position:absolute;top:0;left:50%;transform:translateX(-50%);width:200px;height:1px;background:linear-gradient(90deg,transparent,rgba(0,212,255,0.4),transparent);}
+.footer-col-title{font-size:11px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:rgba(0,212,255,0.5);margin-bottom:16px;}
+.footer-link{display:flex;align-items:center;gap:8px;color:rgba(148,163,184,0.8);font-size:13px;text-decoration:none;transition:all 0.25s;padding:4px 0;}
+.footer-link:hover{color:#80f0ff;transform:translateX(3px);}
+.footer-contact-item{display:flex;align-items:flex-start;gap:10px;color:rgba(148,163,184,0.7);font-size:13px;padding:6px 0;}
+.footer-contact-item a{color:inherit;text-decoration:none;transition:color 0.25s;}
+.footer-contact-item a:hover{color:#80f0ff;}
+.footer-biz-bar{border-top:1px solid rgba(0,212,255,0.06);padding-top:24px;display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:12px;}
+.footer-biz-info{font-size:11px;color:rgba(100,116,139,0.7);line-height:1.8;}
+.footer-biz-info .sep{display:inline-block;width:1px;height:10px;background:rgba(100,116,139,0.3);margin:0 8px;vertical-align:middle;}
+@media(max-width:768px){.footer-biz-bar{flex-direction:column;align-items:flex-start;}}
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════ -->
+<!-- NAV -->
+<!-- ═══════════════════════════════════════ -->
+<nav id="nav" class="fixed top-0 w-full z-50 transition-all duration-500 backdrop-blur-sm">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="flex items-center justify-between h-16 sm:h-20">
+      <a href="index.html" class="flex items-center">
+        <img src="Logo/logo-kc.png" alt="KC" class="h-7 sm:h-10 w-auto">
+      </a>
+      <div class="hidden lg:flex items-center gap-8">
+        <a href="index.html#products" class="text-sm text-slate-300 hover:text-cyan-400 transition" data-ko="제품" data-en="Products">제품</a>
+        <a href="index.html#about" class="text-sm text-slate-300 hover:text-cyan-400 transition" data-ko="회사소개" data-en="About">회사소개</a>
+        <a href="#products" class="text-sm text-cyan-400 font-medium" data-ko="바이오뱅킹" data-en="Biobanking">바이오뱅킹</a>
+        <div id="lang-toggle" style="display:inline-flex;align-items:center;background:rgba(255,255,255,0.07);border-radius:9999px;padding:3px;cursor:pointer;border:1px solid rgba(255,255,255,0.12);gap:1px;" onclick="toggleLang()">
+          <span id="lang-ko" style="padding:4px 10px;font-size:11px;font-weight:700;border-radius:9999px;background:#06b6d4;color:#060d1b;transition:all 0.3s;">KO</span>
+          <span id="lang-en" style="padding:4px 10px;font-size:11px;font-weight:700;border-radius:9999px;background:transparent;color:#9ca3af;transition:all 0.3s;">EN</span>
+        </div>
+        <a href="#contact" class="px-5 py-2 bg-cyan-500 hover:bg-cyan-400 rounded-full text-sm font-medium transition text-slate-950" data-ko="문의하기" data-en="Contact">문의하기</a>
+      </div>
+      <div class="flex items-center gap-3 lg:hidden">
+        <div onclick="toggleLang()" style="display:inline-flex;align-items:center;background:rgba(255,255,255,0.07);border-radius:9999px;padding:2px;cursor:pointer;border:1px solid rgba(255,255,255,0.12);">
+          <span id="lang-ko-m" style="padding:3px 8px;font-size:11px;font-weight:700;border-radius:9999px;background:#06b6d4;color:#060d1b;transition:all 0.3s;">KO</span>
+          <span id="lang-en-m" style="padding:3px 8px;font-size:11px;font-weight:700;border-radius:9999px;background:transparent;color:#9ca3af;transition:all 0.3s;">EN</span>
+        </div>
+        <button id="menu-btn" class="p-2 flex flex-col gap-[6px]" onclick="document.getElementById('mobile-menu').classList.toggle('hidden')">
+          <span class="block w-6 h-0.5 bg-white"></span><span class="block w-6 h-0.5 bg-white"></span><span class="block w-6 h-0.5 bg-white"></span>
+        </button>
+      </div>
+    </div>
+  </div>
+  <div id="mobile-menu" class="hidden lg:hidden bg-[#060d1b]/95 backdrop-blur-xl border-t border-white/5">
+    <div class="px-6 py-6 space-y-4">
+      <a href="index.html" class="block text-sm text-slate-300 hover:text-white" data-ko="홈" data-en="Home">홈</a>
+      <a href="#products" class="block text-sm text-cyan-400 font-medium" data-ko="제품 라인업" data-en="Products">제품 라인업</a>
+      <a href="#why-kc" class="block text-sm text-slate-300 hover:text-white" data-ko="왜 KC인가" data-en="Why KC">왜 KC인가</a>
+      <a href="#contact" class="block text-sm text-slate-300 hover:text-white" data-ko="문의하기" data-en="Contact">문의하기</a>
+    </div>
+  </div>
+</nav>
+
+
+<!-- ═══════════════════════════════════════ -->
+<!-- 1. HERO -->
+<!-- ═══════════════════════════════════════ -->
+<section class="hero-section" id="hero">
+  <canvas id="hero-canvas"></canvas>
+  <div class="relative z-10 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-32">
+    <div class="grid lg:grid-cols-2 gap-12 items-center">
+      <!-- Left: Text -->
+      <div>
+        <p class="eyebrow hero-anim hero-anim-d1" data-ko="IC Biomedical &times; 한국초저온용기" data-en="IC Biomedical &times; Korea Cryo">IC Biomedical &times; 한국초저온용기</p>
+        <h1 class="display-xl text-white mt-4 hero-anim hero-anim-d2">
+          <span data-ko="극저온의 정밀함으로," data-en="Precision cryogenics">극저온의 정밀함으로,</span><br>
+          <span data-ko="생명을 지킵니다" data-en="that protect life">생명을 지킵니다</span>
+        </h1>
+        <p class="text-lg text-slate-400 mt-6 max-w-lg hero-anim hero-anim-d3" data-ko="줄기세포부터 유전자치료제까지. 소형 Dewar에서 대규모 자동 바이오뱅크까지, 시료의 가치에 맞는 보관 환경을 설계합니다." data-en="From stem cells to gene therapies. From compact dewars to large-scale automated biobanks, we engineer storage environments that match the value of your samples.">줄기세포부터 유전자치료제까지. 소형 Dewar에서 대규모 자동 바이오뱅크까지, 시료의 가치에 맞는 보관 환경을 설계합니다.</p>
+        <div class="flex flex-wrap gap-4 mt-8 hero-anim hero-anim-d4">
+          <a href="#products" class="px-7 py-3 bg-cyan-500 hover:bg-cyan-400 text-slate-950 rounded-full text-sm font-semibold transition-all hover:shadow-lg hover:shadow-cyan-500/20" data-ko="제품 라인업" data-en="Product Lineup">제품 라인업</a>
+          <a href="#contact" class="px-7 py-3 border border-white/15 hover:border-cyan-500/40 text-white rounded-full text-sm font-medium transition-all hover:bg-white/5" data-ko="무료 컨설팅" data-en="Free Consultation">무료 컨설팅</a>
+        </div>
+      </div>
+      <!-- Right: Hero Image -->
+      <div class="hidden lg:flex justify-center hero-anim hero-anim-d5">
+        <img src="bio-images/labs-family-hires.png" alt="IC Biomedical Product Family" class="max-h-[480px] object-contain drop-shadow-2xl" onerror="this.style.display='none'">
+      </div>
+    </div>
+  </div>
+  <!-- Scroll indicator -->
+  <div class="absolute bottom-8 left-1/2 -translate-x-1/2 z-10 scroll-indicator">
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="rgba(148,163,184,0.5)" stroke-width="1.5"><path d="M12 5v14M19 12l-7 7-7-7"/></svg>
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════════════════ -->
+<!-- 2. TRUST BAR -->
+<!-- ═══════════════════════════════════════ -->
+<div class="trust-bar py-6 reveal">
+  <div class="max-w-6xl mx-auto px-4 grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-4 text-center">
+    <div>
+      <span class="text-2xl md:text-3xl font-black gradient-text counter" data-target="35" data-suffix="년+">0</span>
+      <p class="text-xs text-slate-500 mt-1" data-ko="극저온 전문" data-en="Cryogenic expertise">극저온 전문</p>
+    </div>
+    <div>
+      <span class="text-2xl md:text-3xl font-black gradient-text counter" data-target="500" data-suffix="+">0</span>
+      <p class="text-xs text-slate-500 mt-1" data-ko="기관 파트너" data-en="Institutional partners">기관 파트너</p>
+    </div>
+    <div>
+      <span class="text-2xl md:text-3xl font-black gradient-text counter" data-target="98625" data-suffix="">0</span>
+      <p class="text-xs text-slate-500 mt-1" data-ko="최대 바이알 용량" data-en="Max vial capacity">최대 바이알 용량</p>
+    </div>
+    <div>
+      <span class="text-2xl md:text-3xl font-black gradient-text counter" data-target="99.9" data-suffix="%" data-decimal="1">0</span>
+      <p class="text-xs text-slate-500 mt-1" data-ko="장비 가동률" data-en="Equipment uptime">장비 가동률</p>
+    </div>
+  </div>
+</div>
+
+
+<!-- ═══════════════════════════════════════ -->
+<!-- 3. WHY KC -->
+<!-- ═══════════════════════════════════════ -->
+<section class="py-24 lg:py-32" id="why-kc">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="grid lg:grid-cols-2 gap-16 items-start">
+      <!-- Left: Copy -->
+      <div class="reveal">
+        <p class="eyebrow" data-ko="엔지니어링 파트너" data-en="Engineering Partner">엔지니어링 파트너</p>
+        <h2 class="display-lg text-white mt-4">
+          <span data-ko="장비를 파는 것이 아닙니다." data-en="We don't sell equipment.">장비를 파는 것이 아닙니다.</span><br>
+          <span data-ko="보관 환경을 설계합니다." data-en="We engineer storage environments.">보관 환경을 설계합니다.</span>
+        </h2>
+        <p class="text-slate-400 mt-6 leading-relaxed max-w-lg" data-ko="한국초저온용기는 IC Biomedical의 한국 공식 파트너로서 장비 선정부터 설치, LN2 공급 배관, 모니터링 시스템까지 바이오뱅크 구축의 전 과정을 직접 수행합니다." data-en="As IC Biomedical's official Korean partner, Korea Cryo directly handles the entire biobank construction process from equipment selection to installation, LN2 supply piping, and monitoring systems.">한국초저온용기는 IC Biomedical의 한국 공식 파트너로서 장비 선정부터 설치, LN2 공급 배관, 모니터링 시스템까지 바이오뱅크 구축의 전 과정을 직접 수행합니다.</p>
+      </div>
+      <!-- Right: 2x2 Feature cards -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div class="glass-card p-6 reveal reveal-d1">
+          <div class="w-10 h-10 rounded-xl bg-cyan-500/10 flex items-center justify-center mb-4">
+            <svg class="w-5 h-5 text-cyan-400" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9.75 3.104v5.714a2.25 2.25 0 01-.659 1.591L5 14.5M9.75 3.104c-.251.023-.501.05-.75.082m.75-.082a24.301 24.301 0 014.5 0m0 0v5.714c0 .597.237 1.17.659 1.591L19.8 15.3M14.25 3.104c.251.023.501.05.75.082M19.8 15.3l-1.57.393A9.065 9.065 0 0112 15a9.065 9.065 0 00-6.23.693L5 14.5m14.8.8l1.402 1.402c1.232 1.232.65 3.318-1.067 3.611A48.309 48.309 0 0112 21c-2.773 0-5.491-.235-8.135-.687-1.718-.293-2.3-2.379-1.067-3.61L5 14.5"/></svg>
+          </div>
+          <h3 class="text-white font-semibold mb-1" data-ko="맞춤 컨설팅" data-en="Custom Consulting">맞춤 컨설팅</h3>
+          <p class="text-slate-500 text-sm" data-ko="시료 종류, 규모, 규정에 맞는 최적 장비 제안" data-en="Optimal equipment recommendations for your needs">시료 종류, 규모, 규정에 맞는 최적 장비 제안</p>
+        </div>
+        <div class="glass-card p-6 reveal reveal-d2">
+          <div class="w-10 h-10 rounded-xl bg-cyan-500/10 flex items-center justify-center mb-4">
+            <svg class="w-5 h-5 text-cyan-400" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          </div>
+          <h3 class="text-white font-semibold mb-1" data-ko="자동 LN2 공급" data-en="Auto LN2 Supply">자동 LN2 공급</h3>
+          <p class="text-slate-500 text-sm" data-ko="벌크 탱크에서 냉동고까지 자동 진공배관 시공" data-en="Automated vacuum piping from bulk tank to freezer">벌크 탱크에서 냉동고까지 자동 진공배관 시공</p>
+        </div>
+        <div class="glass-card p-6 reveal reveal-d3">
+          <div class="w-10 h-10 rounded-xl bg-cyan-500/10 flex items-center justify-center mb-4">
+            <svg class="w-5 h-5 text-cyan-400" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 3v11.25A2.25 2.25 0 006 16.5h2.25M3.75 3h-1.5m1.5 0h16.5m0 0h1.5m-1.5 0v11.25A2.25 2.25 0 0118 16.5h-2.25m-7.5 0h7.5m-7.5 0l-1 3m8.5-3l1 3m0 0l.5 1.5m-.5-1.5h-9.5m0 0l-.5 1.5"/></svg>
+          </div>
+          <h3 class="text-white font-semibold mb-1" data-ko="24/7 모니터링" data-en="24/7 Monitoring">24/7 모니터링</h3>
+          <p class="text-slate-500 text-sm" data-ko="온도, 수위, O2 실시간 감시 및 경보" data-en="Real-time temp, level, O2 monitoring and alerts">온도, 수위, O2 실시간 감시 및 경보</p>
+        </div>
+        <div class="glass-card p-6 reveal reveal-d4">
+          <div class="w-10 h-10 rounded-xl bg-cyan-500/10 flex items-center justify-center mb-4">
+            <svg class="w-5 h-5 text-cyan-400" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M20.893 13.393l-1.135-1.135a2.252 2.252 0 01-.421-.585l-1.08-2.16a.414.414 0 00-.663-.107.827.827 0 01-.812.21l-1.273-.363a.89.89 0 00-.738 1.595l.587.39c.59.395.674 1.23.172 1.732l-.2.2c-.212.212-.33.498-.33.796v.41c0 .409-.11.809-.32 1.158l-1.315 2.191a2.11 2.11 0 01-1.81 1.025 1.055 1.055 0 01-1.055-1.055v-1.172c0-.92-.56-1.747-1.414-2.089l-.655-.261a2.25 2.25 0 01-1.383-2.46l.007-.042a2.25 2.25 0 01.29-.787l.09-.15a2.25 2.25 0 012.37-1.048l1.178.236a1.125 1.125 0 001.302-.795l.208-.73a1.125 1.125 0 00-.578-1.315l-.665-.332-.091.091a2.25 2.25 0 01-1.591.659h-.18c-.249 0-.487.1-.662.274a.931.931 0 01-1.458-1.137l1.411-2.353a2.25 2.25 0 00.286-.76m11.928 9.869A9 9 0 008.965 3.525m11.928 9.868A9 9 0 118.965 3.525"/></svg>
+          </div>
+          <h3 class="text-white font-semibold mb-1" data-ko="가스 공급" data-en="Gas Supply">가스 공급</h3>
+          <p class="text-slate-500 text-sm" data-ko="LN2 벌크 공급부터 특수가스까지 원스톱" data-en="One-stop from LN2 bulk supply to specialty gases">LN2 벌크 공급부터 특수가스까지 원스톱</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="section-divider"></div>
+
+<!-- ═══════════════════════════════════════ -->
+<!-- 4. PRODUCT LINEUP -->
+<!-- ═══════════════════════════════════════ -->
+<section class="py-24 lg:py-32" id="products">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <!-- Header -->
+    <div class="text-center mb-12 reveal">
+      <p class="eyebrow">Full Lineup</p>
+      <h2 class="display-lg text-white mt-4" data-ko="IC Biomedical 제품군" data-en="IC Biomedical Product Catalog">IC Biomedical 제품군</h2>
+      <p class="text-slate-400 mt-4 max-w-xl mx-auto" data-ko="소형 실험실용 Dewar부터 대규모 바이오뱅크용 자동 보관 시스템까지" data-en="From small lab dewars to large-scale automated biobank systems">소형 실험실용 Dewar부터 대규모 바이오뱅크용 자동 보관 시스템까지</p>
+    </div>
+    <!-- Filter Tabs -->
+    <div class="flex flex-wrap justify-center gap-2 mb-12 reveal" id="filter-tabs">
+      <button class="filter-tab active" onclick="filterProducts('all')" data-filter="all" data-ko="전체" data-en="All">전체</button>
+      <button class="filter-tab" onclick="filterProducts('storage')" data-filter="storage" data-ko="보관" data-en="Storage">보관</button>
+      <button class="filter-tab" onclick="filterProducts('transport')" data-filter="transport" data-ko="운송" data-en="Transport">운송</button>
+      <button class="filter-tab" onclick="filterProducts('auto')" data-filter="auto" data-ko="자동화" data-en="Automated">자동화</button>
+    </div>
+    <!-- Product Grid -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 reveal" id="product-grid">
+
+      <!-- LD Series -->
+      <a href="bio-ld-series.html" class="product-card-v2 group" data-category="storage">
+        <div class="h-36 flex items-center justify-center mb-4">
+          <img loading="lazy" src="bio-images/ld-series-hires.png" alt="LD Series" class="max-h-32 object-contain" onerror="this.style.opacity='0.3'">
+        </div>
+        <h3 class="text-white font-semibold">LD Series</h3>
+        <p class="text-slate-500 text-sm mt-1" data-ko="LN2 저장 및 소량 분주용 경량 Dewar" data-en="Lightweight dewars for LN2 storage and dispensing">LN2 저장 및 소량 분주용 경량 Dewar</p>
+        <div class="flex items-center justify-between mt-4">
+          <span class="text-xs text-cyan-400/70 px-2 py-0.5 bg-cyan-500/8 rounded-md">4L ~ 50L</span>
+          <span class="text-cyan-400 text-sm group-hover:translate-x-1 transition-transform">&rarr;</span>
+        </div>
+      </a>
+
+      <!-- XT/TW Series -->
+      <a href="bio-xt-series.html" class="product-card-v2 group" data-category="storage">
+        <div class="h-36 flex items-center justify-center mb-4">
+          <img loading="lazy" src="bio-images/xt-series-hires.png" alt="XT Series" class="max-h-32 object-contain" onerror="this.style.opacity='0.3'">
+        </div>
+        <h3 class="text-white font-semibold">XT &amp; TW Series</h3>
+        <p class="text-slate-500 text-sm mt-1" data-ko="장기 Cane 보관용. 낮은 증발률" data-en="Long-term cane storage. Low evaporation rate">장기 Cane 보관용. 낮은 증발률</p>
+        <div class="flex items-center justify-between mt-4">
+          <span class="text-xs text-cyan-400/70 px-2 py-0.5 bg-cyan-500/8 rounded-md">XT3 ~ TW47</span>
+          <span class="text-cyan-400 text-sm group-hover:translate-x-1 transition-transform">&rarr;</span>
+        </div>
+      </a>
+
+      <!-- HC Series -->
+      <a href="bio-hc-series.html" class="product-card-v2 group" data-category="storage">
+        <div class="h-36 flex items-center justify-center mb-4">
+          <img loading="lazy" src="bio-images/hc-series-hires.png" alt="HC Series" class="max-h-32 object-contain" onerror="this.style.opacity='0.3'">
+        </div>
+        <h3 class="text-white font-semibold">HC &amp; VHC Series</h3>
+        <p class="text-slate-500 text-sm mt-1" data-ko="대용량 Cane 보관. 최대 1,260 바이알" data-en="High-capacity cane storage. Up to 1,260 vials">대용량 Cane 보관. 최대 1,260 바이알</p>
+        <div class="flex items-center justify-between mt-4">
+          <span class="text-xs text-cyan-400/70 px-2 py-0.5 bg-cyan-500/8 rounded-md">1,260 vials</span>
+          <span class="text-cyan-400 text-sm group-hover:translate-x-1 transition-transform">&rarr;</span>
+        </div>
+      </a>
+
+      <!-- LS Series -->
+      <a href="bio-ls-series.html" class="product-card-v2 group" data-category="storage">
+        <div class="h-36 flex items-center justify-center mb-4">
+          <img loading="lazy" src="bio-images/ls-series-hires.png" alt="LS Series" class="max-h-32 object-contain" onerror="this.style.opacity='0.3'">
+        </div>
+        <h3 class="text-white font-semibold">LS Series</h3>
+        <p class="text-slate-500 text-sm mt-1" data-ko="Box Rack 타입. 최대 6,000 바이알" data-en="Box rack type. Up to 6,000 vials">Box Rack 타입. 최대 6,000 바이알</p>
+        <div class="flex items-center justify-between mt-4">
+          <span class="text-xs text-cyan-400/70 px-2 py-0.5 bg-cyan-500/8 rounded-md">6,000 vials</span>
+          <span class="text-cyan-400 text-sm group-hover:translate-x-1 transition-transform">&rarr;</span>
+        </div>
+      </a>
+
+      <!-- CX / D Series (Transport) -->
+      <a href="bio-icb-dual-series.html" class="product-card-v2 group" data-category="transport">
+        <div class="h-36 flex items-center justify-center mb-4">
+          <img loading="lazy" src="bio-images/cx-series.png" alt="CX Series" class="max-h-32 object-contain" onerror="this.style.opacity='0.3'">
+        </div>
+        <h3 class="text-white font-semibold">CX &amp; D Series</h3>
+        <p class="text-slate-500 text-sm mt-1" data-ko="Vapor Phase 시료 운송. IATA 규정" data-en="Vapor phase transport. IATA compliant">Vapor Phase 시료 운송. IATA 규정</p>
+        <div class="flex items-center justify-between mt-4">
+          <span class="text-xs text-cyan-400/70 px-2 py-0.5 bg-cyan-500/8 rounded-md">Dry Shipper</span>
+          <span class="text-cyan-400 text-sm group-hover:translate-x-1 transition-transform">&rarr;</span>
+        </div>
+      </a>
+
+      <!-- ICB Series -->
+      <a href="bio-icb-series.html" class="product-card-v2 group" data-category="transport">
+        <div class="h-36 flex items-center justify-center mb-4">
+          <img loading="lazy" src="bio-images/icb-series-hires.png" alt="ICB Series" class="max-h-32 object-contain" onerror="this.style.opacity='0.3'">
+        </div>
+        <h3 class="text-white font-semibold">ICB Series</h3>
+        <p class="text-slate-500 text-sm mt-1" data-ko="Store.Ship.Store 이중 운용" data-en="Store.Ship.Store dual operation">Store.Ship.Store 이중 운용</p>
+        <div class="flex items-center justify-between mt-4">
+          <span class="text-xs text-cyan-400/70 px-2 py-0.5 bg-cyan-500/8 rounded-md">Next-Gen</span>
+          <span class="text-cyan-400 text-sm group-hover:translate-x-1 transition-transform">&rarr;</span>
+        </div>
+      </a>
+
+      <!-- LABS Series -->
+      <a href="bio-labs-series.html" class="product-card-v2 group" data-category="auto">
+        <div class="h-36 flex items-center justify-center mb-4">
+          <img loading="lazy" src="bio-images/labs-family-hires.png" alt="LABS Series" class="max-h-32 object-contain" onerror="this.style.opacity='0.3'">
+        </div>
+        <h3 class="text-white font-semibold">LABS Series</h3>
+        <p class="text-slate-500 text-sm mt-1" data-ko="대용량 스테인리스. 최대 93,000 바이알" data-en="High-capacity stainless. Up to 93,000 vials">대용량 스테인리스. 최대 93,000 바이알</p>
+        <div class="flex items-center justify-between mt-4">
+          <span class="text-xs text-cyan-400/70 px-2 py-0.5 bg-cyan-500/8 rounded-md">93K vials</span>
+          <span class="text-cyan-400 text-sm group-hover:translate-x-1 transition-transform">&rarr;</span>
+        </div>
+      </a>
+
+      <!-- Revolution (FEATURED) -->
+      <a href="bio-revolution-series.html" class="product-card-v2 featured group" data-category="auto">
+        <div class="absolute top-3 right-3 bg-gradient-to-r from-emerald-500 to-cyan-500 text-[10px] font-bold px-2.5 py-0.5 rounded-full text-slate-950">FLAGSHIP</div>
+        <div class="h-36 flex items-center justify-center mb-4">
+          <img loading="lazy" src="bio-images/revolution-hires.png" alt="Revolution Series" class="max-h-32 object-contain" onerror="this.style.opacity='0.3'">
+        </div>
+        <h3 class="text-white font-semibold">Revolution Series</h3>
+        <p class="text-slate-500 text-sm mt-1" data-ko="Radiance 온도관리, RFID, cGMP. 98,625 바이알" data-en="Radiance temp control, RFID, cGMP. 98,625 vials">Radiance 온도관리, RFID, cGMP. 98,625 바이알</p>
+        <div class="flex items-center justify-between mt-4">
+          <span class="text-xs text-emerald-400/70 px-2 py-0.5 bg-emerald-500/8 rounded-md">98,625 vials</span>
+          <span class="text-emerald-400 text-sm group-hover:translate-x-1 transition-transform">&rarr;</span>
+        </div>
+      </a>
+
+    </div>
+
+    <!-- AI / Animal Husbandry -->
+    <div class="mt-5 reveal">
+      <a href="bio-ai.html" class="product-card-v2 group flex flex-col sm:flex-row items-center gap-6 sm:gap-8" style="border-color:rgba(251,191,36,0.15);">
+        <div class="w-full sm:w-48 h-32 flex items-center justify-center flex-shrink-0">
+          <img loading="lazy" src="bio-images/AIS_Group_Freezersr-600x400.png" alt="AI / Animal Husbandry" class="max-h-28 object-contain" onerror="this.style.opacity='0.3'">
+        </div>
+        <div class="flex-1 min-w-0">
+          <div class="flex items-center gap-2">
+            <h3 class="text-white font-semibold" data-ko="AI / 축산" data-en="AI / Animal Husbandry">AI / 축산</h3>
+            <span class="bg-gradient-to-r from-amber-500 to-orange-500 text-[10px] font-bold px-2 py-0.5 rounded-full text-slate-950" data-ko="축산" data-en="AI/AH">축산</span>
+          </div>
+          <p class="text-slate-500 text-sm mt-1" data-ko="소, 말, 돼지 번식 프로그램용 극저온 장비. AI Shield 열 보호 기술" data-en="Cryogenic equipment for breeding programs. AI Shield thermal protection">소, 말, 돼지 번식 프로그램용 극저온 장비. AI Shield 열 보호 기술</p>
+        </div>
+        <span class="text-amber-400 text-sm group-hover:translate-x-1 transition-transform flex-shrink-0">&rarr;</span>
+      </a>
+    </div>
+
+    <!-- Product Finder CTA -->
+    <div class="mt-10 reveal">
+      <a href="product-finder-tree.html" class="block p-6 rounded-2xl text-center transition hover:scale-[1.01]" style="background:linear-gradient(135deg,rgba(6,182,212,0.06),rgba(16,185,129,0.06));border:1px solid rgba(6,182,212,0.12);">
+        <p class="text-white font-semibold" data-ko="어떤 장비가 필요한지 모르시겠나요?" data-en="Not sure which equipment you need?">어떤 장비가 필요한지 모르시겠나요?</p>
+        <p class="text-cyan-400 text-sm mt-1" data-ko="제품 찾기 도구로 3분 만에 최적 장비를 추천받으세요 &rarr;" data-en="Get a recommendation in 3 minutes with our Product Finder &rarr;">제품 찾기 도구로 3분 만에 최적 장비를 추천받으세요 &rarr;</p>
+      </a>
+    </div>
+  </div>
+</section>
+
+<div class="section-divider"></div>
+
+<!-- ═══════════════════════════════════════ -->
+<!-- 5. INNOVATION TRENDS -->
+<!-- ═══════════════════════════════════════ -->
+<section class="py-24 lg:py-28" id="trends">
+  <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="text-center mb-12 reveal">
+      <p class="eyebrow">2025 Biobanking Trends</p>
+      <h2 class="display-lg text-white mt-4" data-ko="바이오뱅킹 트렌드" data-en="Biobanking Trends">바이오뱅킹 트렌드</h2>
+    </div>
+    <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
+      <div class="glass-card p-6 reveal reveal-d1">
+        <span class="text-cyan-400 font-mono text-sm font-bold">01</span>
+        <h3 class="text-white font-semibold mt-2" data-ko="자동화 &amp; 로보틱스" data-en="Automation &amp; Robotics">자동화 &amp; 로보틱스</h3>
+        <p class="text-slate-500 text-sm mt-2" data-ko="시료 접근 자동화로 교차 오염 리스크 제거. Revolution의 자동 LN2 공급과 RFID 시료 추적이 대응합니다." data-en="Automated sample access eliminates cross-contamination. Revolution's auto LN2 supply and RFID tracking address this.">시료 접근 자동화로 교차 오염 리스크 제거. Revolution의 자동 LN2 공급과 RFID 시료 추적이 대응합니다.</p>
+      </div>
+      <div class="glass-card p-6 reveal reveal-d2">
+        <span class="text-cyan-400 font-mono text-sm font-bold">02</span>
+        <h3 class="text-white font-semibold mt-2" data-ko="데이터 무결성 (ALCOA+)" data-en="Data Integrity (ALCOA+)">데이터 무결성 (ALCOA+)</h3>
+        <p class="text-slate-500 text-sm mt-2" data-ko="cGMP, FDA 21 CFR Part 11 준수를 위한 감사 추적. Revolution의 전자 서명과 접근 이력 기록이 규정을 충족합니다." data-en="Audit trails for cGMP and FDA 21 CFR Part 11. Revolution's e-signatures and access logging meet regulations.">cGMP, FDA 21 CFR Part 11 준수를 위한 감사 추적. Revolution의 전자 서명과 접근 이력 기록이 규정을 충족합니다.</p>
+      </div>
+      <div class="glass-card p-6 reveal reveal-d3">
+        <span class="text-cyan-400 font-mono text-sm font-bold">03</span>
+        <h3 class="text-white font-semibold mt-2" data-ko="CGT 냉동보존 확대" data-en="CGT Cryopreservation Growth">CGT 냉동보존 확대</h3>
+        <p class="text-slate-500 text-sm mt-2" data-ko="CAR-T, 유전자치료제 시장 성장에 따른 고밀도 보관 수요. LABS 시리즈가 최대 93,000 바이알 보관을 지원합니다." data-en="Growing high-density storage demand with CAR-T market. LABS supports up to 93,000 vials.">CAR-T, 유전자치료제 시장 성장에 따른 고밀도 보관 수요. LABS 시리즈가 최대 93,000 바이알 보관을 지원합니다.</p>
+      </div>
+      <div class="glass-card p-6 reveal reveal-d1">
+        <span class="text-cyan-400 font-mono text-sm font-bold">04</span>
+        <h3 class="text-white font-semibold mt-2" data-ko="Vapor Phase 전환" data-en="Vapor Phase Transition">Vapor Phase 전환</h3>
+        <p class="text-slate-500 text-sm mt-2" data-ko="액상 침지 대비 교차 오염 제거. IC Biomedical 전 제품이 Vapor Phase 보관을 지원합니다." data-en="Eliminates cross-contamination vs. liquid immersion. All IC Biomedical products support vapor phase.">액상 침지 대비 교차 오염 제거. IC Biomedical 전 제품이 Vapor Phase 보관을 지원합니다.</p>
+      </div>
+      <div class="glass-card p-6 reveal reveal-d2">
+        <span class="text-cyan-400 font-mono text-sm font-bold">05</span>
+        <h3 class="text-white font-semibold mt-2" data-ko="에너지 효율" data-en="Energy Efficiency">에너지 효율</h3>
+        <p class="text-slate-500 text-sm mt-2" data-ko="기계식 냉동고 대비 80% 전력 절감. LN2 기반 패시브 시스템으로 탄소 발자국 최소화." data-en="80% power savings vs. mechanical freezers. LN2 passive systems minimize carbon footprint.">기계식 냉동고 대비 80% 전력 절감. LN2 기반 패시브 시스템으로 탄소 발자국 최소화.</p>
+      </div>
+      <div class="glass-card p-6 reveal reveal-d3">
+        <span class="text-cyan-400 font-mono text-sm font-bold">06</span>
+        <h3 class="text-white font-semibold mt-2" data-ko="콜드체인 보안" data-en="Cold Chain Security">콜드체인 보안</h3>
+        <p class="text-slate-500 text-sm mt-2" data-ko="운송 중 온도 연속 기록 의무화. CX/D 시리즈의 데이터 로거가 운송 이력을 보장합니다." data-en="Mandatory continuous temp recording. CX/D data loggers ensure transport history.">운송 중 온도 연속 기록 의무화. CX/D 시리즈의 데이터 로거가 운송 이력을 보장합니다.</p>
+      </div>
+    </div>
+    <p class="text-center text-xs text-slate-600 mt-8 reveal" data-ko="출처: ISBER, BioLife Solutions, Grand View Research 2024-2025 보고서 기반" data-en="Source: Based on ISBER, BioLife Solutions, Grand View Research 2024-2025 reports">출처: ISBER, BioLife Solutions, Grand View Research 2024-2025 보고서 기반</p>
+  </div>
+</section>
+
+<div class="section-divider"></div>
+
+<!-- ═══════════════════════════════════════ -->
+<!-- 6. TURNKEY SYSTEM -->
+<!-- ═══════════════════════════════════════ -->
+<section class="py-24 lg:py-32 relative overflow-hidden" id="turnkey">
+  <div class="absolute inset-0 bg-gradient-to-b from-transparent via-cyan-950/5 to-transparent"></div>
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+    <div class="text-center mb-16 reveal">
+      <p class="eyebrow" data-ko="턴키 솔루션" data-en="Turnkey Solution">턴키 솔루션</p>
+      <h2 class="display-lg text-white mt-4" data-ko="바이오뱅크, 처음부터 끝까지" data-en="Biobank, from start to finish">바이오뱅크, 처음부터 끝까지</h2>
+      <p class="text-slate-400 mt-4 max-w-2xl mx-auto" data-ko="설계, 장비 선정, LN2 공급 배관, 설치, 모니터링, A/S까지. 바이오뱅크 구축에 필요한 모든 것을 한 곳에서." data-en="Design, equipment, LN2 piping, installation, monitoring, and service. Everything for biobank construction in one place.">설계, 장비 선정, LN2 공급 배관, 설치, 모니터링, A/S까지. 바이오뱅크 구축에 필요한 모든 것을 한 곳에서.</p>
+    </div>
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-5 reveal">
+      <div class="glass-card p-6 text-center">
+        <div class="text-3xl font-black gradient-text mb-2">Bulk</div>
+        <p class="text-white text-sm font-medium" data-ko="LN2 벌크 탱크" data-en="LN2 Bulk Tank">LN2 벌크 탱크</p>
+        <p class="text-slate-500 text-xs mt-1" data-ko="현장 맞춤 용량" data-en="Custom capacity">현장 맞춤 용량</p>
+      </div>
+      <div class="glass-card p-6 text-center">
+        <div class="text-3xl font-black gradient-text mb-2">Auto</div>
+        <p class="text-white text-sm font-medium" data-ko="자동 공급 배관" data-en="Auto Supply Piping">자동 공급 배관</p>
+        <p class="text-slate-500 text-xs mt-1" data-ko="진공 단열 배관" data-en="Vacuum insulated">진공 단열 배관</p>
+      </div>
+      <div class="glass-card p-6 text-center">
+        <div class="text-3xl font-black gradient-text mb-2">20+</div>
+        <p class="text-white text-sm font-medium" data-ko="냉동고 동시 운용" data-en="Simultaneous Freezers">냉동고 동시 운용</p>
+        <p class="text-slate-500 text-xs mt-1" data-ko="확장 가능 설계" data-en="Scalable design">확장 가능 설계</p>
+      </div>
+      <div class="glass-card p-6 text-center">
+        <div class="text-3xl font-black gradient-text mb-2">24/7</div>
+        <p class="text-white text-sm font-medium" data-ko="실시간 모니터링" data-en="Real-time Monitoring">실시간 모니터링</p>
+        <p class="text-slate-500 text-xs mt-1" data-ko="온도 · 수위 · O2" data-en="Temp · Level · O2">온도 · 수위 · O2</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="section-divider"></div>
+
+<!-- ═══════════════════════════════════════ -->
+<!-- 7. CREDIBILITY -->
+<!-- ═══════════════════════════════════════ -->
+<section class="py-24 lg:py-28" id="credibility">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="text-center mb-16 reveal">
+      <p class="eyebrow" data-ko="신뢰할 수 있는 파트너" data-en="Trusted Partner">신뢰할 수 있는 파트너</p>
+      <h2 class="display-lg text-white mt-4" data-ko="현장에서 증명합니다" data-en="Proven in the field">현장에서 증명합니다</h2>
+    </div>
+
+    <!-- Client Sectors -->
+    <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-16 reveal">
+      <div class="glass-card p-6 text-center">
+        <div class="w-12 h-12 rounded-2xl bg-cyan-500/10 flex items-center justify-center mx-auto mb-3">
+          <svg class="w-6 h-6 text-cyan-400" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 21v-8.25M15.75 21v-8.25M8.25 21v-8.25M3 9l9-6 9 6m-1.5 12V10.332A48.36 48.36 0 0012 9.75c-2.551 0-5.056.2-7.5.582V21M3 21h18M12 6.75h.008v.008H12V6.75z"/></svg>
+        </div>
+        <h3 class="text-white text-sm font-semibold" data-ko="병원 · 의료원" data-en="Hospitals">병원 · 의료원</h3>
+        <p class="text-slate-500 text-xs mt-1" data-ko="보라매병원, 서울대병원 외" data-en="Boramae, SNU Hospital etc.">보라매병원, 서울대병원 외</p>
+      </div>
+      <div class="glass-card p-6 text-center">
+        <div class="w-12 h-12 rounded-2xl bg-cyan-500/10 flex items-center justify-center mx-auto mb-3">
+          <svg class="w-6 h-6 text-cyan-400" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9.75 3.104v5.714a2.25 2.25 0 01-.659 1.591L5 14.5M9.75 3.104c-.251.023-.501.05-.75.082m.75-.082a24.301 24.301 0 014.5 0m0 0v5.714c0 .597.237 1.17.659 1.591L19.8 15.3"/></svg>
+        </div>
+        <h3 class="text-white text-sm font-semibold" data-ko="제약 · 바이오" data-en="Pharma &amp; Biotech">제약 · 바이오</h3>
+        <p class="text-slate-500 text-xs mt-1" data-ko="CGT, 줄기세포 전문 기관" data-en="CGT, stem cell specialists">CGT, 줄기세포 전문 기관</p>
+      </div>
+      <div class="glass-card p-6 text-center">
+        <div class="w-12 h-12 rounded-2xl bg-cyan-500/10 flex items-center justify-center mx-auto mb-3">
+          <svg class="w-6 h-6 text-cyan-400" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 21h16.5M4.5 3h15M5.25 3v18m13.5-18v18M9 6.75h1.5m-1.5 3h1.5m-1.5 3h1.5m3-6H15m-1.5 3H15m-1.5 3H15M9 21v-3.375c0-.621.504-1.125 1.125-1.125h3.75c.621 0 1.125.504 1.125 1.125V21"/></svg>
+        </div>
+        <h3 class="text-white text-sm font-semibold" data-ko="정부 · 공공기관" data-en="Government">정부 · 공공기관</h3>
+        <p class="text-slate-500 text-xs mt-1" data-ko="국립연구소, 검역원" data-en="National labs, quarantine">국립연구소, 검역원</p>
+      </div>
+      <div class="glass-card p-6 text-center">
+        <div class="w-12 h-12 rounded-2xl bg-cyan-500/10 flex items-center justify-center mx-auto mb-3">
+          <svg class="w-6 h-6 text-cyan-400" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4.26 10.147a60.436 60.436 0 00-.491 6.347A48.627 48.627 0 0112 20.904a48.627 48.627 0 018.232-4.41 60.46 60.46 0 00-.491-6.347m-15.482 0a50.57 50.57 0 00-2.658-.813A59.905 59.905 0 0112 3.493a59.902 59.902 0 0110.399 5.84c-.896.248-1.783.52-2.658.814m-15.482 0A50.697 50.697 0 0112 13.489a50.702 50.702 0 017.74-3.342"/></svg>
+        </div>
+        <h3 class="text-white text-sm font-semibold" data-ko="대학 · 연구소" data-en="Universities">대학 · 연구소</h3>
+        <p class="text-slate-500 text-xs mt-1" data-ko="세포은행, 유전체 연구센터" data-en="Cell banks, genome centers">세포은행, 유전체 연구센터</p>
+      </div>
+    </div>
+
+    <!-- A/S + Validation -->
+    <div class="grid md:grid-cols-2 gap-6 reveal">
+      <div class="glass-card p-8">
+        <h3 class="text-white font-semibold text-lg mb-6" data-ko="전담 A/S 프로그램" data-en="Dedicated A/S Program">전담 A/S 프로그램</h3>
+        <div class="grid grid-cols-3 gap-4 text-center">
+          <div>
+            <div class="text-2xl font-black gradient-text">24h</div>
+            <p class="text-slate-500 text-xs mt-1" data-ko="긴급 대응" data-en="Emergency">긴급 대응</p>
+          </div>
+          <div>
+            <div class="text-2xl font-black gradient-text">5yr</div>
+            <p class="text-slate-500 text-xs mt-1" data-ko="진공 보증" data-en="Vacuum warranty">진공 보증</p>
+          </div>
+          <div>
+            <div class="text-2xl font-black gradient-text">14+</div>
+            <p class="text-slate-500 text-xs mt-1" data-ko="예비 부품 보유" data-en="Spare parts">예비 부품 보유</p>
+          </div>
+        </div>
+        <p class="text-slate-500 text-sm mt-6" data-ko="제조사 인증 엔지니어가 설치, 교정, 수리를 직접 수행합니다." data-en="Manufacturer-certified engineers handle installation, calibration, and repairs directly.">제조사 인증 엔지니어가 설치, 교정, 수리를 직접 수행합니다.</p>
+      </div>
+      <div class="glass-card p-8">
+        <h3 class="text-white font-semibold text-lg mb-4" data-ko="Validation &amp; Compliance" data-en="Validation &amp; Compliance">Validation &amp; Compliance</h3>
+        <p class="text-slate-400 text-sm leading-relaxed" data-ko="NIST 추적 가능 정밀 교정, IQ/OQ/PQ 적격성 평가, 온도 맵핑까지. GMP 바이오뱅크 운영에 필요한 Compliance 솔루션을 제공합니다." data-en="From NIST-traceable calibration to IQ/OQ/PQ qualification and temp mapping. Compliance solutions for GMP biobank operations.">NIST 추적 가능 정밀 교정, IQ/OQ/PQ 적격성 평가, 온도 맵핑까지. GMP 바이오뱅크 운영에 필요한 Compliance 솔루션을 제공합니다.</p>
+        <div class="flex flex-wrap gap-2 mt-4">
+          <span class="text-xs px-2.5 py-1 border border-cyan-500/15 text-cyan-400/80 rounded-full">NIST Calibration</span>
+          <span class="text-xs px-2.5 py-1 border border-cyan-500/15 text-cyan-400/80 rounded-full">IQ/OQ/PQ</span>
+          <span class="text-xs px-2.5 py-1 border border-cyan-500/15 text-cyan-400/80 rounded-full">Temp Mapping</span>
+          <span class="text-xs px-2.5 py-1 border border-cyan-500/15 text-cyan-400/80 rounded-full">GMP</span>
+        </div>
+        <a href="#contact" class="inline-block text-cyan-400 text-sm mt-4 hover:text-cyan-300 transition" data-ko="자세히 보기 &rarr;" data-en="Learn more &rarr;">자세히 보기 &rarr;</a>
+      </div>
+    </div>
+
+    <!-- Gas Supply Partners -->
+    <div class="mt-10 text-center reveal">
+      <p class="text-xs text-slate-600 mb-3" data-ko="가스 공급 파트너" data-en="Gas Supply Partners">가스 공급 파트너</p>
+      <div class="flex flex-wrap justify-center gap-6 items-center opacity-40">
+        <span class="text-sm text-slate-400 font-medium">Air Liquide</span>
+        <span class="text-slate-700">|</span>
+        <span class="text-sm text-slate-400 font-medium">Linde</span>
+        <span class="text-slate-700">|</span>
+        <span class="text-sm text-slate-400 font-medium">Air Products</span>
+        <span class="text-slate-700">|</span>
+        <span class="text-sm text-slate-400 font-medium">SK Materials</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="section-divider"></div>
+
+<!-- ═══════════════════════════════════════ -->
+<!-- 8. CONTACT -->
+<!-- ═══════════════════════════════════════ -->
+<section class="py-24 lg:py-32" id="contact">
+  <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="grid lg:grid-cols-2 gap-16">
+      <!-- Left: Info -->
+      <div class="reveal">
+        <p class="eyebrow" data-ko="문의하기" data-en="Contact Us">문의하기</p>
+        <h2 class="display-lg text-white mt-4">
+          <span data-ko="바이오뱅크 구축," data-en="Start with a">바이오뱅크 구축,</span><br>
+          <span data-ko="상담부터 시작하세요" data-en="consultation">상담부터 시작하세요</span>
+        </h2>
+        <div class="mt-8 space-y-4">
+          <div class="flex items-center gap-3">
+            <svg class="w-5 h-5 text-cyan-400 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 6.75c0 8.284 6.716 15 15 15h2.25a2.25 2.25 0 002.25-2.25v-1.372c0-.516-.351-.966-.852-1.091l-4.423-1.106c-.44-.11-.902.055-1.173.417l-.97 1.293c-.282.376-.769.542-1.21.38a12.035 12.035 0 01-7.143-7.143c-.162-.441.004-.928.38-1.21l1.293-.97c.363-.271.527-.734.417-1.173L6.963 3.102a1.125 1.125 0 00-1.091-.852H4.5A2.25 2.25 0 002.25 4.5v2.25z"/></svg>
+            <a href="tel:02-850-3114" class="text-slate-300 hover:text-white transition">02-850-3114</a>
+          </div>
+          <div class="flex items-center gap-3">
+            <svg class="w-5 h-5 text-cyan-400 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75"/></svg>
+            <a href="mailto:info@koreacryo.com" class="text-slate-300 hover:text-white transition">info@koreacryo.com</a>
+          </div>
+        </div>
+      </div>
+      <!-- Right: Form -->
+      <div class="reveal">
+        <form id="contact-form" onsubmit="submitContact(event)" class="space-y-4">
+          <div class="grid grid-cols-2 gap-4">
+            <input type="text" name="name" class="form-input" required placeholder="성함" data-ko="성함" data-en="Name">
+            <input type="email" name="email" class="form-input" required placeholder="이메일" data-ko="이메일" data-en="Email">
+          </div>
+          <input type="tel" name="phone" class="form-input" placeholder="연락처" data-ko="연락처" data-en="Phone">
+          <!-- Product Interest Chips -->
+          <div class="flex flex-wrap gap-2">
+            <label class="product-chip cursor-pointer"><input type="checkbox" name="products" value="LD/XT/HC" class="hidden"><span class="text-xs px-3 py-1.5 rounded-full border border-white/10 text-slate-400 transition">LD/XT/HC</span></label>
+            <label class="product-chip cursor-pointer"><input type="checkbox" name="products" value="LS" class="hidden"><span class="text-xs px-3 py-1.5 rounded-full border border-white/10 text-slate-400 transition">LS</span></label>
+            <label class="product-chip cursor-pointer"><input type="checkbox" name="products" value="LABS" class="hidden"><span class="text-xs px-3 py-1.5 rounded-full border border-white/10 text-slate-400 transition">LABS</span></label>
+            <label class="product-chip cursor-pointer"><input type="checkbox" name="products" value="Revolution" class="hidden"><span class="text-xs px-3 py-1.5 rounded-full border border-white/10 text-slate-400 transition">Revolution</span></label>
+            <label class="product-chip cursor-pointer"><input type="checkbox" name="products" value="CX/Shipper" class="hidden"><span class="text-xs px-3 py-1.5 rounded-full border border-white/10 text-slate-400 transition">CX/Shipper</span></label>
+            <label class="product-chip cursor-pointer"><input type="checkbox" name="products" value="AI/축산" class="hidden"><span class="text-xs px-3 py-1.5 rounded-full border border-white/10 text-slate-400 transition" data-ko="AI/축산" data-en="AI/AH">AI/축산</span></label>
+            <label class="product-chip cursor-pointer"><input type="checkbox" name="products" value="턴키시스템" class="hidden"><span class="text-xs px-3 py-1.5 rounded-full border border-white/10 text-slate-400 transition" data-ko="턴키 시스템" data-en="Turnkey">턴키 시스템</span></label>
+          </div>
+          <textarea name="message" rows="4" class="form-input" placeholder="문의 내용" data-ko="문의 내용" data-en="Message"></textarea>
+          <button type="submit" id="contact-submit" class="w-full py-3 bg-cyan-500 hover:bg-cyan-400 text-slate-950 rounded-xl font-semibold transition-all hover:shadow-lg hover:shadow-cyan-500/20" data-ko="문의 보내기" data-en="Send Inquiry">문의 보내기</button>
+          <p id="contact-success" class="hidden text-center text-emerald-400 text-sm mt-2" data-ko="문의가 전송되었습니다." data-en="Your inquiry has been sent.">문의가 전송되었습니다.</p>
+        </form>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════════════════ -->
+<!-- FOOTER -->
+<!-- ═══════════════════════════════════════ -->
+<footer class="footer-v2 pt-16 pb-8 mt-12">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-8 mb-12">
+      <div>
+        <p class="footer-col-title" data-ko="회사" data-en="Company">회사</p>
+        <div class="space-y-1">
+          <a href="index.html#about" class="footer-link" data-ko="회사소개" data-en="About">회사소개</a>
+          <a href="index.html#brand-story" class="footer-link" data-ko="브랜드 스토리" data-en="Brand Story">브랜드 스토리</a>
+          <a href="careers.html" class="footer-link" data-ko="채용" data-en="Careers">채용</a>
+        </div>
+      </div>
+      <div>
+        <p class="footer-col-title" data-ko="제품" data-en="Products">제품</p>
+        <div class="space-y-1">
+          <a href="biobanking.html" class="footer-link" data-ko="바이오뱅킹" data-en="Biobanking">바이오뱅킹</a>
+          <a href="cryo-equipment.html" class="footer-link" data-ko="극저온 장비" data-en="Cryo Equipment">극저온 장비</a>
+          <a href="liquid-helium.html" class="footer-link" data-ko="액체헬륨" data-en="Liquid Helium">액체헬륨</a>
+          <a href="gas-engineering.html" class="footer-link" data-ko="가스엔지니어링" data-en="Gas Engineering">가스엔지니어링</a>
+        </div>
+      </div>
+      <div>
+        <p class="footer-col-title">Biobanking</p>
+        <div class="space-y-1">
+          <a href="bio-ld-series.html" class="footer-link">LD Series</a>
+          <a href="bio-xt-series.html" class="footer-link">XT Series</a>
+          <a href="bio-labs-series.html" class="footer-link">LABS Series</a>
+          <a href="bio-revolution-series.html" class="footer-link">Revolution</a>
+          <a href="bio-ai.html" class="footer-link" data-ko="AI / 축산" data-en="AI / Animal">AI / 축산</a>
+        </div>
+      </div>
+      <div>
+        <p class="footer-col-title" data-ko="연락처" data-en="Contact">연락처</p>
+        <div class="space-y-2">
+          <div class="footer-contact-item">
+            <svg class="w-4 h-4 text-cyan-400/40 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 6.75c0 8.284 6.716 15 15 15h2.25a2.25 2.25 0 002.25-2.25v-1.372c0-.516-.351-.966-.852-1.091l-4.423-1.106c-.44-.11-.902.055-1.173.417l-.97 1.293c-.282.376-.769.542-1.21.38a12.035 12.035 0 01-7.143-7.143c-.162-.441.004-.928.38-1.21l1.293-.97c.363-.271.527-.734.417-1.173L6.963 3.102a1.125 1.125 0 00-1.091-.852H4.5A2.25 2.25 0 002.25 4.5v2.25z"/></svg>
+            <a href="tel:02-850-3114">02-850-3114</a>
+          </div>
+          <div class="footer-contact-item">
+            <svg class="w-4 h-4 text-cyan-400/40 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75"/></svg>
+            <a href="mailto:info@koreacryo.com">info@koreacryo.com</a>
+          </div>
+          <div class="footer-contact-item">
+            <svg class="w-4 h-4 text-cyan-400/40 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z"/></svg>
+            <span data-ko="서울특별시 금천구 가산디지털1로 168" data-en="168 Gasan Digital 1-ro, Geumcheon-gu, Seoul">서울특별시 금천구 가산디지털1로 168</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="footer-biz-bar">
+      <div class="footer-biz-info">
+        <span data-ko="한국초저온용기(주)" data-en="Korea Cryo Vessels Co., Ltd." style="white-space:nowrap">한국초저온용기(주)</span>
+        <span class="sep"></span>
+        <span data-ko="대표이사: 박형준" data-en="CEO: H.J. Park">대표이사: 박형준</span>
+        <span class="sep"></span>
+        <span>사업자등록번호: 109-81-53161</span>
+      </div>
+      <div style="font-size:11px;color:rgba(100,116,139,0.5);font-family:'Inter',sans-serif;">
+        &copy; <span id="footer-year">2026</span> Korea Cryo. All rights reserved. <span style="opacity:0.5;cursor:default;" title="Est. by HJP">Est. by HJP</span>
+      </div>
+    </div>
+  </div>
+</footer>
+
+
+<!-- ═══════════════════════════════════════ -->
+<!-- JAVASCRIPT -->
+<!-- ═══════════════════════════════════════ -->
+<script>
+// ===== LANGUAGE TOGGLE =====
+var currentLang = 'ko';
+function toggleLang() {
+  currentLang = currentLang === 'ko' ? 'en' : 'ko';
+  document.documentElement.lang = currentLang;
+  var els = document.querySelectorAll('[data-ko]');
+  for (var i = 0; i < els.length; i++) {
+    var el = els[i];
+    var text = el.getAttribute('data-' + currentLang);
+    if (text) {
+      if (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA') {
+        el.placeholder = text;
+      } else {
+        el.textContent = text;
+      }
+    }
+  }
+  // Toggle indicator styling
+  var koEl = document.getElementById('lang-ko');
+  var enEl = document.getElementById('lang-en');
+  var koM = document.getElementById('lang-ko-m');
+  var enM = document.getElementById('lang-en-m');
+  if (currentLang === 'en') {
+    if(koEl){koEl.style.background='transparent';koEl.style.color='#9ca3af';}
+    if(enEl){enEl.style.background='#06b6d4';enEl.style.color='#060d1b';}
+    if(koM){koM.style.background='transparent';koM.style.color='#9ca3af';}
+    if(enM){enM.style.background='#06b6d4';enM.style.color='#060d1b';}
+  } else {
+    if(koEl){koEl.style.background='#06b6d4';koEl.style.color='#060d1b';}
+    if(enEl){enEl.style.background='transparent';enEl.style.color='#9ca3af';}
+    if(koM){koM.style.background='#06b6d4';koM.style.color='#060d1b';}
+    if(enM){enM.style.background='transparent';enM.style.color='#9ca3af';}
+  }
+}
+
+// ===== SCROLL REVEAL (IntersectionObserver) =====
+var revealObserver = new IntersectionObserver(function(entries) {
+  for (var i = 0; i < entries.length; i++) {
+    if (entries[i].isIntersecting) {
+      entries[i].target.classList.add('visible');
+      revealObserver.unobserve(entries[i].target);
+    }
+  }
+}, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+var revealEls = document.querySelectorAll('.reveal');
+for (var i = 0; i < revealEls.length; i++) { revealObserver.observe(revealEls[i]); }
+
+// ===== STATS COUNTER ANIMATION =====
+function animateCounters() {
+  var counters = document.querySelectorAll('.counter');
+  for (var c = 0; c < counters.length; c++) {
+    (function(el) {
+      var target = parseFloat(el.dataset.target);
+      var suffix = el.dataset.suffix || '';
+      var decimal = parseInt(el.dataset.decimal) || 0;
+      var duration = 2000;
+      var start = performance.now();
+      function update(now) {
+        var elapsed = now - start;
+        var progress = Math.min(elapsed / duration, 1);
+        var eased = 1 - Math.pow(1 - progress, 3);
+        var current = target * eased;
+        if (target > 1000) {
+          el.textContent = Math.floor(current).toLocaleString() + suffix;
+        } else if (decimal > 0) {
+          el.textContent = current.toFixed(decimal) + suffix;
+        } else {
+          el.textContent = Math.floor(current) + suffix;
+        }
+        if (progress < 1) requestAnimationFrame(update);
+      }
+      requestAnimationFrame(update);
+    })(counters[c]);
+  }
+}
+var counterObserver = new IntersectionObserver(function(entries) {
+  for (var i = 0; i < entries.length; i++) {
+    if (entries[i].isIntersecting) {
+      animateCounters();
+      counterObserver.unobserve(entries[i].target);
+    }
+  }
+}, { threshold: 0.3 });
+var trustBar = document.querySelector('.trust-bar');
+if (trustBar) counterObserver.observe(trustBar);
+
+// ===== HERO CANVAS PARTICLES =====
+function initHeroParticles() {
+  var canvas = document.getElementById('hero-canvas');
+  if (!canvas) return;
+  var ctx = canvas.getContext('2d');
+  var w, h, particles = [];
+  var isMobile = window.innerWidth < 768;
+  var count = isMobile ? 40 : 120;
+
+  function resize() {
+    w = canvas.width = canvas.parentElement.offsetWidth;
+    h = canvas.height = canvas.parentElement.offsetHeight;
+  }
+  resize();
+  window.addEventListener('resize', resize);
+
+  var colors = ['rgba(6,182,212,','rgba(16,185,129,','rgba(103,232,249,','rgba(148,163,184,'];
+  for (var i = 0; i < count; i++) {
+    particles.push({
+      x: Math.random() * (w || 1200), y: Math.random() * (h || 800),
+      vx: (Math.random() - 0.5) * 0.3, vy: (Math.random() - 0.5) * 0.3,
+      r: Math.random() * 1.2 + 0.4,
+      color: colors[Math.floor(Math.random() * colors.length)],
+      alpha: Math.random() * 0.5 + 0.2
+    });
+  }
+
+  var running = true;
+  function draw() {
+    if (!running) return;
+    ctx.clearRect(0, 0, w, h);
+    for (var i = 0; i < particles.length; i++) {
+      var p = particles[i];
+      p.x += p.vx; p.y += p.vy;
+      if (p.x < 0) p.x = w; if (p.x > w) p.x = 0;
+      if (p.y < 0) p.y = h; if (p.y > h) p.y = 0;
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+      ctx.fillStyle = p.color + p.alpha + ')';
+      ctx.fill();
+    }
+    requestAnimationFrame(draw);
+  }
+  draw();
+
+  var heroObs = new IntersectionObserver(function(entries) {
+    running = entries[0].isIntersecting;
+    if (running) draw();
+  }, { threshold: 0.1 });
+  heroObs.observe(canvas.parentElement);
+}
+initHeroParticles();
+
+// ===== PRODUCT FILTER =====
+function filterProducts(category) {
+  var tabs = document.querySelectorAll('#filter-tabs .filter-tab');
+  for (var i = 0; i < tabs.length; i++) {
+    if (tabs[i].dataset.filter === category) tabs[i].classList.add('active');
+    else tabs[i].classList.remove('active');
+  }
+  var cards = document.querySelectorAll('#product-grid > a');
+  for (var i = 0; i < cards.length; i++) {
+    var cat = cards[i].dataset.category;
+    cards[i].style.display = (category === 'all' || cat === category) ? '' : 'none';
+  }
+}
+
+// ===== CONTACT FORM =====
+function submitContact(e) {
+  e.preventDefault();
+  var form = e.target;
+  var name = form.querySelector('[name="name"]').value.trim();
+  var email = form.querySelector('[name="email"]').value.trim();
+  var phone = form.querySelector('[name="phone"]').value.trim();
+  var message = form.querySelector('[name="message"]').value.trim();
+  var checked = form.querySelectorAll('[name="products"]:checked');
+  var products = [];
+  for (var i = 0; i < checked.length; i++) products.push(checked[i].value);
+
+  var params = {
+    from_name: name, reply_to: email, phone: phone,
+    message: message, products: products.join(', ') || '미선택',
+    source: 'biobanking-v2'
+  };
+
+  try {
+    if (typeof emailjs !== 'undefined') {
+      emailjs.send('service_v89smv9', 'template_xweueym', params)
+        .then(function() { showContactSuccess(form); })
+        .catch(function() { fallbackMailto(name, email, phone, message, products); });
+    } else {
+      fallbackMailto(name, email, phone, message, products);
+    }
+  } catch(err) {
+    fallbackMailto(name, email, phone, message, products);
+  }
+}
+
+function fallbackMailto(name, email, phone, message, products) {
+  var parts = ['[성함] ' + name, '[이메일] ' + email];
+  if (phone) parts.push('[연락처] ' + phone);
+  if (products.length) parts.push('[관심 제품] ' + products.join(', '));
+  if (message) parts.push('\n[문의 내용]\n' + message);
+  var body = parts.join('\n');
+  window.location.href = 'mailto:info@koreacryo.com?subject=' + encodeURIComponent('[KC 바이오뱅킹 문의] ' + name) + '&body=' + encodeURIComponent(body);
+}
+
+function showContactSuccess(form) {
+  var btn = document.getElementById('contact-submit');
+  var msg = document.getElementById('contact-success');
+  btn.textContent = '\u2713'; btn.classList.add('pointer-events-none','opacity-70');
+  msg.classList.remove('hidden');
+  setTimeout(function() {
+    btn.textContent = currentLang === 'ko' ? '문의 보내기' : 'Send Inquiry';
+    btn.classList.remove('pointer-events-none','opacity-70');
+    msg.classList.add('hidden');
+    form.reset();
+  }, 4000);
+}
+
+// ===== NAV SCROLL =====
+(function() {
+  var nav = document.getElementById('nav');
+  if (!nav) return;
+  window.addEventListener('scroll', function() {
+    if (window.scrollY > 50) {
+      nav.style.background = 'rgba(6,13,27,0.8)';
+      nav.style.backdropFilter = 'blur(24px)';
+      nav.style.webkitBackdropFilter = 'blur(24px)';
+      nav.style.borderBottom = '1px solid rgba(255,255,255,0.05)';
+      nav.style.boxShadow = '0 10px 30px rgba(0,0,0,0.3)';
+    } else {
+      nav.style.background = 'transparent';
+      nav.style.backdropFilter = 'blur(4px)';
+      nav.style.webkitBackdropFilter = 'blur(4px)';
+      nav.style.borderBottom = 'none';
+      nav.style.boxShadow = 'none';
+    }
+  }, { passive: true });
+})();
+
+// ===== FOOTER YEAR =====
+document.getElementById('footer-year').textContent = new Date().getFullYear();
+</script>
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+<script>try{emailjs.init('sQsYCTrE1oUQdNLYN');}catch(e){}</script>
+<script src="kc-chatbot.js"></script>
+</body>
+</html>

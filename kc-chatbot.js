@@ -30,7 +30,7 @@ var kcProducts = {
    ======================================================================== */
 var isOpen = false;
 var chatHistory = [];
-var GEMINI_KEY = localStorage.getItem('kc-gemini-key') || window.KC_GEMINI_KEY || '';
+var GEMINI_KEY = localStorage.getItem('kc-gemini-key') || window.KC_GEMINI_KEY || 'AIzaSyDBTmsJ7t3VkM-XYYDDXU3uE9164oiysgU';
 var markedReady = false;
 var welcomeShown = false;
 
@@ -113,6 +113,16 @@ function injectStyles(){
 '  font-size:15px; font-weight:600; color:#e2e8f0;',
 '}',
 '#kc-chatbot-header-title .kc-sparkle { font-size:18px; }',
+'#kc-chatbot-header-actions {',
+'  display:flex; align-items:center; gap:4px;',
+'}',
+'#kc-chatbot-clear {',
+'  background:none; border:none; cursor:pointer; color:rgba(255,255,255,0.4);',
+'  font-family:"Noto Sans KR","Inter",system-ui,sans-serif;',
+'  font-size:11px; padding:4px 8px; border-radius:6px;',
+'  transition:background .15s,color .15s; white-space:nowrap;',
+'}',
+'#kc-chatbot-clear:hover { background:rgba(255,255,255,0.08); color:#fff; }',
 '#kc-chatbot-minimize {',
 '  background:none; border:none; cursor:pointer; color:rgba(255,255,255,0.5);',
 '  width:28px; height:28px; display:flex; align-items:center; justify-content:center;',
@@ -355,6 +365,15 @@ function buildDOM(){
   titleWrap.appendChild(document.createTextNode(' KC AI \uC0C1\uB2F4'));
   header.appendChild(titleWrap);
 
+  var headerActions = document.createElement('div');
+  headerActions.id = 'kc-chatbot-header-actions';
+
+  var clearBtn = document.createElement('button');
+  clearBtn.id = 'kc-chatbot-clear';
+  clearBtn.textContent = '\uB300\uD654 \uCD08\uAE30\uD654';
+  clearBtn.onclick = function(){ clearChat(); };
+  headerActions.appendChild(clearBtn);
+
   var minBtn = document.createElement('button');
   minBtn.id = 'kc-chatbot-minimize';
   var minSvg = document.createElementNS('http://www.w3.org/2000/svg','svg');
@@ -369,7 +388,9 @@ function buildDOM(){
   minSvg.appendChild(minPath);
   minBtn.appendChild(minSvg);
   minBtn.onclick = function(){ toggleChat(); };
-  header.appendChild(minBtn);
+  headerActions.appendChild(minBtn);
+
+  header.appendChild(headerActions);
 
   chatWindow.appendChild(header);
 
@@ -673,12 +694,24 @@ function showWelcome(){
   var chips = document.createElement('div');
   chips.className = 'kc-chips';
 
-  var suggestions = [
-    '\uBC14\uC774\uC624\uBC45\uD06C \uC7A5\uBE44 \uCD94\uCC9C',
-    '\uC561\uCCB4\uD5EC\uB968 \uACF5\uAE09 \uAC00\uB2A5?',
-    '\uD68C\uC0AC \uC18C\uAC1C\uD574\uC918',
-    '\uC81C\uD488 \uCC3E\uAE30 \uB3C4\uC640\uC918'
-  ];
+  var currentPage = window.location.pathname.split('/').pop() || 'index.html';
+  var suggestions;
+
+  if(currentPage.indexOf('bio-ai') !== -1){
+    suggestions = ['AI Shield \uBB50\uAC00 \uC88B\uC544?', '\uC815\uC561 \uD0F1\uD06C \uCD94\uCC9C\uD574\uC918', '\uC18C 500\uB450 \uBAA9\uC7A5 \uC7A5\uBE44', '\uC6B4\uC1A1 \uC7A5\uBE44 \uBB50 \uC788\uC5B4?'];
+  } else if(currentPage.indexOf('bio-revolution') !== -1){
+    suggestions = ['Revolution \uBAA8\uB378 \uCC28\uC774\uC810', 'cGMP \uC778\uC99D \uC124\uBA85\uD574\uC918', '\uAC00\uACA9 \uBB38\uC758', '\uBC38\uB9AC\uB370\uC774\uC158 \uAC00\uB2A5?'];
+  } else if(currentPage.indexOf('bio-labs') !== -1){
+    suggestions = ['LABS \uBAA8\uB378\uBCC4 \uCC28\uC774', '\uC790\uB3D9 \uC548\uAC1C\uC81C\uAC70 \uC124\uBA85', '\uD134\uD14C\uC774\uBE14 \uAD6C\uC870', '\uC124\uCE58 \uBB38\uC758'];
+  } else if(currentPage.indexOf('bio-ls') !== -1){
+    suggestions = ['LS \uBAA8\uB378 \uBE44\uAD50', 'Vapor \uBCF4\uAD00 \uBC29\uC2DD', '\uC6D0\uACA9 \uBAA8\uB2C8\uD130\uB9C1', '\uACAC\uC801 \uC694\uCCAD'];
+  } else if(currentPage.indexOf('bio-') !== -1){
+    suggestions = ['\uC774 \uC81C\uD488 \uC2A4\uD399 \uC54C\uB824\uC918', '\uBE44\uC2B7\uD55C \uC81C\uD488 \uBE44\uAD50', '\uACAC\uC801 \uBB38\uC758', '\uC124\uCE58 \uC0C1\uB2F4'];
+  } else if(currentPage.indexOf('biobanking') !== -1){
+    suggestions = ['\uBC14\uC774\uC624\uBC45\uD06C \uC7A5\uBE44 \uCD94\uCC9C', '\uD134\uD0A4 \uC2DC\uC2A4\uD15C \uAC00\uB2A5?', 'A/S \uD504\uB85C\uADF8\uB7A8', '\uBC38\uB9AC\uB370\uC774\uC158 \uC11C\uBE44\uC2A4'];
+  } else {
+    suggestions = ['\uBC14\uC774\uC624\uBC45\uD06C \uC7A5\uBE44 \uCD94\uCC9C', '\uC561\uCCB4\uD5EC\uB968 \uACF5\uAE09 \uAC00\uB2A5?', '\uD68C\uC0AC \uC18C\uAC1C\uD574\uC918', '\uC81C\uD488 \uCC3E\uAE30 \uB3C4\uC640\uC918'];
+  }
 
   suggestions.forEach(function(text){
     var chip = document.createElement('button');
@@ -1244,11 +1277,13 @@ var systemPrompt = [
 '1. \uD55C\uAD6D\uC5B4\uB85C \uB2F5\uBCC0 (\uACE0\uAC1D\uC774 \uC601\uC5B4\uBA74 \uC601\uC5B4\uB85C)',
 '2. KC\uC758 \uBAA8\uB4E0 \uC0AC\uC5C5 \uC601\uC5ED\uC5D0 \uB300\uD574 \uB2F5\uBCC0 \uAC00\uB2A5 (\uBC14\uC774\uC624\uBC45\uD0B9, \uADF9\uC800\uC628 \uC7A5\uBE44, \uC561\uCCB4\uD5EC\uB968, \uD2B9\uC218\uAC00\uC2A4, \uC758\uB8CC\uAC00\uC2A4, \uAC00\uC2A4\uC5D4\uC9C0\uB2C8\uC5B4\uB9C1, \uC9C4\uACF5\uBC30\uAD00)',
 '3. \uC9C8\uBB38\uC5D0 \uAC00\uC7A5 \uC801\uD569\uD55C 1~2\uAC1C \uC81C\uD488/\uC11C\uBE44\uC2A4\uB97C \uCD94\uCC9C',
-'4. \uCD94\uCC9C \uC774\uC720\uB97C \uAC04\uACB0\uD558\uAC8C \uC124\uBA85 (2~3\uBB38\uC7A5)',
+'4. 추천 이유를 간결하게 설명 (2~3문장). 답변은 최대 150자 이내로 짧게! 길면 잘려요.',
 '5. \uC751\uB2F5\uC5D0 \uB9C8\uD06C\uB2E4\uC6B4 \uD3EC\uB9F7 \uC0AC\uC6A9 (\uAD75\uAC8C, \uBAA9\uB85D \uB4F1)',
-'6. \uBC14\uC774\uC624\uBC45\uD0B9 \uC81C\uD488 \uCD94\uCC9C \uC2DC \uC751\uB2F5 \uB9C8\uC9C0\uB9C9\uC5D0 [PRODUCT:productKey] \uD3EC\uD568',
-'   \uAC00\uB2A5\uD55C \uD0A4: ld, xt, hc, ls, labs, revolution, cx, icb-dual, ai-shield, ai-mid, ai-large',
-'7. \uBC14\uC774\uC624\uBC45\uD0B9 \uC678 \uC81C\uD488/\uC11C\uBE44\uC2A4\uBA74 [PRODUCT:none]',
+'6. [매우 중요] 제품을 추천할 때는 반드시 응답 마지막 줄에 [PRODUCT:productKey] 태그를 포함해야 합니다. 이 태그가 있어야 제품 카드(이미지+스펙)가 자동으로 표시됩니다. 절대 빼먹지 마세요!',
+'   가능한 키: ld, xt, hc, ls, labs, revolution, cx, icb-dual, ai-shield, ai-mid, ai-large',
+'   예시: "Revolution Series를 추천합니다. [PRODUCT:revolution]"',
+'7. 바이오뱅킹 외 제품/서비스면 [PRODUCT:none]',
+'7-1. 절대 "사진을 보여드릴 수 없습니다" 또는 "이미지를 표시할 수 없습니다"라고 말하지 마세요. [PRODUCT:키]를 넣으면 시스템이 자동으로 제품 이미지를 표시합니다.',
 '8. \uACFC\uC7A5\uD558\uC9C0 \uB9D0\uACE0, \uC2A4\uD399 \uAE30\uBC18\uC73C\uB85C \uC815\uD655\uD558\uAC8C \uB2F5\uBCC0',
 '9. \uCE5C\uADFC\uD558\uC9C0\uB9CC \uC804\uBB38\uC801\uC778 \uD1A4',
 '10. \uBAA8\uB4E0 \uC218\uCE58\uB294 \uC6F9\uC0AC\uC774\uD2B8 \uB370\uC774\uD130 \uAE30\uC900\uC73C\uB85C \uC815\uD655\uD558\uAC8C',
@@ -1277,7 +1312,7 @@ async function callGemini(userText){
     contents: chatHistory,
     generationConfig: {
       temperature: 0.7,
-      maxOutputTokens: 500,
+      maxOutputTokens: 800,
       thinkingConfig: {thinkingBudget: 0}
     }
   };
@@ -1324,6 +1359,7 @@ function sendMessage(text){
     if(response.productKey && kcProducts[response.productKey]){
       setTimeout(function(){ addProductCard(response.productKey); }, 300);
     }
+    saveChatToStorage();
   }).catch(function(){
     hideTyping();
     addBotMessage('\uC8C4\uC1A1\uD569\uB2C8\uB2E4, \uC77C\uC2DC\uC801\uC778 \uC624\uB958\uAC00 \uBC1C\uC0DD\uD588\uC2B5\uB2C8\uB2E4. \uB2E4\uC2DC \uC2DC\uB3C4\uD574\uC8FC\uC138\uC694.\n031-737-8171', true);
@@ -1402,16 +1438,18 @@ function submitQuote(productKey){
     return;
   }
 
+  var prodName = kcProducts[productKey] ? kcProducts[productKey].name : productKey;
   if(typeof emailjs === 'undefined'){
     var s = document.createElement('script');
     s.src = 'https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js';
     s.onload = function(){
       try { emailjs.init('sQsYCTrE1oUQdNLYN'); } catch(e){}
-      sendQuoteEmail(product.name, name, phone, email, org, note);
+      setTimeout(function(){ sendQuoteEmail(prodName, name, phone, email, org, note); }, 500);
     };
     document.head.appendChild(s);
   } else {
-    sendQuoteEmail(product.name, name, phone, email, org, note);
+    try { emailjs.init('sQsYCTrE1oUQdNLYN'); } catch(e){}
+    sendQuoteEmail(prodName, name, phone, email, org, note);
   }
 }
 
@@ -1432,12 +1470,37 @@ function sendQuoteEmail(productName, name, phone, email, org, note){
 }
 
 /* ========================================================================
+   CHAT PERSISTENCE (localStorage)
+   ======================================================================== */
+function saveChatToStorage(){
+  try {
+    localStorage.setItem('kc-chat-log', JSON.stringify(chatHistory.slice(-10)));
+  } catch(e){}
+}
+
+function loadChatFromStorage(){
+  try {
+    var saved = localStorage.getItem('kc-chat-log');
+    if(saved) chatHistory = JSON.parse(saved);
+  } catch(e){}
+}
+
+function clearChat(){
+  chatHistory = [];
+  try { localStorage.removeItem('kc-chat-log'); } catch(e){}
+  while(chatMessages.firstChild) chatMessages.removeChild(chatMessages.firstChild);
+  welcomeShown = false;
+  showWelcome();
+}
+
+/* ========================================================================
    INIT
    ======================================================================== */
 function init(){
   injectStyles();
   buildDOM();
   loadMarked();
+  loadChatFromStorage();
 }
 
 if(document.readyState === 'loading'){
