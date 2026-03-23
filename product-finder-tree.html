@@ -1149,6 +1149,28 @@ function drawSvgLines(){
   svgEl.setAttribute('width', ct.scrollWidth);
   svgEl.setAttribute('height', ct.scrollHeight);
 
+  // Gradient defs for each category (fade from transparent to solid)
+  var defs = document.createElementNS('http://www.w3.org/2000/svg','defs');
+  Object.keys(catConfig).forEach(function(catId){
+    var cfg = catConfig[catId];
+    var grad = document.createElementNS('http://www.w3.org/2000/svg','linearGradient');
+    grad.id = 'grad-'+catId;
+    grad.setAttribute('x1','0%');
+    grad.setAttribute('x2','100%');
+    var stop1 = document.createElementNS('http://www.w3.org/2000/svg','stop');
+    stop1.setAttribute('offset','0%');
+    stop1.setAttribute('stop-color', cfg.color);
+    stop1.setAttribute('stop-opacity','0.3');
+    var stop2 = document.createElementNS('http://www.w3.org/2000/svg','stop');
+    stop2.setAttribute('offset','100%');
+    stop2.setAttribute('stop-color', cfg.color);
+    stop2.setAttribute('stop-opacity','1');
+    grad.appendChild(stop1);
+    grad.appendChild(stop2);
+    defs.appendChild(grad);
+  });
+  svgEl.appendChild(defs);
+
   function pos(el){
     var r = el.getBoundingClientRect();
     return {
@@ -1162,13 +1184,13 @@ function drawSvgLines(){
     };
   }
 
-  function bezier(x1,y1,x2,y2,color,opacity,sw,animate,glowColor){
+  function bezier(x1,y1,x2,y2,color,opacity,sw,animate,glowColor,gradientId){
     var p = document.createElementNS('http://www.w3.org/2000/svg','path');
     // Midpoint X control — clean S-curve that never crosses
     var mx = (x1+x2)/2;
     var d = 'M'+x1+' '+y1+' C'+mx+' '+y1+' '+mx+' '+y2+' '+x2+' '+y2;
     p.setAttribute('d', d);
-    p.setAttribute('stroke', color);
+    p.setAttribute('stroke', gradientId ? 'url(#'+gradientId+')' : color);
     p.setAttribute('stroke-width', sw||2);
     p.style.opacity = opacity;
     if(glowColor){
@@ -1181,6 +1203,32 @@ function drawSvgLines(){
       p.style.setProperty('--len', realLen);
       p.setAttribute('stroke-dasharray', realLen);
       p.classList.add('draw-anim');
+    }
+    // Connection dots at endpoints for visible curves
+    if(opacity > 0.2){
+      var dot2 = document.createElementNS('http://www.w3.org/2000/svg','circle');
+      dot2.setAttribute('cx', x2);
+      dot2.setAttribute('cy', y2);
+      dot2.setAttribute('r', 3);
+      dot2.setAttribute('fill', color);
+      dot2.style.opacity = opacity;
+      if(glowColor){
+        dot2.style.filter = 'drop-shadow(0 0 4px '+glowColor+')';
+      }
+      svgEl.appendChild(dot2);
+      // Start dot for active/animated curves
+      if(animate){
+        var dot1 = document.createElementNS('http://www.w3.org/2000/svg','circle');
+        dot1.setAttribute('cx', x1);
+        dot1.setAttribute('cy', y1);
+        dot1.setAttribute('r', 3);
+        dot1.setAttribute('fill', color);
+        dot1.style.opacity = opacity;
+        if(glowColor){
+          dot1.style.filter = 'drop-shadow(0 0 4px '+glowColor+')';
+        }
+        svgEl.appendChild(dot1);
+      }
     }
     return p;
   }
@@ -1198,10 +1246,11 @@ function drawSvgLines(){
 
     // Root -> L1 bezier curve
     bezier(rp.x + rp.w/2, rp.y, lp.left, lp.y,
-      isActive ? cfg.color : cfg.color,
+      cfg.color,
       isDimmed ? 0.06 : (isActive ? 0.8 : 0.25),
       isActive ? 2.5 : 1.8,
-      isActive, isActive ? cfg.glow : null);
+      isActive, isActive ? cfg.glow : null,
+      isActive ? 'grad-'+catId : null);
 
     if(isActive){
       var pills = document.querySelectorAll('#l2col-'+catId+' .l2-pill.visible');
@@ -1215,7 +1264,8 @@ function drawSvgLines(){
           cfg.color,
           isDimmedPill ? 0.08 : (isSubActive ? 0.9 : 0.45),
           isSubActive ? 2.5 : 2,
-          true, isSubActive ? cfg.glow : null);
+          true, isSubActive ? cfg.glow : null,
+          'grad-'+catId);
       });
 
       if(activeSub){
@@ -1226,7 +1276,8 @@ function drawSvgLines(){
           cards.forEach(function(card){
             var cp = pos(card);
             bezier(ap.right + 4, ap.y, cp.left, cp.y,
-              cfg.color, 0.5, 2, true, cfg.glow);
+              cfg.color, 0.5, 2, true, cfg.glow,
+              'grad-'+catId);
           });
         }
       }
