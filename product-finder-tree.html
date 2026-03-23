@@ -1145,9 +1145,9 @@ function drawSvgLines(){
 
   function bezier(x1,y1,x2,y2,color,opacity,sw,animate,glowColor){
     var p = document.createElementNS('http://www.w3.org/2000/svg','path');
-    var dx = Math.abs(x2-x1);
-    var cpOff = Math.max(dx * 0.5, 30);
-    var d = 'M'+x1+' '+y1+' C'+(x1+cpOff)+' '+y1+' '+(x2-cpOff)+' '+y2+' '+x2+' '+y2;
+    // Midpoint X control — clean S-curve that never crosses
+    var mx = (x1+x2)/2;
+    var d = 'M'+x1+' '+y1+' C'+mx+' '+y1+' '+mx+' '+y2+' '+x2+' '+y2;
     p.setAttribute('d', d);
     p.setAttribute('stroke', color);
     p.setAttribute('stroke-width', sw||2);
