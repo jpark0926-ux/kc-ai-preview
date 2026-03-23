@@ -624,7 +624,7 @@ var catConfig = {
    STATE
    ================================================================ */
 var lang = 'ko';
-var darkMode = false;
+var darkMode = true;
 var activeCat = null;
 var activeSub = null;
 var bioTab = 'use';
@@ -1473,16 +1473,22 @@ function updateThemeIcon(){
   }
 }
 
-// Load saved theme
+// Load saved theme (default: dark)
 (function(){
   try {
     var saved = localStorage.getItem('kc-tree-theme');
-    if(saved === 'dark'){
+    if(saved === 'light'){
+      darkMode = false;
+      document.body.classList.remove('dark-mode');
+    } else {
       darkMode = true;
       document.body.classList.add('dark-mode');
-      updateThemeIcon();
     }
-  } catch(e){}
+    updateThemeIcon();
+  } catch(e){
+    document.body.classList.add('dark-mode');
+    updateThemeIcon();
+  }
 })();
 
 /* ================================================================
