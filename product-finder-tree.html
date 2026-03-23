@@ -711,7 +711,7 @@ function buildTree(){
     // L1 column
     var l1col = document.createElement('div');
     l1col.className = 'l1-col';
-    l1col.style.marginTop = ci === 0 ? '0' : '-9px';
+    l1col.style.marginTop = ci === 0 ? '4px' : '-9px';
 
     var l1node = document.createElement('div');
     l1node.className = 'l1-node';
@@ -1252,8 +1252,11 @@ function drawSvgLines(){
     var isActive = activeCat === catId;
     var isDimmed = activeCat && activeCat !== catId;
 
-    // Root -> L1 bezier curve
-    bezier(rp.x + rp.w/2, rp.y, lp.left, lp.y,
+    // Root -> L1: first branch uses straight horizontal line (same Y as root)
+    var isFirst = (catId === catOrder[0]);
+    var startY = rp.y;
+    var endY = isFirst ? rp.y : lp.y;
+    bezier(rp.x + rp.w/2, startY, lp.left, endY,
       cfg.color,
       isDimmed ? 0.06 : (isActive ? 0.8 : 0.25),
       isActive ? 2.5 : 1.8,
