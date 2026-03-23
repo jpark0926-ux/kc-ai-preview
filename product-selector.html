@@ -189,11 +189,11 @@ body {
 
 <!-- ===== CHAT AREA ===== -->
 <main class="flex-1 flex flex-col max-w-3xl mx-auto w-full">
-  <div id="chat-area" class="flex-1 overflow-y-auto px-4 py-6 space-y-4">
+  <div id="chat-area" class="flex-1 overflow-y-auto px-4 py-6 space-y-4" style="padding-bottom:80px;">
     <!-- Messages injected here by JS -->
   </div>
   <!-- Answer buttons area -->
-  <div id="answer-area" class="px-4 pb-6 pt-2">
+  <div id="answer-area" class="px-4 pb-6 pt-2" style="margin-bottom:70px;">
     <!-- Buttons injected here by JS -->
   </div>
 </main>
@@ -633,6 +633,182 @@ document.addEventListener('DOMContentLoaded', function() {
   answerArea = document.getElementById('answer-area');
   startChat();
 });
+</script>
+
+<!-- ===== FREE CHAT INPUT ===== -->
+<div id="freeChat" style="position:fixed;bottom:0;left:0;right:0;padding:12px 16px;background:rgba(6,13,27,0.95);backdrop-filter:blur(20px);border-top:1px solid rgba(6,182,212,0.1);z-index:100;display:flex;gap:8px;max-width:800px;margin:0 auto;">
+  <input type="text" id="chatInput" placeholder="자유롭게 질문해보세요 (예: 정액 5만개 보관)" style="flex:1;padding:10px 16px;border-radius:24px;border:1px solid rgba(6,182,212,0.2);background:rgba(255,255,255,0.05);color:#e2e8f0;font-size:14px;outline:none;font-family:inherit;" data-ko="자유롭게 질문해보세요 (예: 정액 5만개 보관)" data-en="Ask freely (e.g., store 50K semen straws)">
+  <button id="chatSend" onclick="handleFreeChat()" style="padding:10px 20px;border-radius:24px;border:none;background:linear-gradient(135deg,#06b6d4,#10b981);color:white;font-size:14px;font-weight:600;cursor:pointer;transition:all 0.25s;white-space:nowrap;" data-ko="보내기" data-en="Send">보내기</button>
+</div>
+
+<script>
+/* ============================================================
+   FREE CHAT — Smart Keyword Matching
+   ============================================================ */
+document.getElementById('chatInput').addEventListener('keydown', function(e){
+  if(e.key === 'Enter') handleFreeChat();
+});
+
+function handleFreeChat(){
+  var input = document.getElementById('chatInput');
+  var text = input.value.trim();
+  if(!text) return;
+  input.value = '';
+
+  // Show user message
+  addUserMsg(text);
+
+  // Analyze keywords and find matching products
+  var result = analyzeQuery(text);
+
+  // Show typing then result
+  showTypingIndicator();
+  setTimeout(function(){
+    hideTypingIndicator();
+    if(result.products.length > 0){
+      addKcMsg(result.message);
+      // Show first recommended product
+      setTimeout(function(){
+        showResult(result.products[0]);
+      }, 300);
+    } else {
+      addKcMsg(lang === 'ko' ?
+        '죄송합니다, 정확한 제품을 찾기 어렵습니다. 전문가 상담을 추천드립니다!\n📞 031-737-8171' :
+        'Sorry, I couldn\'t find an exact match. I recommend expert consultation!\n📞 031-737-8171');
+    }
+  }, 600);
+}
+
+function analyzeQuery(text){
+  var t = text.toLowerCase();
+  var result = {products:[], message:''};
+
+  // Keyword maps
+  var keywords = {
+    // Revolution / cGMP
+    cgmp: {prod:'revolution', msgKo:'cGMP 규정 준수가 필요하시군요. Revolution Series를 추천합니다!', msgEn:'You need cGMP compliance. I recommend the Revolution Series!'},
+    revolution: {prod:'revolution', msgKo:'Revolution Series — 업계 최고 수준의 자동화 극저온 저장 시스템입니다.', msgEn:'Revolution Series — the industry\'s top automated cryogenic storage.'},
+    rfid: {prod:'revolution', msgKo:'RFID 추적이 필요하시면 Revolution Series가 적합합니다!', msgEn:'For RFID tracking, Revolution Series is the right choice!'},
+    '감사추적': {prod:'revolution', msgKo:'감사추적(Audit Trail) 기능은 Revolution Series에서 지원합니다!', msgEn:'Audit trail is supported by Revolution Series!'},
+    'audit': {prod:'revolution', msgKo:'감사추적(Audit Trail) 기능은 Revolution Series에서 지원합니다!', msgEn:'Audit trail is supported by Revolution Series!'},
+    fda: {prod:'revolution', msgKo:'FDA 21 CFR Part 11 호환이 필요하시면 Revolution Series입니다!', msgEn:'For FDA 21 CFR Part 11 compliance, it\'s Revolution Series!'},
+
+    // LABS
+    '93000': {prod:'labs', msgKo:'대용량 저장이 필요하시군요! LABS Series는 최대 93,000 바이알을 보관합니다.', msgEn:'You need large-scale storage! LABS holds up to 93,000 vials.'},
+    '대용량': {prod:'labs', msgKo:'대용량 보관에는 LABS Series를 추천합니다!', msgEn:'For large-scale storage, I recommend LABS Series!'},
+    '바이오뱅크': {prod:'labs', msgKo:'바이오뱅크 구축에는 LABS Series가 최적입니다!', msgEn:'LABS Series is optimal for biobank construction!'},
+    'labs': {prod:'labs', msgKo:'LABS Series — 대용량 스테인리스 자동화 바이오 저장 시스템입니다.', msgEn:'LABS Series — large-scale stainless automated bio storage.'},
+    '턴테이블': {prod:'labs', msgKo:'H-Type 턴테이블 4구역 접근은 LABS Series의 핵심 기능입니다!', msgEn:'H-Type turntable 4-zone access is a key LABS feature!'},
+
+    // LS
+    '바이알': {prod:'ls', msgKo:'바이알 보관에는 LS Series (750~6,000개)를 추천합니다!', msgEn:'For vial storage, I recommend LS Series (750-6,000 vials)!'},
+    'ls': {prod:'ls', msgKo:'LS Series — Box Rack 타입 스테인리스 바이알 저장 시스템입니다.', msgEn:'LS Series — Box Rack type stainless vial storage system.'},
+
+    // LD
+    '실험실': {prod:'ld', msgKo:'실험실용으로는 LD Series가 가장 적합합니다!', msgEn:'For lab use, LD Series is the best fit!'},
+    '듀어': {prod:'ld', msgKo:'LN₂ 듀어는 LD Series — 4L부터 50L까지 다양합니다.', msgEn:'LN₂ dewars: LD Series — from 4L to 50L.'},
+    'dewar': {prod:'ld', msgKo:'LN₂ 듀어는 LD Series — 4L부터 50L까지 다양합니다.', msgEn:'LN₂ dewars: LD Series — from 4L to 50L.'},
+    '분주': {prod:'ld', msgKo:'LN₂ 분주용으로는 LD Series를 추천합니다!', msgEn:'For LN₂ dispensing, I recommend LD Series!'},
+
+    // XT
+    '장기보관': {prod:'xt', msgKo:'장기 보관에는 XT Series가 적합합니다. 업계 최저 증발률!', msgEn:'For long-term storage, XT Series is ideal. Industry-lowest evaporation!'},
+    'extended': {prod:'xt', msgKo:'XT Series — Extended Time, 장기 Cane 보관 전용입니다.', msgEn:'XT Series — Extended Time, dedicated long-term Cane storage.'},
+
+    // HC
+    '캐니스터': {prod:'hc', msgKo:'고용량 Canister 보관에는 HC Series를 추천합니다!', msgEn:'For high-capacity canister storage, I recommend HC Series!'},
+    'canister': {prod:'hc', msgKo:'고용량 Canister 보관에는 HC Series를 추천합니다!', msgEn:'For high-capacity canister storage, I recommend HC Series!'},
+
+    // Transport
+    '운송': {prod:'icb-dual', msgKo:'시료 운송에는 ICB Dual Series (IATA 승인 Vapor Shipper)를 추천합니다!', msgEn:'For sample transport, I recommend ICB Dual (IATA approved Vapor Shipper)!'},
+    '항공': {prod:'icb-dual', msgKo:'국제 항공 운송에는 IATA 승인 ICB Dual Series입니다!', msgEn:'For international air transport, it\'s IATA approved ICB Dual!'},
+    'iata': {prod:'icb-dual', msgKo:'IATA 승인 운송 용기는 ICB Dual Series입니다!', msgEn:'The IATA approved transport vessel is ICB Dual!'},
+    'shipping': {prod:'icb-dual', msgKo:'시료 운송에는 ICB Dual — Store-Ship-Store 운용 가능!', msgEn:'For sample shipping, ICB Dual — Store-Ship-Store operation!'},
+    'transport': {prod:'icb-dual', msgKo:'시료 운송에는 ICB Dual — Store-Ship-Store 운용 가능!', msgEn:'For sample transport, ICB Dual — Store-Ship-Store operation!'},
+    '드라이쉬퍼': {prod:'cx', msgKo:'드라이쉬퍼는 CX/DX Series입니다. 국내 단거리 운송에 적합!', msgEn:'Dry shippers: CX/DX Series. Ideal for short-range domestic transport!'},
+
+    // AI/Livestock
+    '정액': {prod:'ai-shield', msgKo:'정액 보관에는 AI Shield 또는 XT Series를 추천합니다!', msgEn:'For semen storage, I recommend AI Shield or XT Series!'},
+    'semen': {prod:'ai-shield', msgKo:'정액 보관에는 AI Shield 또는 XT Series를 추천합니다!', msgEn:'For semen storage, I recommend AI Shield or XT Series!'},
+    '축산': {prod:'ai-shield', msgKo:'축산/인공수정용으로는 AI Shield 시리즈를 추천합니다!', msgEn:'For livestock/AI, I recommend AI Shield series!'},
+    '인공수정': {prod:'ai-shield', msgKo:'인공수정용 장비는 AI Shield — 열 보호 기술 적용!', msgEn:'For AI equipment: AI Shield — with thermal protection!'},
+    '목장': {prod:'ai-shield', msgKo:'목장 규모에 따라 AI Shield (소규모) 또는 LABS 80K AI (대규모)를 추천합니다!', msgEn:'Based on farm size: AI Shield (small) or LABS 80K AI (large)!'},
+    '배아': {prod:'xt', msgKo:'배아 보관에는 XT Series 또는 HC Series가 적합합니다!', msgEn:'For embryo storage, XT Series or HC Series are suitable!'},
+
+    // Vapor/temperature
+    '증기상': {prod:'ls', msgKo:'증기상(-190\u00B0C) 보관에는 LS, LABS, Revolution Series가 있습니다. 수량에 따라 추천이 달라요!', msgEn:'For vapor phase (-190\u00B0C): LS, LABS, or Revolution. Depends on quantity!'},
+    'vapor': {prod:'ls', msgKo:'Vapor phase 보관에는 LS, LABS, Revolution Series가 있습니다!', msgEn:'For vapor phase: LS, LABS, or Revolution Series!'},
+
+    // Quantity-based
+    '만개': {prod:'labs', msgKo:'만 개 이상의 시료 보관에는 LABS Series를 추천합니다!', msgEn:'For 10,000+ sample storage, I recommend LABS Series!'},
+    '5만': {prod:'revolution', msgKo:'5만 개 이상이면 Revolution Series (최대 98,625 바이알)가 최적입니다!', msgEn:'For 50,000+, Revolution Series (up to 98,625 vials) is optimal!'},
+    '10만': {prod:'revolution', msgKo:'10만 개에 가까운 저장은 Revolution 600 Series를 추천합니다!', msgEn:'For near 100K storage, I recommend Revolution 600 Series!'}
+  };
+
+  // Check each keyword
+  var matched = null;
+  var keys = Object.keys(keywords);
+  for(var i=0; i<keys.length; i++){
+    if(t.indexOf(keys[i]) !== -1){
+      matched = keywords[keys[i]];
+      break;
+    }
+  }
+
+  if(matched){
+    result.products = [matched.prod];
+    result.message = lang === 'ko' ? matched.msgKo : matched.msgEn;
+  }
+
+  return result;
+}
+
+// Helper to add user message to chat (free chat version)
+function addUserMsg(text){
+  var div = document.createElement('div');
+  div.className = 'flex justify-end chat-msg';
+  var bubble = document.createElement('div');
+  bubble.className = 'inline-block rounded-2xl rounded-tr-sm px-4 py-2.5 text-sm font-medium max-w-[85%] sm:max-w-[75%]';
+  bubble.style.cssText = 'background:rgba(16,185,129,0.12);border:1px solid rgba(16,185,129,0.3);color:#6ee7b7;';
+  bubble.textContent = text;
+  div.appendChild(bubble);
+  chatArea.appendChild(div);
+  scrollToBottom();
+}
+
+// Helper to add KC message (free chat version)
+function addKcMsg(text){
+  var div = document.createElement('div');
+  div.className = 'flex items-start gap-3 chat-msg';
+  div.appendChild(createKCAvatar());
+  var bubble = document.createElement('div');
+  bubble.className = 'max-w-[85%] sm:max-w-[75%] rounded-2xl rounded-tl-sm px-4 py-3 text-sm leading-relaxed';
+  bubble.style.cssText = 'background:rgba(6,182,212,0.06);border:1px solid rgba(6,182,212,0.12);white-space:pre-line;';
+  bubble.textContent = text;
+  div.appendChild(bubble);
+  chatArea.appendChild(div);
+  scrollToBottom();
+}
+
+// Typing indicator for free chat
+function showTypingIndicator(){
+  var div = document.createElement('div');
+  div.id = 'typingIndicator';
+  div.className = 'flex items-start gap-3 chat-msg';
+  div.appendChild(createKCAvatar());
+  var dots = document.createElement('div');
+  dots.className = 'typing-dots mt-2';
+  for(var i=0;i<3;i++){
+    dots.appendChild(document.createElement('span'));
+  }
+  div.appendChild(dots);
+  chatArea.appendChild(div);
+  scrollToBottom();
+}
+
+function hideTypingIndicator(){
+  var el = document.getElementById('typingIndicator');
+  if(el) el.remove();
+}
 </script>
 
 </body>
